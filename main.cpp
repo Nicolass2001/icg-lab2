@@ -2,53 +2,59 @@
 #include "header.h"
 
 // Clase representa un color
-class Color_RR {
+class Color_RR
+{
 private:
     int r, g, b;
+
 public:
     Color_RR(int r, int g, int b);
 };
 
 // Clase representa un rayo poner la logica de rayo aqui dentro
-class Rayo_RR {
-
+class Rayo_RR
+{
 };
 
 // Clase representa una normal
 // No se si es muy necesario pero por las dudas
-class Normal_RR {
-
+class Normal_RR
+{
 };
 
 // Clase que representa la escena completa
-class Escena_RR {
+class Escena_RR
+{
 private:
-    std::vector<Objeto_RR*> objetos;
+    std::vector<Objeto_RR *> objetos;
     Color_RR fondo;
-public:
-    Objeto_RR* calcularInterseccionMasCercana(Rayo_RR rayo);
-    Color_RR getFondo();
 
+public:
+    Objeto_RR *calcularInterseccionMasCercana(Rayo_RR rayo);
+    Color_RR getFondo();
 };
 
-class Objeto_RR {
+class Objeto_RR
+{
 public:
     virtual Normal_RR calcularNormal(Rayo_RR rayo) = 0;
 };
 
-class Pared_RR : public Objeto_RR {
-
+class Pared_RR : public Objeto_RR
+{
 };
 
 Escena_RR escena;
 
-Color_RR sombra_RR(Objeto_RR* objeto, Rayo_RR rayo, Normal_RR normal, int profundidad) {
-
+Color_RR sombra_RR(Objeto_RR *objeto, Rayo_RR rayo, Normal_RR normal, int profundidad)
+{
 }
 
-Color_RR traza_RR(Rayo_RR rayo, int profundidad) {
-    Objeto_RR* objMasCercano = escena.calcularInterseccionMasCercana(rayo);
-    if (objMasCercano == nullptr) {
+Color_RR traza_RR(Rayo_RR rayo, int profundidad)
+{
+    Objeto_RR *objMasCercano = escena.calcularInterseccionMasCercana(rayo);
+    if (objMasCercano == nullptr)
+    {
         return escena.getFondo();
     }
 
@@ -56,7 +62,8 @@ Color_RR traza_RR(Rayo_RR rayo, int profundidad) {
     return sombra_RR(objMasCercano, rayo, normal, profundidad);
 }
 
-int main() {
+int main()
+{
     copiarImagen();
 
     Color_RR traza_RR();
