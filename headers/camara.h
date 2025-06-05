@@ -25,7 +25,6 @@ public:
     Camara_RR();
     Camara_RR(Vector pos, Vector dir, Vector upVec);
     Rayo_RR generarRayo(int i, int j);
-    // cout operator
     friend std::ostream &operator<<(std::ostream &os, const Camara_RR &camara);
 };
 

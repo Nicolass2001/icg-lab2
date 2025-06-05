@@ -9,9 +9,9 @@ private:
 public:
     ColorRGB();
     ColorRGB(int r, int g, int b);
-    int getR() const { return r; }
-    int getG() const { return g; }
-    int getB() const { return b; }
+    int getR() const;
+    int getG() const;
+    int getB() const;
 };
 
 ColorRGB::ColorRGB()
@@ -27,5 +27,11 @@ ColorRGB::ColorRGB(int r, int g, int b)
     this->g = g;
     this->b = b;
 }
+
+int ColorRGB::getR() const { return r; }
+
+int ColorRGB::getG() const { return g; }
+
+int ColorRGB::getB() const { return b; }
 
 #endif // COLOR_RGB_H

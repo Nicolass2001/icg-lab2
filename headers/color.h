@@ -12,15 +12,7 @@ public:
     Color_RR();
     Color_RR(int r, int g, int b);
     Color_RR(const ColorRGB &other);
-    RGBQUAD toRGBQUAD() const
-    {
-        RGBQUAD color;
-        color.rgbRed = static_cast<BYTE>(r);
-        color.rgbGreen = static_cast<BYTE>(g);
-        color.rgbBlue = static_cast<BYTE>(b);
-        color.rgbReserved = 0; // Reservado, no se usa en este contexto
-        return color;
-    }
+    RGBQUAD toRGBQUAD() const;
 };
 
 Color_RR::Color_RR()
@@ -42,6 +34,16 @@ Color_RR::Color_RR(const ColorRGB &other)
     this->r = other.getR();
     this->g = other.getG();
     this->b = other.getB();
+}
+
+RGBQUAD Color_RR::toRGBQUAD() const
+{
+    RGBQUAD color;
+    color.rgbRed = static_cast<BYTE>(r);
+    color.rgbGreen = static_cast<BYTE>(g);
+    color.rgbBlue = static_cast<BYTE>(b);
+    color.rgbReserved = 0; // Reservado, no se usa en este contexto
+    return color;
 }
 
 #endif // COLOR_H
