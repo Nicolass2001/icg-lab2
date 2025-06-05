@@ -13,21 +13,24 @@ public:
     Rayo_RR(Vector origen, Vector direccion);
     Vector getOrigen();
     Vector getDireccion();
-    // cout operator
     friend std::ostream &operator<<(std::ostream &os, const Rayo_RR &rayo);
 };
 
 Rayo_RR::Rayo_RR() {}
+
 Rayo_RR::Rayo_RR(Vector origen, Vector direccion)
     : origen(origen), direccion(direccion.normalize()) {}
+
 Vector Rayo_RR::getOrigen()
 {
     return origen;
 }
+
 Vector Rayo_RR::getDireccion()
 {
     return direccion;
 }
+
 std::ostream &operator<<(std::ostream &os, const Rayo_RR &rayo)
 {
     os << "Rayo: Origen(" << rayo.origen.x() << ", " << rayo.origen.y() << ", " << rayo.origen.z()
