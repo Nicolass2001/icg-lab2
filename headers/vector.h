@@ -12,27 +12,20 @@ public:
     Vector(float x, float y, float z);
     Vector(const glm::vec3 &vec);
     Vector(const Vector &other);
-    float x() const { return components.x; }
-    float y() const { return components.y; }
-    float z() const { return components.z; }
-    bool parallel(const Vector &other) const
-    {
-        return glm::length(glm::cross(components, other.components)) < 1e-6f;
-    }
-    float length() const { return glm::length(components); }
-    Vector normalize() { return Vector(glm::normalize(components)); }
-    Vector operator+(const Vector &other) { return Vector(components + other.components); }
-    Vector operator-(const Vector &other) { return Vector(components - other.components); }
-    Vector operator*(float scalar) { return Vector(components * scalar); }
-    Vector operator/(float scalar) { return Vector(components / scalar); }
-    Vector operator*(const Vector &other) { return Vector(components * other.components); }
-    Vector cross(const Vector &other) { return Vector(glm::cross(components, other.components)); }
-    float dot(const Vector &other) const { return glm::dot(components, other.components); }
-    friend std::ostream &operator<<(std::ostream &os, const Vector &vec)
-    {
-        os << "Vector(" << vec.x() << ", " << vec.y() << ", " << vec.z() << ")";
-        return os;
-    }
+    float x() const;
+    float y() const;
+    float z() const;
+    bool parallel(const Vector &other) const;
+    float length() const;
+    Vector normalize();
+    Vector operator+(const Vector &other);
+    Vector operator-(const Vector &other);
+    Vector operator*(float scalar);
+    Vector operator/(float scalar);
+    Vector operator*(const Vector &other);
+    Vector cross(const Vector &other);
+    float dot(const Vector &other);
+    friend std::ostream &operator<<(std::ostream &os, const Vector &vec);
 };
 
 Vector::Vector()
@@ -53,6 +46,78 @@ Vector::Vector(const glm::vec3 &vec)
 Vector::Vector(const Vector &other)
 {
     components = other.components;
+}
+
+float Vector::x() const
+{
+    return components.x;
+}
+
+float Vector::y() const
+{
+    return components.y;
+}
+
+float Vector::z() const
+{
+    return components.z;
+}
+
+bool Vector::parallel(const Vector &other) const
+{
+    float crossProductLength = glm::length(glm::cross(components, other.components));
+    return crossProductLength < 1e-6f;
+}
+
+float Vector::length() const
+{
+    return glm::length(components);
+}
+
+Vector Vector::normalize()
+{
+    return Vector(glm::normalize(components));
+}
+
+Vector Vector::operator+(const Vector &other)
+{
+    return Vector(components + other.components);
+}
+
+Vector Vector::operator-(const Vector &other)
+{
+    return Vector(components - other.components);
+}
+
+Vector Vector::operator*(float scalar)
+{
+    return Vector(components * scalar);
+}
+
+Vector Vector::operator/(float scalar)
+{
+    return Vector(components / scalar);
+}
+
+Vector Vector::operator*(const Vector &other)
+{
+    return Vector(components * other.components);
+}
+
+Vector Vector::cross(const Vector &other)
+{
+    return Vector(glm::cross(components, other.components));
+}
+
+float Vector::dot(const Vector &other)
+{
+    return glm::dot(components, other.components);
+}
+
+std::ostream &operator<<(std::ostream &os, const Vector &vec)
+{
+    os << "Vector(" << vec.x() << ", " << vec.y() << ", " << vec.z() << ")";
+    return os;
 }
 
 #endif // VECTOR_H
