@@ -1,72 +1,67 @@
-#include <vector>
-#include "header.h"
-
-// Clase representa un color
-class Color_RR
-{
-private:
-    int r, g, b;
-
-public:
-    Color_RR(int r, int g, int b);
-};
-
-// Clase representa un rayo poner la logica de rayo aqui dentro
-class Rayo_RR
-{
-};
-
-// Clase representa una normal
-// No se si es muy necesario pero por las dudas
-class Normal_RR
-{
-};
-
-// Clase que representa la escena completa
-class Escena_RR
-{
-private:
-    std::vector<Objeto_RR *> objetos;
-    Color_RR fondo;
-
-public:
-    Objeto_RR *calcularInterseccionMasCercana(Rayo_RR rayo);
-    Color_RR getFondo();
-};
-
-class Objeto_RR
-{
-public:
-    virtual Normal_RR calcularNormal(Rayo_RR rayo) = 0;
-};
-
-class Pared_RR : public Objeto_RR
-{
-};
+#include <iostream>
+#include <FreeImage.h>
+#include "escena.h"
 
 Escena_RR escena;
 
-Color_RR sombra_RR(Objeto_RR *objeto, Rayo_RR rayo, Normal_RR normal, int profundidad)
+Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, int profundidad)
 {
+    return objeto->getColorAmbiente(); // Por simplicidad, retornamos el color ambiente del objeto
 }
 
 Color_RR traza_RR(Rayo_RR rayo, int profundidad)
 {
-    Objeto_RR *objMasCercano = escena.calcularInterseccionMasCercana(rayo);
+    Vector interseccion;
+    ObjetoPtr objMasCercano = escena.calcularInterseccionMasCercana(rayo, &interseccion);
     if (objMasCercano == nullptr)
     {
         return escena.getFondo();
     }
 
-    Normal_RR normal = objMasCercano->calcularNormal(rayo);
-    return sombra_RR(objMasCercano, rayo, normal, profundidad);
+    Vector normal = objMasCercano->calcularNormal(rayo);
+    return sombra_RR(objMasCercano, rayo, interseccion, normal, profundidad);
 }
 
 int main()
 {
-    copiarImagen();
+    // Inicializar FreeImage
+    FreeImage_Initialise();
 
-    Color_RR traza_RR();
+    // Crear una imagen vacía de 24 bits
+    FIBITMAP *bitmap = FreeImage_Allocate(IMAGE_WIDTH, IMAGE_HEIGHT, 24);
+    if (!bitmap)
+    {
+        std::cerr << "No se pudo crear la imagen." << std::endl;
+        FreeImage_DeInitialise();
+        return 1;
+    }
+
+    Camara_RR camara = escena.getCamara();
+    // Llenar la imagen utilizando la función `colorFunction`
+    for (int y = 0; y < IMAGE_HEIGHT; ++y)
+    {
+        for (int x = 0; x < IMAGE_WIDTH; ++x)
+        {
+            Color_RR colorPixel = traza_RR(camara.generarRayo(x, y), 1);
+            // Convertir Color_RR a RGBQUAD
+            RGBQUAD color = colorPixel.toRGBQUAD();
+            FreeImage_SetPixelColor(bitmap, x, y, &color);
+        }
+    }
+
+    // Guardar la imagen en un archivo
+    if (FreeImage_Save(FIF_PNG, bitmap, "output.png", 0))
+    {
+        std::cout << "Imagen guardada como 'output.png'" << std::endl;
+    }
+    else
+    {
+        std::cerr << "Error al guardar la imagen." << std::endl;
+    }
+
+    // Liberar memoria y finalizar FreeImage
+    FreeImage_Unload(bitmap);
+    FreeImage_DeInitialise();
 
     return 0;
 }
