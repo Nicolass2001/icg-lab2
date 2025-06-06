@@ -173,7 +173,7 @@ void Escena_RR::calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector 
         float dotProduct = normal.dot(direccionLuz);
         if (dotProduct > 0)
         {
-            colorDifuso = colorLuz * intensidad * dotProduct;
+            colorDifuso = colorDifuso + colorLuz * intensidad * dotProduct;
         }
     }
     color.setComponenteDifusa(colorDifuso / 2 + objeto->getColorReflexionDifusa() / 2, objeto->getCoeficienteReflexionDifusa());
