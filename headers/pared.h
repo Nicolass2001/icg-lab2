@@ -29,7 +29,7 @@ Pared_RR::Pared_RR(Vector centro, Vector normal, float ancho, float alto, Propie
     : Objeto_RR(prop)
 {
     this->centro = centro;
-    this->normal = normal;
+    this->normal = normal.normalize();
 
     // Ejes locales al plano de la pared
     Vector ejeX;

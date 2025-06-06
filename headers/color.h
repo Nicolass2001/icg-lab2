@@ -27,6 +27,7 @@ public:
     ColorRGB getColorTotal() const;
     void setComponenteAmbiente(ColorRGB color, float coeficiente);
     void setComponenteDifusa(ColorRGB color, float coeficiente);
+    void setComponenteEspecular(ColorRGB color, float coeficiente);
 };
 
 Color_RR::Color_RR()
@@ -64,7 +65,8 @@ RGBQUAD Color_RR::toRGBQUAD()
 ColorRGB Color_RR::getColorTotal() const
 {
     return this->colorAmbiente * this->coeficienteAmbiente +
-           this->colorReflexionDifusa * this->coeficienteReflexionDifusa;
+           this->colorReflexionDifusa * this->coeficienteReflexionDifusa +
+           this->colorReflexionEspecular * this->coeficienteReflexionEspecular;
 }
 
 void Color_RR::setComponenteAmbiente(ColorRGB color, float coeficiente)
@@ -77,6 +79,12 @@ void Color_RR::setComponenteDifusa(ColorRGB color, float coeficiente)
 {
     this->colorReflexionDifusa = color;
     this->coeficienteReflexionDifusa = coeficiente;
+}
+
+void Color_RR::setComponenteEspecular(ColorRGB color, float coeficiente)
+{
+    this->colorReflexionEspecular = color;
+    this->coeficienteReflexionEspecular = coeficiente;
 }
 
 #endif // COLOR_H
