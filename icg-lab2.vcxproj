@@ -71,11 +71,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)dep\FreeImage;$(ProjectDir)headers;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(ProjectDir)dep;$(ProjectDir)dep\FreeImage;$(ProjectDir)headers;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)dep\FreeImage;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)dep\FreeImage;$(ProjectDir)headers;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(ProjectDir)dep;$(ProjectDir)dep\FreeImage;$(ProjectDir)headers;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)dep\FreeImage;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -146,7 +146,16 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="headers\header.h" />
+    <ClInclude Include="headers\camara.h" />
+    <ClInclude Include="headers\color.h" />
+    <ClInclude Include="headers\color_rgb.h" />
+    <ClInclude Include="headers\escena.h" />
+    <ClInclude Include="headers\esfera.h" />
+    <ClInclude Include="headers\globalVariables.h" />
+    <ClInclude Include="headers\objeto.h" />
+    <ClInclude Include="headers\pared.h" />
+    <ClInclude Include="headers\rayo.h" />
+    <ClInclude Include="headers\vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
