@@ -12,7 +12,7 @@ private:
 
 public:
     Esfera_RR();
-    Esfera_RR(Vector centro, float radio, ColorRGB color);
+    Esfera_RR(Vector centro, float radio, PropiedadesObjeto prop);
     Vector calcularNormal(Rayo_RR rayo) override;
     bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion) override;
 };
@@ -21,11 +21,11 @@ using EsferaPtr = std::shared_ptr<Esfera_RR>;
 
 Esfera_RR::Esfera_RR() {}
 
-Esfera_RR::Esfera_RR(Vector centro, float radio, ColorRGB color)
+Esfera_RR::Esfera_RR(Vector centro, float radio, PropiedadesObjeto prop)
+    : Objeto_RR(prop)
 {
     this->centro = centro;
     this->radio = radio;
-    this->colorAmbiente = color;
 }
 
 Vector Esfera_RR::calcularNormal(Rayo_RR rayo)

@@ -5,6 +5,7 @@
 #include "camara.h"
 #include "esfera.h"
 #include "objeto.h"
+#include "luz.h"
 
 #ifndef ESCENA_H
 #define ESCENA_H
@@ -14,6 +15,7 @@ class Escena_RR
 private:
     Camara_RR camara;
     std::vector<ObjetoPtr> objetos;
+    std::vector<Luz> luces;
     Color_RR fondo;
 
 public:
@@ -21,6 +23,7 @@ public:
     Color_RR getFondo();
     Camara_RR getCamara();
     ObjetoPtr calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto);
+    void calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, Color_RR &color);
 };
 
 Color_RR Escena_RR::getFondo()
@@ -42,6 +45,20 @@ Escena_RR::Escena_RR()
 
     fondo = Color_RR(51, 221, 221); // Fondo
 
+    // LUCES
+
+    // La suma de las intensidades de las luces no debería superar 1.0f
+    Luz luz1(
+        0.5f,                     // Intensidad de la luz
+        Vector(7, 4.5, 0),        // Posición de la luz
+        ColorRGB(255, 255, 255)); // Color de la luz
+    luces.push_back(luz1);
+    Luz luz2(
+        0.5f,
+        Vector(3, 4.5, 0),
+        ColorRGB(255, 255, 0));
+    luces.push_back(luz2);
+
     // PAREDES
 
     ParedPtr paredFondo = std::make_shared<Pared_RR>(
@@ -49,7 +66,7 @@ Escena_RR::Escena_RR()
         Vector(-1, 0, 0),     // Normal
         10.0f,                // Ancho de la pared
         10.0f,                // Alto de la pared
-        ColorRGB(255, 0, 0)); // Color ambiente
+        ColorRGB(255, 0, 0)); // Color
     objetos.push_back(paredFondo);
 
     ParedPtr paredIzquierda = std::make_shared<Pared_RR>(
@@ -140,6 +157,26 @@ ObjetoPtr Escena_RR::calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto)
     }
 
     return objMasCercano;
+}
+
+void Escena_RR::calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, Color_RR &color)
+{
+
+    ColorRGB colorDifuso;
+    for (const auto &luz : luces)
+    {
+        Vector direccionLuz = luz.getDirection(punto);
+        float intensidad = luz.getIntensidad();
+        ColorRGB colorLuz = luz.getColor();
+
+        // Calcular iluminación difusa
+        float dotProduct = normal.dot(direccionLuz);
+        if (dotProduct > 0)
+        {
+            colorDifuso = colorLuz * intensidad * dotProduct;
+        }
+    }
+    color.setComponenteDifusa(colorDifuso / 2 + objeto->getColorReflexionDifusa() / 2, objeto->getCoeficienteReflexionDifusa());
 }
 
 #endif // ESCENA_H

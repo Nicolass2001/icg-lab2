@@ -1,5 +1,5 @@
+#include "propObjetos.h"
 #include "rayo.h"
-#include "color_rgb.h"
 
 #ifndef OBJETO_H
 #define OBJETO_H
@@ -7,10 +7,20 @@
 class Objeto_RR
 {
 protected:
-    ColorRGB colorAmbiente;
+    PropiedadesObjeto prop;
 
 public:
-    ColorRGB getColorAmbiente() const { return colorAmbiente; }
+    Objeto_RR() {}
+    Objeto_RR(PropiedadesObjeto prop) : prop(prop) {}
+    ColorRGB getColorAmbiente() const { return prop.colorAmbiente; }
+    float getCoeficienteAmbiente() const { return prop.coeficienteAmbiente; }
+    float getCoeficienteReflexionDifusa() const { return prop.coeficienteReflexionDifusa; }
+    ColorRGB getColorReflexionDifusa() const { return prop.colorReflexionDifusa; }
+    float getCoeficienteReflexionEspecular() const { return prop.coeficienteReflexionEspecular; }
+    int getBrilloEspecular() const { return prop.brilloEspecular; }
+    ColorRGB getColorReflexionEspecular() const { return prop.colorReflexionEspecular; }
+    float getCoeficienteTransparencia() const { return prop.coeficienteTransparencia; }
+    float getCoeficienteRefraccion() const { return prop.coeficienteRefraccion; }
     virtual Vector calcularNormal(Rayo_RR rayo) = 0;
     virtual bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion) = 0;
 };

@@ -6,7 +6,10 @@ Escena_RR escena;
 
 Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, int profundidad)
 {
-    return objeto->getColorAmbiente(); // Por simplicidad, retornamos el color ambiente del objeto
+    Color_RR color;
+    color.setComponenteAmbiente(objeto->getColorAmbiente(), objeto->getCoeficienteAmbiente());
+    escena.calcularColorIluminacion(objeto, rayo, punto, normal, color);
+    return color;
 }
 
 Color_RR traza_RR(Rayo_RR rayo, int profundidad)

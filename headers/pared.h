@@ -15,8 +15,8 @@ private:
 
 public:
     Pared_RR();
-    Pared_RR(Vector centro, Vector normal, float ancho, float alto, ColorRGB color);
-    Pared_RR(Vector centro, Vector normal, Vector up, float ancho, float alto, ColorRGB color);
+    Pared_RR(Vector centro, Vector normal, float ancho, float alto, PropiedadesObjeto prop);
+    Pared_RR(Vector centro, Vector normal, Vector up, float ancho, float alto, PropiedadesObjeto prop);
     Vector calcularNormal(Rayo_RR rayo) override;
     bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion) override;
 };
@@ -25,11 +25,11 @@ using ParedPtr = std::shared_ptr<Pared_RR>;
 
 Pared_RR::Pared_RR() {}
 
-Pared_RR::Pared_RR(Vector centro, Vector normal, float ancho, float alto, ColorRGB color)
+Pared_RR::Pared_RR(Vector centro, Vector normal, float ancho, float alto, PropiedadesObjeto prop)
+    : Objeto_RR(prop)
 {
     this->centro = centro;
     this->normal = normal;
-    this->colorAmbiente = color;
 
     // Ejes locales al plano de la pared
     Vector ejeX;
@@ -45,11 +45,11 @@ Pared_RR::Pared_RR(Vector centro, Vector normal, float ancho, float alto, ColorR
     this->altoVec = ejeY * alto;   // Alto de la pared
 }
 
-Pared_RR::Pared_RR(Vector centro, Vector normal, Vector up, float ancho, float alto, ColorRGB color)
+Pared_RR::Pared_RR(Vector centro, Vector normal, Vector up, float ancho, float alto, PropiedadesObjeto prop)
+    : Objeto_RR(prop)
 {
     this->centro = centro;
     this->normal = normal;
-    this->colorAmbiente = color;
 
     // Ejes locales al plano de la pared
     Vector ejeX = normal.cross(up).normalize(); // Se asume que 'up' es un vector no paralelo a 'normal'
