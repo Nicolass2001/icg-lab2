@@ -8,31 +8,29 @@
 class Luz
 {
 private:
-    float intensidad;
     Vector posicion;
-    ColorRGB color;
+    Vector intensidad;
 
 public:
     Luz();
-    Luz(float intensidad, const Vector &posicion, const ColorRGB &color);
+    Luz(const Vector &posicion, const Vector &intensidad);
     Luz(const Luz &other);
-    float getIntensidad() const;
+    Vector getIntensidad() const;
     Vector getPosicion() const;
-    ColorRGB getColor() const;
     friend std::ostream &operator<<(std::ostream &os, const Luz &luz);
     Vector getDirection(Vector punto) const;
     float getDistancia(Vector punto) const;
 };
 
-Luz::Luz() : intensidad(0.0f), posicion(Vector()), color(ColorRGB()) {}
+Luz::Luz() : posicion(Vector()), intensidad(Vector(1, 1, 1)) {}
 
-Luz::Luz(float intensidad, const Vector &posicion, const ColorRGB &color)
-    : intensidad(intensidad), posicion(posicion), color(color) {}
+Luz::Luz(const Vector &posicion, const Vector &intensidad)
+    : posicion(posicion), intensidad(intensidad) {}
 
 Luz::Luz(const Luz &other)
-    : intensidad(other.intensidad), posicion(other.posicion), color(other.color) {}
+    : posicion(other.posicion), intensidad(other.intensidad) {}
 
-float Luz::getIntensidad() const
+Vector Luz::getIntensidad() const
 {
     return intensidad;
 }
@@ -42,16 +40,10 @@ Vector Luz::getPosicion() const
     return posicion;
 }
 
-ColorRGB Luz::getColor() const
-{
-    return color;
-}
-
 std::ostream &operator<<(std::ostream &os, const Luz &luz)
 {
     os << "Luz(intensidad: " << luz.intensidad
-       << ", posicion: " << luz.posicion
-       << ", color: " << luz.color << ")";
+       << ", posicion: " << luz.posicion << ")";
     return os;
 }
 

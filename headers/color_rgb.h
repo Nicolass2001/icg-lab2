@@ -1,3 +1,5 @@
+#include "vector.h"
+
 #ifndef COLOR_RGB_H
 #define COLOR_RGB_H
 
@@ -16,6 +18,7 @@ public:
     ColorRGB operator*(float factor) const;
     ColorRGB operator+(const ColorRGB &other) const;
     ColorRGB operator/(float factor) const;
+    ColorRGB operator*(const Vector &other) const;
 };
 
 ColorRGB::ColorRGB()
@@ -27,9 +30,9 @@ ColorRGB::ColorRGB()
 
 ColorRGB::ColorRGB(int r, int g, int b)
 {
-    this->r = r;
-    this->g = g;
-    this->b = b;
+    this->r = std::min(r, 255);
+    this->g = std::min(g, 255);
+    this->b = std::min(b, 255);
 }
 
 int ColorRGB::getR() const { return r; }
@@ -57,6 +60,11 @@ ColorRGB ColorRGB::operator+(const ColorRGB &other) const
 ColorRGB ColorRGB::operator/(float factor) const
 {
     return ColorRGB(static_cast<int>(r / factor), static_cast<int>(g / factor), static_cast<int>(b / factor));
+}
+
+ColorRGB ColorRGB::operator*(const Vector &other) const
+{
+    return ColorRGB(r * other.x(), g * other.y(), b * other.z());
 }
 
 #endif // COLOR_RGB_H

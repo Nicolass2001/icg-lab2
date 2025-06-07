@@ -49,14 +49,12 @@ Escena_RR::Escena_RR()
 
     // La suma de las intensidades de las luces no debería superar 1.0f
     Luz luz1(
-        0.5f,                     // Intensidad de la luz
-        Vector(7, 4.5, 0),        // Posición de la luz
-        ColorRGB(255, 255, 255)); // Color de la luz
+        Vector(7, 4.5, 0),      // Posición de la luz
+        Vector(0.7, 0.2, 0.2)); // Intensidad de la luz en RGB
     luces.push_back(luz1);
     Luz luz2(
-        0.8f,
         Vector(3, 4.5, 0),
-        ColorRGB(255, 255, 0));
+        Vector(0.8, 0.8, 0.1));
     luces.push_back(luz2);
 
     // PAREDES
@@ -162,27 +160,23 @@ ObjetoPtr Escena_RR::calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto)
 void Escena_RR::calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, Color_RR &color)
 {
 
-    ColorRGB *colorDifuso = nullptr;
+    ColorRGB colorDifuso = ColorRGB(0, 0, 0);
     ColorRGB colorBaseDifuso = objeto->getColorReflexionDifusa();
-    ColorRGB *colorEspecular = nullptr;
+    ColorRGB colorEspecular = ColorRGB(0, 0, 0);
     ColorRGB colorBaseEspecular = objeto->getColorReflexionEspecular();
     int brilloEspecular = objeto->getBrilloEspecular();
     for (const auto &luz : luces)
     {
         Vector direccionLuz = luz.getDirection(punto);
-        float intensidad = luz.getIntensidad();
-        ColorRGB colorLuz = luz.getColor();
+        Vector intensidad = luz.getIntensidad();
         float distanciaLuz = luz.getDistancia(punto);
         float factorAtenuacion = 1 / distanciaLuz * distanciaLuz;
 
         // Calcular iluminación difusa
-        float dotProduct = normal.dot(direccionLuz);
-        if (dotProduct > 0)
+        float dotProductDifuso = normal.dot(direccionLuz);
+        if (dotProductDifuso > 0)
         {
-            if (colorDifuso == nullptr)
-                colorDifuso = new ColorRGB((colorLuz / 2 + colorBaseDifuso / 2) * intensidad * dotProduct * factorAtenuacion);
-            else
-                *colorDifuso = *colorDifuso + (colorLuz / 2 + colorBaseDifuso / 2) * intensidad * dotProduct * factorAtenuacion;
+            colorDifuso = colorDifuso + colorBaseDifuso * intensidad * dotProductDifuso * factorAtenuacion;
         }
 
         // Calcular iluminación especular
@@ -192,20 +186,11 @@ void Escena_RR::calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector 
         if (dotProductEspecular > 0)
         {
             float intensidadEspecular = pow(dotProductEspecular, brilloEspecular);
-            if (colorEspecular == nullptr)
-                colorEspecular = new ColorRGB((colorLuz / 2 + colorBaseEspecular / 2) * intensidad * intensidadEspecular * factorAtenuacion);
-            else
-                *colorEspecular = *colorEspecular + (colorLuz / 2 + colorBaseEspecular / 2) * intensidad * intensidadEspecular * factorAtenuacion;
+            colorEspecular = colorEspecular + colorBaseEspecular * intensidad * intensidadEspecular * factorAtenuacion;
         }
     }
-    // Si no se calculó iluminación difusa, usar color base difuso
-    if (colorDifuso == nullptr)
-        colorDifuso = new ColorRGB(0, 0, 0);
-    // Si no se calculó iluminación especular, usar color base especular
-    if (colorEspecular == nullptr)
-        colorEspecular = new ColorRGB(0, 0, 0);
-    color.setComponenteDifusa(*colorDifuso, objeto->getCoeficienteReflexionDifusa());
-    color.setComponenteEspecular(*colorEspecular, objeto->getCoeficienteReflexionEspecular());
+    color.setComponenteDifusa(colorDifuso, objeto->getCoeficienteReflexionDifusa());
+    color.setComponenteEspecular(colorEspecular, objeto->getCoeficienteReflexionEspecular());
 }
 
 #endif // ESCENA_H
