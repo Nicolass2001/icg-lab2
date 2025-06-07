@@ -15,13 +15,13 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
 Color_RR traza_RR(Rayo_RR rayo, int profundidad)
 {
     Vector interseccion;
-    ObjetoPtr objMasCercano = escena.calcularInterseccionMasCercana(rayo, &interseccion);
+    Vector normal;
+    ObjetoPtr objMasCercano = escena.calcularInterseccionMasCercana(rayo, &interseccion, &normal);
     if (objMasCercano == nullptr)
     {
         return escena.getFondo();
     }
 
-    Vector normal = objMasCercano->calcularNormal(rayo);
     return sombra_RR(objMasCercano, rayo, interseccion, normal, profundidad);
 }
 

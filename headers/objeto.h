@@ -21,8 +21,7 @@ public:
     ColorRGB getColorReflexionEspecular() const { return prop.colorReflexionEspecular; }
     float getCoeficienteTransparencia() const { return prop.coeficienteTransparencia; }
     float getCoeficienteRefraccion() const { return prop.coeficienteRefraccion; }
-    virtual Vector calcularNormal(Rayo_RR rayo) = 0;
-    virtual bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion) = 0;
+    virtual bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal) = 0;
 };
 
 using ObjetoPtr = std::shared_ptr<Objeto_RR>;

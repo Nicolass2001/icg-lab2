@@ -17,8 +17,7 @@ public:
     Pared_RR();
     Pared_RR(Vector centro, Vector normal, float ancho, float alto, PropiedadesObjeto prop);
     Pared_RR(Vector centro, Vector normal, Vector up, float ancho, float alto, PropiedadesObjeto prop);
-    Vector calcularNormal(Rayo_RR rayo) override;
-    bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion) override;
+    bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal) override;
 };
 
 using ParedPtr = std::shared_ptr<Pared_RR>;
@@ -59,13 +58,10 @@ Pared_RR::Pared_RR(Vector centro, Vector normal, Vector up, float ancho, float a
     this->altoVec = ejeY * alto;   // Alto de la pared
 }
 
-Vector Pared_RR::calcularNormal(Rayo_RR rayo)
+bool Pared_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normalRet)
 {
-    return normal;
-}
+    normalRet = &normal;
 
-bool Pared_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion)
-{
     // Paso 1: Intersección con el plano
     float denominator = normal.dot(rayo.getDireccion());
 

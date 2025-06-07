@@ -13,8 +13,7 @@ private:
 public:
     Esfera_RR();
     Esfera_RR(Vector centro, float radio, PropiedadesObjeto prop);
-    Vector calcularNormal(Rayo_RR rayo) override;
-    bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion) override;
+    bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal) override;
 };
 
 using EsferaPtr = std::shared_ptr<Esfera_RR>;
@@ -28,15 +27,7 @@ Esfera_RR::Esfera_RR(Vector centro, float radio, PropiedadesObjeto prop)
     this->radio = radio;
 }
 
-Vector Esfera_RR::calcularNormal(Rayo_RR rayo)
-{
-    // Implementación de la normal para una esfera
-    // Aquí se debería calcular la normal en el punto de intersección
-    // con el rayo, pero por simplicidad retornamos una normal nula.
-    return Vector();
-}
-
-bool Esfera_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion)
+bool Esfera_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal)
 {
     return false; // Por simplicidad, no implementamos la intersección de la esfera
 }

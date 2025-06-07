@@ -22,7 +22,7 @@ public:
     Escena_RR();
     Color_RR getFondo();
     Camara_RR getCamara();
-    ObjetoPtr calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto);
+    ObjetoPtr calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto, Vector *normal);
     void calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, Color_RR &color);
 };
 
@@ -136,14 +136,14 @@ Escena_RR::Escena_RR()
     // objetos.push_back(&esfera);
 }
 
-ObjetoPtr Escena_RR::calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto)
+ObjetoPtr Escena_RR::calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto, Vector *normal)
 {
     ObjetoPtr objMasCercano = nullptr;
     float distanciaMinima = std::numeric_limits<float>::max();
 
     for (const auto &objeto : objetos)
     {
-        if (objeto->calcularInterseccion(rayo, punto))
+        if (objeto->calcularInterseccion(rayo, punto, normal))
         {
             float distancia = (rayo.getOrigen() - *punto).length();
             if (distancia < distanciaMinima)
