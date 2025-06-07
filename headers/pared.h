@@ -58,10 +58,8 @@ Pared_RR::Pared_RR(Vector centro, Vector normal, Vector up, float ancho, float a
     this->altoVec = ejeY * alto;   // Alto de la pared
 }
 
-bool Pared_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normalRet)
+bool Pared_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccionRet, Vector *normalRet)
 {
-    normalRet = &normal;
-
     // Paso 1: Intersección con el plano
     float denominator = normal.dot(rayo.getDireccion());
 
@@ -81,10 +79,10 @@ bool Pared_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vec
         return false;
 
     // Calcula el punto de intersección
-    *puntoInterseccion = rayo.getOrigen() + rayo.getDireccion() * t;
+    Vector puntoInterseccion = rayo.getOrigen() + rayo.getDireccion() * t;
 
     // Paso 2: Proyección en el espacio del semiplano
-    Vector relativePoint = *puntoInterseccion - centro;
+    Vector relativePoint = puntoInterseccion - centro;
 
     float u = relativePoint.dot(anchoVec.normalize()); // Coordenada en la dirección del ancho
     float v = relativePoint.dot(altoVec.normalize());  // Coordenada en la dirección del largo
@@ -94,7 +92,11 @@ bool Pared_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vec
 
     // Paso 3: Verificar si está dentro de los límites
     if ((u >= -width / 2 && u <= width / 2) && (v >= -height / 2 && v <= height / 2))
+    {
+        *puntoInterseccionRet = Vector(puntoInterseccion);
+        *normalRet = Vector(normal);
         return true;
+    }
     return false;
 }
 
