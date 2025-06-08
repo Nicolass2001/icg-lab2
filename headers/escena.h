@@ -128,10 +128,29 @@ Escena_RR::Escena_RR()
 
     // MAS OBJETOS
 
-    // Esfera_RR esfera = Esfera_RR(
-    //     Vector(0, 0, 0),      // Centro de la esfera
-    //     1.0f,                 // Radio de la esfera
-    //     ColorRGB(255, 0, 0)); // Color rojo
+    PropiedadesObjeto propEsfera(
+        0.1f,                    // Coeficiente de ambiente
+        ColorRGB(255, 0, 255),   // Color ambiente
+        0.5f,                    // Coeficiente de reflexión difusa
+        ColorRGB(255, 0, 255),   // Color de reflexión difusa
+        0.8f,                    // Coeficiente de reflexión especular
+        5,                       // Brillo especular
+        ColorRGB(255, 255, 255), // Color de reflexión especular
+        0.0f,                    // Coeficiente de transparencia
+        0.1f                     // Coeficiente de refracción
+    );
+
+    Esfera_RR esfera = Esfera_RR(
+        Vector(8, 0, 0), // Centro de la esfera
+        2.0f,            // Radio de la esfera
+        propEsfera);     // Color rojo
+    objetos.push_back(std::make_shared<Esfera_RR>(esfera));
+
+    Esfera_RR esfera2 = Esfera_RR(
+        Vector(4, -1, -1), // Centro de la esfera
+        1.0f,              // Radio de la esfera
+        propEsfera);       // Color rojo
+    objetos.push_back(std::make_shared<Esfera_RR>(esfera2));
 
     // objetos.push_back(&esfera);
 }
