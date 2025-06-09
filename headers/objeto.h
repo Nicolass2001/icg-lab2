@@ -19,7 +19,7 @@ public:
     float getCoeficienteReflexionEspecular() const { return prop.coeficienteReflexionEspecular; }
     int getBrilloEspecular() const { return prop.brilloEspecular; }
     ColorRGB getColorReflexionEspecular() const { return prop.colorReflexionEspecular; }
-    float getCoeficienteTransparencia() const { return prop.coeficienteTransparencia; }
+    Vector getCoeficienteTransparencia() const { return prop.coeficienteTransparencia; }
     float getCoeficienteRefraccion() const { return prop.coeficienteRefraccion; }
     virtual bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal) = 0;
 };

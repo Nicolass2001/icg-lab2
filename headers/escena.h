@@ -24,6 +24,7 @@ public:
     Camara_RR getCamara();
     ObjetoPtr calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto, Vector *normal);
     void calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, Color_RR &color);
+    Vector calcularLuzBloqueada(Rayo_RR rayo, Vector puntoLuz); // Método para calcular la luz bloqueada por otros objetos
 };
 
 Color_RR Escena_RR::getFondo()
@@ -126,18 +127,18 @@ Escena_RR::Escena_RR()
     //     ColorRGB(128, 128, 128)); // Color gris
     // objetos.push_back(paredAtras);
 
-    // MAS OBJETOS
+    // ESFERAS
 
     PropiedadesObjeto propEsfera(
-        0.1f,                    // Coeficiente de ambiente
-        ColorRGB(255, 0, 255),   // Color ambiente
-        0.5f,                    // Coeficiente de reflexión difusa
-        ColorRGB(255, 0, 255),   // Color de reflexión difusa
-        0.8f,                    // Coeficiente de reflexión especular
-        5,                       // Brillo especular
-        ColorRGB(255, 255, 255), // Color de reflexión especular
-        0.0f,                    // Coeficiente de transparencia
-        0.1f                     // Coeficiente de refracción
+        0.1f,                     // Coeficiente de ambiente
+        ColorRGB(255, 0, 255),    // Color ambiente
+        0.5f,                     // Coeficiente de reflexión difusa
+        ColorRGB(255, 0, 255),    // Color de reflexión difusa
+        0.8f,                     // Coeficiente de reflexión especular
+        5,                        // Brillo especular
+        ColorRGB(255, 255, 255),  // Color de reflexión especular
+        Vector(0.2f, 0.8f, 0.8f), // Coeficiente de transparencia
+        0.1f                      // Coeficiente de refracción
     );
 
     Esfera_RR esfera = Esfera_RR(
@@ -146,13 +147,22 @@ Escena_RR::Escena_RR()
         propEsfera);     // Color rojo
     objetos.push_back(std::make_shared<Esfera_RR>(esfera));
 
+    PropiedadesObjeto propEsfera2(
+        0.1f,
+        ColorRGB(255, 0, 255),
+        0.5f,
+        ColorRGB(255, 0, 255),
+        0.8f,
+        5,
+        ColorRGB(255, 255, 255),
+        Vector(0.0f, 0.0f, 0.0f),
+        0.1f);
+
     Esfera_RR esfera2 = Esfera_RR(
         Vector(4, -1, -1), // Centro de la esfera
         1.0f,              // Radio de la esfera
-        propEsfera);       // Color rojo
+        propEsfera2);      // Color rojo
     objetos.push_back(std::make_shared<Esfera_RR>(esfera2));
-
-    // objetos.push_back(&esfera);
 }
 
 ObjetoPtr Escena_RR::calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto, Vector *normal)
@@ -191,6 +201,10 @@ void Escena_RR::calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector 
         float distanciaLuz = luz.getDistancia(punto);
         float factorAtenuacion = 1 / distanciaLuz * distanciaLuz;
 
+        // Calcular atenuación por bloqueo
+        Vector factorAtenuacionPorBloqueo = calcularLuzBloqueada(Rayo_RR(punto + direccionLuz * EPSILON, direccionLuz), luz.getPosicion());
+        intensidad = intensidad * factorAtenuacionPorBloqueo;
+
         // Calcular iluminación difusa
         float dotProductDifuso = normal.dot(direccionLuz);
         if (dotProductDifuso > 0)
@@ -210,6 +224,30 @@ void Escena_RR::calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector 
     }
     color.setComponenteDifusa(colorDifuso, objeto->getCoeficienteReflexionDifusa());
     color.setComponenteEspecular(colorEspecular, objeto->getCoeficienteReflexionEspecular());
+}
+
+Vector Escena_RR::calcularLuzBloqueada(Rayo_RR rayo, Vector puntoLuz)
+{
+    Vector origenRayo = rayo.getOrigen();
+    Vector punto, normal;
+    float distanciaLuz = (puntoLuz - origenRayo).length();
+    Vector factorDeAtenuacion(1.0f, 1.0f, 1.0f); // Inicialmente la luz no está bloqueada
+
+    for (const auto &objeto : objetos)
+    {
+        if (objeto->calcularInterseccion(rayo, &punto, &normal))
+        {
+            float distancia = (punto - origenRayo).length();
+            if (distancia < distanciaLuz)
+            {
+                Vector coeficienteTransparencia = objeto->getCoeficienteTransparencia();
+                if (coeficienteTransparencia.length() == 0.0f)
+                    return Vector(0.0f, 0.0f, 0.0f); // La luz está bloqueada
+                factorDeAtenuacion = factorDeAtenuacion * coeficienteTransparencia;
+            }
+        }
+    }
+    return factorDeAtenuacion;
 }
 
 #endif // ESCENA_H
