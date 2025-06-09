@@ -6,6 +6,9 @@
 #include <string>
 #include <iostream>
 
+#ifndef FILE_MANAGER_H
+#define FILE_MANAGER_H
+
 namespace fs = std::filesystem;
 
 std::string obtenerFechaHoraActual()
@@ -73,3 +76,5 @@ std::string getPathToFile()
     std::cout << file << std::endl;
     return file;
 }
+
+#endif // FILE_MANAGER_H
