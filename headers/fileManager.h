@@ -50,15 +50,7 @@ std::string getPathToFile()
 
     dirPath = dirPath + partes.first;
 
-    std::cout << dirPath << std::endl;
-
-    std::cout << fs::absolute(dirPath) << std::endl;
-
-    if (fs::exists(fs::absolute(dirPath)))
-    {
-        std::cout << "El directorio ya existe.\n";
-    }
-    else
+    if (!fs::exists(fs::absolute(dirPath)))
     {
         std::cout << "Directorio no existe. Creando...\n";
         if (fs::create_directories(fs::absolute(dirPath)))
@@ -73,7 +65,6 @@ std::string getPathToFile()
 
     std::string file = dirPath + "/" + partes.second + ".png";
 
-    std::cout << file << std::endl;
     return file;
 }
 

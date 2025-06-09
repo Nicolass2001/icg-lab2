@@ -54,9 +54,11 @@ int main()
     }
 
     // Guardar la imagen en un archivo
-    if (FreeImage_Save(FIF_PNG, bitmap, getPathToFile().c_str(), 0))
+    std::string outputPath = getPathToFile();
+
+    if (FreeImage_Save(FIF_PNG, bitmap, outputPath.c_str(), 0))
     {
-        std::cout << "Imagen guardada como 'output.png'" << std::endl;
+        std::cout << "Imagen guardada en: " << outputPath << std::endl;
     }
     else
     {
