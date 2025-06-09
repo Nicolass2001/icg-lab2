@@ -1,6 +1,7 @@
 #include <iostream>
 #include <FreeImage.h>
 #include "escena.h"
+#include "fileManager.h"
 
 Escena_RR escena;
 
@@ -53,7 +54,7 @@ int main()
     }
 
     // Guardar la imagen en un archivo
-    if (FreeImage_Save(FIF_PNG, bitmap, "output.png", 0))
+    if (FreeImage_Save(FIF_PNG, bitmap, getPathToFile().c_str(), 0))
     {
         std::cout << "Imagen guardada como 'output.png'" << std::endl;
     }
