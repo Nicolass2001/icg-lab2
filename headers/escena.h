@@ -184,22 +184,33 @@ Escena_RR::Escena_RR()
         2.0f,             // Altura del cilindro
         propCilindro);    // Propiedades del cilindro
     objetos.push_back(std::make_shared<Cilindro_RR>(cilindro));
+
+    Cilindro_RR cilindro2 = Cilindro_RR(
+        Vector(8, 3, 3),
+        Vector(0, 1, 0),
+        1.0f,
+        2.0f,
+        propCilindro);
+    objetos.push_back(std::make_shared<Cilindro_RR>(cilindro2));
 }
 
 ObjetoPtr Escena_RR::calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto, Vector *normal)
 {
     ObjetoPtr objMasCercano = nullptr;
     float distanciaMinima = std::numeric_limits<float>::max();
+    Vector puntoInterseccion, normalInterseccion;
 
     for (const auto &objeto : objetos)
     {
-        if (objeto->calcularInterseccion(rayo, punto, normal))
+        if (objeto->calcularInterseccion(rayo, &puntoInterseccion, &normalInterseccion))
         {
-            float distancia = (rayo.getOrigen() - *punto).length();
+            float distancia = (rayo.getOrigen() - puntoInterseccion).length();
             if (distancia < distanciaMinima)
             {
                 distanciaMinima = distancia;
                 objMasCercano = objeto;
+                *punto = puntoInterseccion;
+                *normal = normalInterseccion;
             }
         }
     }
