@@ -40,9 +40,9 @@ Camara_RR Escena_RR::getCamara()
 Escena_RR::Escena_RR()
 {
     camara = Camara_RR(
-        Vector(-10, 0, 0), // Posición de la cámara
-        Vector(1, 0, 0),   // Dirección hacia adelante de la cámara
-        Vector(0, 1, 0));  // Vector hacia arriba de la cámara
+        Vector(-6, 0, 0), // Posición de la cámara
+        Vector(1, 0, 0),  // Dirección hacia adelante de la cámara
+        Vector(0, 1, 0)); // Vector hacia arriba de la cámara
 
     fondo = Color_RR(51, 221, 221); // Fondo
 
@@ -130,21 +130,20 @@ Escena_RR::Escena_RR()
     // ESFERAS
 
     PropiedadesObjeto propEsfera(
-        0.1f,                     // Coeficiente de ambiente
-        ColorRGB(255, 0, 255),    // Color ambiente
-        0.5f,                     // Coeficiente de reflexión difusa
-        ColorRGB(255, 0, 255),    // Color de reflexión difusa
-        0.8f,                     // Coeficiente de reflexión especular
-        5,                        // Brillo especular
-        ColorRGB(255, 255, 255),  // Color de reflexión especular
-        Vector(0.2f, 0.8f, 0.8f), // Coeficiente de transparencia
-        0.1f                      // Coeficiente de refracción
-    );
+        0.1f,                      // Coeficiente de ambiente
+        ColorRGB(255, 0, 255),     // Color ambiente
+        0.5f,                      // Coeficiente de reflexión difusa
+        ColorRGB(255, 0, 255),     // Color de reflexión difusa
+        0.8f,                      // Coeficiente de reflexión especular
+        5,                         // Brillo especular
+        ColorRGB(255, 255, 255),   // Color de reflexión especular
+        Vector(0.2f, 0.8f, 0.8f),  // Coeficiente de transparencia
+        Vector(0.5f, 0.5f, 0.5f)); // Coeficiente de reflexion
 
     Esfera_RR esfera = Esfera_RR(
         Vector(8, 0, 0), // Centro de la esfera
         2.0f,            // Radio de la esfera
-        propEsfera);     // Color rojo
+        propEsfera);     // Propiedades de la esfera
     objetos.push_back(std::make_shared<Esfera_RR>(esfera));
 
     PropiedadesObjeto propEsfera2(
@@ -156,12 +155,12 @@ Escena_RR::Escena_RR()
         5,
         ColorRGB(255, 255, 255),
         Vector(0.0f, 0.0f, 0.0f),
-        0.1f);
+        Vector(0.5f, 0.5f, 0.5f));
 
     Esfera_RR esfera2 = Esfera_RR(
-        Vector(4, -1, -1), // Centro de la esfera
-        1.0f,              // Radio de la esfera
-        propEsfera2);      // Color rojo
+        Vector(4, -1, -1),
+        1.0f,
+        propEsfera2);
     objetos.push_back(std::make_shared<Esfera_RR>(esfera2));
 }
 

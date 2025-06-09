@@ -5,11 +5,24 @@
 
 Escena_RR escena;
 
+Color_RR traza_RR(Rayo_RR rayo, int profundidad);
+
 Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, int profundidad)
 {
     Color_RR color;
     color.setComponenteAmbiente(objeto->getColorAmbiente(), objeto->getCoeficienteAmbiente());
     escena.calcularColorIluminacion(objeto, rayo, punto, normal, color);
+    if (profundidad < PROFUNDIDAD_MAXIMA)
+    {
+        // Calcular Reflexion
+        if (objeto->getCoeficienteReflexion().length() > 0.0f)
+        {
+            Vector direccionReflexion = rayo.getDireccion() - normal * 2.0f * (rayo.getDireccion().dot(normal));
+            Rayo_RR rayoReflexion(punto + normal * EPSILON, direccionReflexion.normalize());
+            Color_RR colorReflexion = traza_RR(rayoReflexion, profundidad + 1);
+            color.setComponenteReflexion(colorReflexion.getColorTotal(), objeto->getCoeficienteReflexion());
+        }
+    }
     return color;
 }
 

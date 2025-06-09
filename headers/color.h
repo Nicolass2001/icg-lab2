@@ -13,10 +13,10 @@ private:
     ColorRGB colorReflexionDifusa;
     float coeficienteReflexionEspecular = DEFAULT_SPECULAR_REFLECTION_COEFFICIENT;
     ColorRGB colorReflexionEspecular;
-    float coeficienteTransparencia = DEFAULT_TRANSPARENCY_COEFFICIENT;
+    Vector coeficienteTransparencia = DEFAULT_TRANSPARENCY_COEFFICIENT;
     ColorRGB colorTransparencia;
-    float coeficienteRefraccion = DEFAULT_REFRACTION_COEFFICIENT;
-    ColorRGB colorRefraccion;
+    Vector coeficienteReflexion = DEFAULT_REFLECTION_COEFFICIENT;
+    ColorRGB colorReflexion;
 
 public:
     Color_RR();
@@ -28,6 +28,8 @@ public:
     void setComponenteAmbiente(ColorRGB color, float coeficiente);
     void setComponenteDifusa(ColorRGB color, float coeficiente);
     void setComponenteEspecular(ColorRGB color, float coeficiente);
+    void setComponenteTransparencia(ColorRGB color, Vector coeficiente);
+    void setComponenteReflexion(ColorRGB color, Vector coeficiente);
 };
 
 Color_RR::Color_RR()
@@ -66,7 +68,8 @@ ColorRGB Color_RR::getColorTotal() const
 {
     return this->colorAmbiente * this->coeficienteAmbiente +
            this->colorReflexionDifusa * this->coeficienteReflexionDifusa +
-           this->colorReflexionEspecular * this->coeficienteReflexionEspecular;
+           this->colorReflexionEspecular * this->coeficienteReflexionEspecular +
+           this->colorReflexion * this->coeficienteReflexion;
 }
 
 void Color_RR::setComponenteAmbiente(ColorRGB color, float coeficiente)
@@ -85,6 +88,18 @@ void Color_RR::setComponenteEspecular(ColorRGB color, float coeficiente)
 {
     this->colorReflexionEspecular = color;
     this->coeficienteReflexionEspecular = coeficiente;
+}
+
+void Color_RR::setComponenteTransparencia(ColorRGB color, Vector coeficiente)
+{
+    this->colorTransparencia = color;
+    this->coeficienteTransparencia = coeficiente;
+}
+
+void Color_RR::setComponenteReflexion(ColorRGB color, Vector coeficiente)
+{
+    this->colorReflexion = color;
+    this->coeficienteReflexion = coeficiente;
 }
 
 #endif // COLOR_H
