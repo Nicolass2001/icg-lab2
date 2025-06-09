@@ -4,6 +4,7 @@
 #include "pared.h"
 #include "camara.h"
 #include "esfera.h"
+#include "cilindro.h"
 #include "objeto.h"
 #include "luz.h"
 
@@ -162,6 +163,27 @@ Escena_RR::Escena_RR()
         1.0f,
         propEsfera2);
     objetos.push_back(std::make_shared<Esfera_RR>(esfera2));
+
+    // CILINDROS
+
+    PropiedadesObjeto propCilindro(
+        0.1f,
+        ColorRGB(255, 255, 255),
+        0.5f,
+        ColorRGB(255, 255, 255),
+        0.8f,
+        5,
+        ColorRGB(255, 255, 255),
+        Vector(0.0f, 0.0f, 0.0f),
+        Vector(0.0f, 0.0f, 0.0f));
+
+    Cilindro_RR cilindro = Cilindro_RR(
+        Vector(5, -5, 3), // Base del cilindro
+        Vector(0, 1, 0),  // Dirección del cilindro (eje)
+        1.0f,             // Radio del cilindro
+        2.0f,             // Altura del cilindro
+        propCilindro);    // Propiedades del cilindro
+    objetos.push_back(std::make_shared<Cilindro_RR>(cilindro));
 }
 
 ObjetoPtr Escena_RR::calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto, Vector *normal)
