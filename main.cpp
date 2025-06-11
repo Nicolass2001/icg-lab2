@@ -4,7 +4,7 @@
 #include "fileManager.h"
 #include <SDL.h>
 
-Escena_RR escena;
+Escena_RR escena("config.xml");
 
 Color_RR traza_RR(Rayo_RR rayo, int profundidad);
 
@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
 
     // Guardar la imagen en un archivo
     std::string outputPath = getPathToFile();
-
+    
     if (FreeImage_Save(FIF_PNG, bitmap, outputPath.c_str(), 0))
     {
         std::cout << "Imagen guardada en: " << outputPath << std::endl;

@@ -7,6 +7,8 @@
 #include "cilindro.h"
 #include "objeto.h"
 #include "luz.h"
+#include "tinyxml2.h"
+#include <string>
 
 #ifndef ESCENA_H
 #define ESCENA_H
@@ -20,7 +22,7 @@ private:
     Color_RR fondo;
 
 public:
-    Escena_RR();
+    Escena_RR(std::string pathConfig);
     Color_RR getFondo();
     Camara_RR getCamara();
     ObjetoPtr calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto, Vector *normal);
@@ -38,67 +40,148 @@ Camara_RR Escena_RR::getCamara()
     return camara;
 }
 
-Escena_RR::Escena_RR()
+Escena_RR::Escena_RR(std::string pathConfig)
 {
+    //Leer XML
+    tinyxml2::XMLDocument datos;
+    datos.LoadFile(pathConfig.c_str());
+
+    if (datos.ErrorID() != 0) {
+        std::cout << "XML - ERROR" << std::endl;
+    }
+    else {
+        std::cout << "XML - EXITO" << std::endl;
+    }
+
+    tinyxml2::XMLElement* root = datos.FirstChildElement("config");
+
+    tinyxml2::XMLElement* objetoActual = root->FirstChildElement("camara");
+
     camara = Camara_RR(
-        Vector(-6, 0, 0), // Posición de la cámara
-        Vector(1, 0, 0),  // Dirección hacia adelante de la cámara
-        Vector(0, 1, 0)); // Vector hacia arriba de la cámara
+        Vector(std::stof(objetoActual->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("z")->GetText())), // Posición de la cámara
+        Vector(std::stof(objetoActual->FirstChildElement("lookatx")->GetText()),
+            std::stof(objetoActual->FirstChildElement("lookaty")->GetText()),
+            std::stof(objetoActual->FirstChildElement("lookatz")->GetText())),  // Dirección hacia adelante de la cámara
+        Vector(std::stof(objetoActual->FirstChildElement("upx")->GetText()),
+            std::stof(objetoActual->FirstChildElement("upy")->GetText()),
+            std::stof(objetoActual->FirstChildElement("upz")->GetText()))); // Vector hacia arriba de la cámara
 
     fondo = Color_RR(51, 221, 221); // Fondo
 
     // LUCES
 
     // La suma de las intensidades de las luces no debería superar 1.0f
+    objetoActual = root->FirstChildElement("luces")->FirstChildElement("luz1");
+
     Luz luz1(
-        Vector(7, 4.5, 0),      // Posición de la luz
-        Vector(0.7, 0.2, 0.2)); // Intensidad de la luz en RGB
+        // Posición de la luz
+        Vector(std::stof(objetoActual->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("z")->GetText())),
+        // Intensidad de la luz en RGB
+        Vector(std::stof(objetoActual->FirstChildElement("r")->GetText()),
+            std::stof(objetoActual->FirstChildElement("g")->GetText()),
+            std::stof(objetoActual->FirstChildElement("b")->GetText())));
     luces.push_back(luz1);
+
+    objetoActual = root->FirstChildElement("luces")->FirstChildElement("luz2");
+
     Luz luz2(
-        Vector(3, 4.5, 0),
-        Vector(0.8, 0.8, 0.1));
+        Vector(std::stof(objetoActual->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("z")->GetText())),
+        Vector(std::stof(objetoActual->FirstChildElement("r")->GetText()),
+            std::stof(objetoActual->FirstChildElement("g")->GetText()),
+            std::stof(objetoActual->FirstChildElement("b")->GetText())));
     luces.push_back(luz2);
 
     // PAREDES
 
+    objetoActual = root->FirstChildElement("paredes")->FirstChildElement("paredFondo");
+
     ParedPtr paredFondo = std::make_shared<Pared_RR>(
-        Vector(10, 0, 0),     // Centro de la pared
-        Vector(-1, 0, 0),     // Normal
-        10.0f,                // Ancho de la pared
-        10.0f,                // Alto de la pared
-        ColorRGB(255, 0, 0)); // Color
+        // Centro de la pared
+        Vector(std::stof(objetoActual->FirstChildElement("centro")->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("centro")->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("centro")->FirstChildElement("z")->GetText())),
+        // Normal
+        Vector(std::stof(objetoActual->FirstChildElement("normal")->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("normal")->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("normal")->FirstChildElement("z")->GetText())),
+        // Ancho de la pared
+        std::stof(objetoActual->FirstChildElement("ancho")->GetText()),
+        // Alto de la pared
+        std::stof(objetoActual->FirstChildElement("alto")->GetText()),
+        // Color
+        ColorRGB(std::stoi(objetoActual->FirstChildElement("r")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("g")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("b")->GetText())));
     objetos.push_back(paredFondo);
 
+    objetoActual = root->FirstChildElement("paredes")->FirstChildElement("paredIzquierda");
+
     ParedPtr paredIzquierda = std::make_shared<Pared_RR>(
-        Vector(5, 0, -5),
-        Vector(0, 0, 1),
-        10.0f,
-        10.0f,
-        ColorRGB(0, 255, 0));
+        Vector(std::stof(objetoActual->FirstChildElement("centro")->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("centro")->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("centro")->FirstChildElement("z")->GetText())),
+        Vector(std::stof(objetoActual->FirstChildElement("normal")->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("normal")->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("normal")->FirstChildElement("z")->GetText())),
+        std::stof(objetoActual->FirstChildElement("ancho")->GetText()),
+        std::stof(objetoActual->FirstChildElement("alto")->GetText()),
+        ColorRGB(std::stoi(objetoActual->FirstChildElement("r")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("g")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("b")->GetText())));
     objetos.push_back(paredIzquierda);
 
+    objetoActual = root->FirstChildElement("paredes")->FirstChildElement("paredDerecha");
+
     ParedPtr paredDerecha = std::make_shared<Pared_RR>(
-        Vector(5, 0, 5),
-        Vector(0, 0, -1),
-        10.0f,
-        10.0f,
-        ColorRGB(0, 0, 255));
+        Vector(std::stof(objetoActual->FirstChildElement("centro")->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("centro")->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("centro")->FirstChildElement("z")->GetText())),
+        Vector(std::stof(objetoActual->FirstChildElement("normal")->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("normal")->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("normal")->FirstChildElement("z")->GetText())),
+        std::stof(objetoActual->FirstChildElement("ancho")->GetText()),
+        std::stof(objetoActual->FirstChildElement("alto")->GetText()),
+        ColorRGB(std::stoi(objetoActual->FirstChildElement("r")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("g")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("b")->GetText())));
     objetos.push_back(paredDerecha);
 
+    objetoActual = root->FirstChildElement("paredes")->FirstChildElement("paredSuperior");
+
     ParedPtr paredSuperior = std::make_shared<Pared_RR>(
-        Vector(5, 5, 0),
-        Vector(0, -1, 0),
-        10.0f,
-        10.0f,
-        ColorRGB(255, 255, 0));
+        Vector(std::stof(objetoActual->FirstChildElement("centro")->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("centro")->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("centro")->FirstChildElement("z")->GetText())),
+        Vector(std::stof(objetoActual->FirstChildElement("normal")->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("normal")->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("normal")->FirstChildElement("z")->GetText())),
+        std::stof(objetoActual->FirstChildElement("ancho")->GetText()),
+        std::stof(objetoActual->FirstChildElement("alto")->GetText()),
+        ColorRGB(std::stoi(objetoActual->FirstChildElement("r")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("g")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("b")->GetText())));
     objetos.push_back(paredSuperior);
 
+    objetoActual = root->FirstChildElement("paredes")->FirstChildElement("paredInferior");
+
     ParedPtr paredInferior = std::make_shared<Pared_RR>(
-        Vector(5, -5, 0),
-        Vector(0, 1, 0),
-        10.0f,
-        10.0f,
-        ColorRGB(255, 0, 255));
+        Vector(std::stof(objetoActual->FirstChildElement("centro")->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("centro")->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("centro")->FirstChildElement("z")->GetText())),
+        Vector(std::stof(objetoActual->FirstChildElement("normal")->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("normal")->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("normal")->FirstChildElement("z")->GetText())),
+        std::stof(objetoActual->FirstChildElement("ancho")->GetText()),
+        std::stof(objetoActual->FirstChildElement("alto")->GetText()),
+        ColorRGB(std::stoi(objetoActual->FirstChildElement("r")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("g")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("b")->GetText())));
     objetos.push_back(paredInferior);
 
     // TEST Pared frontal, no se debería ver, porque la normal es hacia adentro del cubo
@@ -130,66 +213,133 @@ Escena_RR::Escena_RR()
 
     // ESFERAS
 
+    objetoActual = root->FirstChildElement("esfera1");
+
     PropiedadesObjeto propEsfera(
-        0.1f,                      // Coeficiente de ambiente
-        ColorRGB(255, 0, 255),     // Color ambiente
-        0.5f,                      // Coeficiente de reflexión difusa
-        ColorRGB(255, 0, 255),     // Color de reflexión difusa
-        0.8f,                      // Coeficiente de reflexión especular
-        5,                         // Brillo especular
-        ColorRGB(255, 255, 255),   // Color de reflexión especular
-        Vector(0.2f, 0.8f, 0.8f),  // Coeficiente de transparencia
-        Vector(0.5f, 0.5f, 0.5f)); // Coeficiente de reflexion
+        // Coeficiente de ambiente
+        std::stof(objetoActual->FirstChildElement("ka")->FirstChildElement("valor")->GetText()),
+        // Color ambiente
+        ColorRGB(std::stoi(objetoActual->FirstChildElement("ka")->FirstChildElement("r")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("ka")->FirstChildElement("g")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("ka")->FirstChildElement("b")->GetText())),
+        // Coeficiente de reflexión difusa
+        std::stof(objetoActual->FirstChildElement("kd")->FirstChildElement("valor")->GetText()),
+        // Color de reflexión difusa
+        ColorRGB(std::stoi(objetoActual->FirstChildElement("kd")->FirstChildElement("r")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("kd")->FirstChildElement("g")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("kd")->FirstChildElement("b")->GetText())),
+        // Coeficiente de reflexión especular
+        std::stof(objetoActual->FirstChildElement("ks")->FirstChildElement("valor")->GetText()),
+        // Brillo especular
+        std::stoi(objetoActual->FirstChildElement("ks")->FirstChildElement("brillo")->GetText()),
+        // Color de reflexión especular
+        ColorRGB(std::stoi(objetoActual->FirstChildElement("ks")->FirstChildElement("r")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("ks")->FirstChildElement("g")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("ks")->FirstChildElement("b")->GetText())),
+        // Coeficiente de transparencia
+        Vector(std::stof(objetoActual->FirstChildElement("kt")->FirstChildElement("r")->GetText()),
+            std::stof(objetoActual->FirstChildElement("kt")->FirstChildElement("g")->GetText()),
+            std::stof(objetoActual->FirstChildElement("kt")->FirstChildElement("b")->GetText())),
+        // Coeficiente de reflexion
+        Vector(std::stof(objetoActual->FirstChildElement("kreflx")->FirstChildElement("r")->GetText()),
+            std::stof(objetoActual->FirstChildElement("kreflx")->FirstChildElement("g")->GetText()),
+            std::stof(objetoActual->FirstChildElement("kreflx")->FirstChildElement("b")->GetText())));
 
     Esfera_RR esfera = Esfera_RR(
-        Vector(8, 0, 0), // Centro de la esfera
-        2.0f,            // Radio de la esfera
-        propEsfera);     // Propiedades de la esfera
+        // Centro de la esfera
+        Vector(std::stof(objetoActual->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("z")->GetText())),
+        // Radio de la esfera
+        std::stof(objetoActual->FirstChildElement("radio")->GetText()),
+        // Propiedades de la esfera
+        propEsfera);
     objetos.push_back(std::make_shared<Esfera_RR>(esfera));
 
+    objetoActual = root->FirstChildElement("esfera2");
+
     PropiedadesObjeto propEsfera2(
-        0.1f,
-        ColorRGB(255, 0, 255),
-        0.5f,
-        ColorRGB(255, 0, 255),
-        0.8f,
-        5,
-        ColorRGB(255, 255, 255),
-        Vector(0.0f, 0.0f, 0.0f),
-        Vector(0.5f, 0.5f, 0.5f));
+        std::stof(objetoActual->FirstChildElement("ka")->FirstChildElement("valor")->GetText()),
+        ColorRGB(std::stoi(objetoActual->FirstChildElement("ka")->FirstChildElement("r")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("ka")->FirstChildElement("g")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("ka")->FirstChildElement("b")->GetText())),
+        std::stof(objetoActual->FirstChildElement("kd")->FirstChildElement("valor")->GetText()),
+        ColorRGB(std::stoi(objetoActual->FirstChildElement("kd")->FirstChildElement("r")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("kd")->FirstChildElement("g")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("kd")->FirstChildElement("b")->GetText())),
+        std::stof(objetoActual->FirstChildElement("ks")->FirstChildElement("valor")->GetText()),
+        std::stoi(objetoActual->FirstChildElement("ks")->FirstChildElement("brillo")->GetText()),
+        ColorRGB(std::stoi(objetoActual->FirstChildElement("ks")->FirstChildElement("r")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("ks")->FirstChildElement("g")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("ks")->FirstChildElement("b")->GetText())),
+        Vector(std::stof(objetoActual->FirstChildElement("kt")->FirstChildElement("r")->GetText()),
+            std::stof(objetoActual->FirstChildElement("kt")->FirstChildElement("g")->GetText()),
+            std::stof(objetoActual->FirstChildElement("kt")->FirstChildElement("b")->GetText())),
+        Vector(std::stof(objetoActual->FirstChildElement("kreflx")->FirstChildElement("r")->GetText()),
+            std::stof(objetoActual->FirstChildElement("kreflx")->FirstChildElement("g")->GetText()),
+            std::stof(objetoActual->FirstChildElement("kreflx")->FirstChildElement("b")->GetText())));
 
     Esfera_RR esfera2 = Esfera_RR(
-        Vector(4, -1, -1),
-        1.0f,
+        Vector(std::stof(objetoActual->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("z")->GetText())),
+        std::stof(objetoActual->FirstChildElement("radio")->GetText()),
         propEsfera2);
     objetos.push_back(std::make_shared<Esfera_RR>(esfera2));
 
     // CILINDROS
 
+    objetoActual = root->FirstChildElement("cilindro1");
+
     PropiedadesObjeto propCilindro(
-        0.1f,
-        ColorRGB(255, 255, 255),
-        0.5f,
-        ColorRGB(255, 255, 255),
-        0.8f,
-        5,
-        ColorRGB(255, 255, 255),
-        Vector(0.0f, 0.0f, 0.0f),
-        Vector(0.0f, 0.0f, 0.0f));
+        std::stof(objetoActual->FirstChildElement("ka")->FirstChildElement("valor")->GetText()),
+        ColorRGB(std::stoi(objetoActual->FirstChildElement("ka")->FirstChildElement("r")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("ka")->FirstChildElement("g")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("ka")->FirstChildElement("b")->GetText())),
+        std::stof(objetoActual->FirstChildElement("kd")->FirstChildElement("valor")->GetText()),
+        ColorRGB(std::stoi(objetoActual->FirstChildElement("kd")->FirstChildElement("r")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("kd")->FirstChildElement("g")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("kd")->FirstChildElement("b")->GetText())),
+        std::stof(objetoActual->FirstChildElement("ks")->FirstChildElement("valor")->GetText()),
+        std::stoi(objetoActual->FirstChildElement("ks")->FirstChildElement("brillo")->GetText()),
+        ColorRGB(std::stoi(objetoActual->FirstChildElement("ks")->FirstChildElement("r")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("ks")->FirstChildElement("g")->GetText()),
+            std::stoi(objetoActual->FirstChildElement("ks")->FirstChildElement("b")->GetText())),
+        Vector(std::stof(objetoActual->FirstChildElement("kt")->FirstChildElement("r")->GetText()),
+            std::stof(objetoActual->FirstChildElement("kt")->FirstChildElement("g")->GetText()),
+            std::stof(objetoActual->FirstChildElement("kt")->FirstChildElement("b")->GetText())),
+        Vector(std::stof(objetoActual->FirstChildElement("kreflx")->FirstChildElement("r")->GetText()),
+            std::stof(objetoActual->FirstChildElement("kreflx")->FirstChildElement("g")->GetText()),
+            std::stof(objetoActual->FirstChildElement("kreflx")->FirstChildElement("b")->GetText())));
 
     Cilindro_RR cilindro = Cilindro_RR(
-        Vector(5, -5, 3), // Base del cilindro
-        Vector(0, 1, 0),  // Dirección del cilindro (eje)
-        1.0f,             // Radio del cilindro
-        2.0f,             // Altura del cilindro
-        propCilindro);    // Propiedades del cilindro
+        // Base del cilindro
+        Vector(std::stof(objetoActual->FirstChildElement("base")->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("base")->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("base")->FirstChildElement("z")->GetText())),
+        // Dirección del cilindro (eje)
+        Vector(std::stof(objetoActual->FirstChildElement("direccion")->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("direccion")->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("direccion")->FirstChildElement("z")->GetText())),
+        // Radio del cilindro
+        std::stof(objetoActual->FirstChildElement("radio")->GetText()),
+        // Altura del cilindro
+        std::stof(objetoActual->FirstChildElement("altura")->GetText()),
+        // Propiedades del cilindro
+        propCilindro);
     objetos.push_back(std::make_shared<Cilindro_RR>(cilindro));
 
+    objetoActual = root->FirstChildElement("cilindro2");
+
     Cilindro_RR cilindro2 = Cilindro_RR(
-        Vector(8, 3, 3),
-        Vector(0, 1, 0),
-        1.0f,
-        2.0f,
+        Vector(std::stof(objetoActual->FirstChildElement("base")->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("base")->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("base")->FirstChildElement("z")->GetText())),
+        Vector(std::stof(objetoActual->FirstChildElement("direccion")->FirstChildElement("x")->GetText()),
+            std::stof(objetoActual->FirstChildElement("direccion")->FirstChildElement("y")->GetText()),
+            std::stof(objetoActual->FirstChildElement("direccion")->FirstChildElement("z")->GetText())),
+        std::stof(objetoActual->FirstChildElement("radio")->GetText()),
+        std::stof(objetoActual->FirstChildElement("altura")->GetText()),
         propCilindro);
     objetos.push_back(std::make_shared<Cilindro_RR>(cilindro2));
 }
