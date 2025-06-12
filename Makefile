@@ -1,7 +1,7 @@
 # Variables
 CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++17 -Iheaders -I/opt/homebrew/include
-LIBS = -L/opt/homebrew/lib -lfreeimage
+CXXFLAGS = -Wall -Wextra -std=c++17 -Iheaders -I/opt/homebrew/include -I/opt/homebrew/include/SDL2
+LIBS = -L/opt/homebrew/lib -lfreeimage -lSDL2 -ltinyxml2
 SRC = main.cpp
 BUILD_DIR = debug
 TARGET = $(BUILD_DIR)/app

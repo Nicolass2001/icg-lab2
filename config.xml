@@ -13,182 +13,27 @@
         <lookaty>0</lookaty>
         <lookatz>0</lookatz>
     </camara>
-    <esfera1>
-        <x>8</x>
-        <y>0</y>
-        <z>0</z>
-        <radio>2.0</radio>
-        <ka>
-            <valor>0.1</valor>
-            <r>255</r>
-            <g>0</g>
-            <b>255</b>
-        </ka>
-        <kd>
-            <valor>0.5</valor>
-            <r>255</r>
-            <g>0</g>
-            <b>255</b>
-        </kd>
-        <ks>
-            <valor>0.8</valor>
-            <brillo>5</brillo>
-            <r>255</r>
-            <g>255</g>
-            <b>255</b>
-        </ks>
-        <kt>
-            <r>0.2</r>
-            <g>0.8</g>
-            <b>0.8</b>
-        </kt>
-        <kreflx>
-            <r>0.5</r>
-            <g>0.5</g>
-            <b>0.5</b>
-        </kreflx>
-    </esfera1>
-    <esfera2>
-        <x>4</x>
-        <y>-1</y>
-        <z>-1</z>
-        <radio>1.0</radio>
-        <ka>
-            <valor>0.1</valor>
-            <r>255</r>
-            <g>0</g>
-            <b>255</b>
-        </ka>
-        <kd>
-            <valor>0.5</valor>
-            <r>255</r>
-            <g>0</g>
-            <b>255</b>
-        </kd>
-        <ks>
-            <valor>0.8</valor>
-            <brillo>5</brillo>
-            <r>255</r>
-            <g>255</g>
-            <b>255</b>
-        </ks>
-        <kt>
-            <r>0.0</r>
-            <g>0.0</g>
-            <b>0.0</b>
-        </kt>
-        <kreflx>
-            <r>0.5</r>
-            <g>0.5</g>
-            <b>0.5</b>
-        </kreflx>
-    </esfera2>
-    <cilindro1>
-        <base>
-            <x>5</x>
-            <y>-5</y>
-            <z>3</z>
-        </base>
-        <direccion>
-            <x>0</x>
-            <y>1</y>
-            <z>0</z>
-        </direccion>
-        <radio>1.0</radio>
-        <altura>2.0</altura>
-        <ka>
-            <valor>0.1</valor>
-            <r>255</r>
-            <g>255</g>
-            <b>255</b>
-        </ka>
-        <kd>
-            <valor>0.5</valor>
-            <r>255</r>
-            <g>255</g>
-            <b>255</b>
-        </kd>
-        <ks>
-            <valor>0.8</valor>
-            <brillo>5</brillo>
-            <r>255</r>
-            <g>255</g>
-            <b>255</b>
-        </ks>
-        <kt>
-            <r>0.0</r>
-            <g>0.0</g>
-            <b>0.0</b>
-        </kt>
-        <kreflx>
-            <r>0.0</r>
-            <g>0.0</g>
-            <b>0.0</b>
-        </kreflx>
-    </cilindro1>
-    <cilindro2>
-        <base>
-            <x>8</x>
-            <y>3</y>
-            <z>3</z>
-        </base>
-        <direccion>
-            <x>0</x>
-            <y>1</y>
-            <z>0</z>
-        </direccion>
-        <radio>1.0</radio>
-        <altura>2.0</altura>
-        <ka>
-            <valor>0.1</valor>
-            <r>255</r>
-            <g>255</g>
-            <b>255</b>
-        </ka>
-        <kd>
-            <valor>0.5</valor>
-            <r>255</r>
-            <g>255</g>
-            <b>255</b>
-        </kd>
-        <ks>
-            <valor>0.8</valor>
-            <brillo>5</brillo>
-            <r>255</r>
-            <g>255</g>
-            <b>255</b>
-        </ks>
-        <kt>
-            <r>0.0</r>
-            <g>0.0</g>
-            <b>0.0</b>
-        </kt>
-        <kreflx>
-            <r>0.0</r>
-            <g>0.0</g>
-            <b>0.0</b>
-        </kreflx>
-    </cilindro2>
     <luces>
-        <luz1>
+        <luz>
             <x>7</x>
             <y>4.5</y>
             <z>0</z>
             <r>0.7</r>
             <g>0.2</g>
             <b>0.2</b>
-        </luz1>
-        <luz2>
+        </luz>
+        <luz>
             <x>3</x>
             <y>4.5</y>
             <z>0</z>
             <r>0.8</r>
             <g>0.8</g>
             <b>0.1</b>
-        </luz2>
+        </luz>
     </luces>
-    <paredes>
-        <paredFondo>
+    <objetos>
+        <pared>
+            <!-- Pared fondo -->
             <normal>
                 <x>-1</x>
                 <y>0</y>
@@ -204,11 +49,9 @@
             <r>255</r>
             <g>0</g>
             <b>0</b>
-            <ka>0.8</ka>
-            <kd>0.2</kd>
-            <ks>0.0</ks>
-        </paredFondo>
-        <paredIzquierda>
+        </pared>
+        <pared>
+            <!-- Pared izquierda -->
             <normal>
                 <x>0</x>
                 <y>0</y>
@@ -224,11 +67,9 @@
             <r>0</r>
             <g>255</g>
             <b>0</b>
-            <ka>0.1</ka>
-            <kd>0.9</kd>
-            <ks>0.0</ks>
-        </paredIzquierda>
-        <paredSuperior>
+        </pared>
+        <pared>
+            <!-- Pared Superior -->
             <normal>
                 <x>0</x>
                 <y>-1</y>
@@ -244,11 +85,9 @@
             <r>255</r>
             <g>255</g>
             <b>0</b>
-            <ka>0.2</ka>
-            <kd>0.8</kd>
-            <ks>0.0</ks>
-        </paredSuperior>
-        <paredDerecha>
+        </pared>
+        <pared>
+            <!-- Pared derecha -->
             <normal>
                 <x>0</x>
                 <y>0</y>
@@ -264,11 +103,9 @@
             <r>0</r>
             <g>0</g>
             <b>255</b>
-            <ka>0.1</ka>
-            <kd>0.9</kd>
-            <ks>0.0</ks>
-        </paredDerecha>
-        <paredInferior>
+        </pared>
+        <pared>
+            <!-- Pared inferior -->
             <normal>
                 <x>0</x>
                 <y>1</y>
@@ -284,9 +121,182 @@
             <r>255</r>
             <g>0</g>
             <b>255</b>
-            <ka>0.7</ka>
-            <kd>0.3</kd>
-            <ks>0.0</ks>
-        </paredInferior>
-    </paredes>
+        </pared>
+        <esfera>
+            <!-- Esfera 1 -->
+            <centro>
+                <x>8</x>
+                <y>0</y>
+                <z>0</z>
+            </centro>
+            <radio>2.0</radio>
+            <propObjeto>
+                <ka>
+                    <valor>0.1</valor>
+                    <r>255</r>
+                    <g>0</g>
+                    <b>255</b>
+                </ka>
+                <kd>
+                    <valor>0.5</valor>
+                    <r>255</r>
+                    <g>0</g>
+                    <b>255</b>
+                </kd>
+                <ks>
+                    <valor>0.8</valor>
+                    <brillo>5</brillo>
+                    <r>255</r>
+                    <g>255</g>
+                    <b>255</b>
+                </ks>
+                <kt>
+                    <r>0.2</r>
+                    <g>0.8</g>
+                    <b>0.8</b>
+                </kt>
+                <kreflx>
+                    <indice>1.0</indice>
+                    <r>0.5</r>
+                    <g>0.5</g>
+                    <b>0.5</b>
+                </kreflx>
+            </propObjeto>
+        </esfera>
+        <esfera>
+            <!-- Esfera 2 -->
+            <centro>
+                <x>4</x>
+                <y>-1</y>
+                <z>-1</z>
+            </centro>
+            <radio>1.0</radio>
+            <propObjeto>
+                <ka>
+                    <valor>0.1</valor>
+                    <r>255</r>
+                    <g>0</g>
+                    <b>255</b>
+                </ka>
+                <kd>
+                    <valor>0.5</valor>
+                    <r>255</r>
+                    <g>0</g>
+                    <b>255</b>
+                </kd>
+                <ks>
+                    <valor>0.8</valor>
+                    <brillo>5</brillo>
+                    <r>255</r>
+                    <g>255</g>
+                    <b>255</b>
+                </ks>
+                <kt>
+                    <r>0.0</r>
+                    <g>0.0</g>
+                    <b>0.0</b>
+                </kt>
+                <kreflx>
+                    <indice>1.0</indice>
+                    <r>0.5</r>
+                    <g>0.5</g>
+                    <b>0.5</b>
+                </kreflx>
+            </propObjeto>
+        </esfera>
+        <cilindro>
+            <!-- Cilindro 1 -->
+            <base>
+                <x>5</x>
+                <y>-5</y>
+                <z>3</z>
+            </base>
+            <direccion>
+                <x>0</x>
+                <y>1</y>
+                <z>0</z>
+            </direccion>
+            <radio>1.0</radio>
+            <altura>2.0</altura>
+            <propObjeto>
+                <ka>
+                    <valor>0.1</valor>
+                    <r>255</r>
+                    <g>255</g>
+                    <b>255</b>
+                </ka>
+                <kd>
+                    <valor>0.5</valor>
+                    <r>255</r>
+                    <g>255</g>
+                    <b>255</b>
+                </kd>
+                <ks>
+                    <valor>0.8</valor>
+                    <brillo>5</brillo>
+                    <r>255</r>
+                    <g>255</g>
+                    <b>255</b>
+                </ks>
+                <kt>
+                    <r>0.0</r>
+                    <g>0.0</g>
+                    <b>0.0</b>
+                </kt>
+                <kreflx>
+                    <indice>1.0</indice>
+                    <r>0.0</r>
+                    <g>0.0</g>
+                    <b>0.0</b>
+                </kreflx>
+            </propObjeto>
+        </cilindro>
+        <cilindro>
+            <!-- Cilindro 2 -->
+            <base>
+                <x>8</x>
+                <y>3</y>
+                <z>3</z>
+            </base>
+            <direccion>
+                <x>0</x>
+                <y>1</y>
+                <z>0</z>
+            </direccion>
+            <radio>1.0</radio>
+            <altura>2.0</altura>
+            <propObjeto>
+                <ka>
+                    <valor>0.1</valor>
+                    <r>255</r>
+                    <g>255</g>
+                    <b>255</b>
+                </ka>
+                <kd>
+                    <valor>0.5</valor>
+                    <r>255</r>
+                    <g>255</g>
+                    <b>255</b>
+                </kd>
+                <ks>
+                    <valor>0.8</valor>
+                    <brillo>5</brillo>
+                    <r>255</r>
+                    <g>255</g>
+                    <b>255</b>
+                </ks>
+                <kt>
+                    <r>0.0</r>
+                    <g>0.0</g>
+                    <b>0.0</b>
+                </kt>
+                <kreflx>
+                    <indice>1.0</indice>
+                    <r>0.0</r>
+                    <g>0.0</g>
+                    <b>0.0</b>
+                </kreflx>
+            </propObjeto>
+        </cilindro>
+    </objetos>
 </config>
