@@ -42,6 +42,9 @@
             <g>0.8</g>
             <b>0.8</b>
         </kt>
+        <nref>
+            <valor>1.0</valor>
+        </nref>
         <kreflx>
             <r>0.5</r>
             <g>0.5</g>
@@ -77,6 +80,9 @@
             <g>0.0</g>
             <b>0.0</b>
         </kt>
+        <nref>
+            <valor>1.0</valor>
+        </nref>
         <kreflx>
             <r>0.5</r>
             <g>0.5</g>
@@ -120,6 +126,9 @@
             <g>0.0</g>
             <b>0.0</b>
         </kt>
+        <nref>
+            <valor>1.0</valor>
+        </nref>
         <kreflx>
             <r>0.0</r>
             <g>0.0</g>

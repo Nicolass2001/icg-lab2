@@ -243,6 +243,8 @@ Escena_RR::Escena_RR(std::string pathConfig)
         Vector(std::stof(objetoActual->FirstChildElement("kt")->FirstChildElement("r")->GetText()),
                std::stof(objetoActual->FirstChildElement("kt")->FirstChildElement("g")->GetText()),
                std::stof(objetoActual->FirstChildElement("kt")->FirstChildElement("b")->GetText())),
+        // Indice de refraccion
+        std::stof(objetoActual->FirstChildElement("nref")->FirstChildElement("valor")->GetText()),
         // Coeficiente de reflexion
         Vector(std::stof(objetoActual->FirstChildElement("kreflx")->FirstChildElement("r")->GetText()),
                std::stof(objetoActual->FirstChildElement("kreflx")->FirstChildElement("g")->GetText()),
@@ -278,6 +280,7 @@ Escena_RR::Escena_RR(std::string pathConfig)
         Vector(std::stof(objetoActual->FirstChildElement("kt")->FirstChildElement("r")->GetText()),
                std::stof(objetoActual->FirstChildElement("kt")->FirstChildElement("g")->GetText()),
                std::stof(objetoActual->FirstChildElement("kt")->FirstChildElement("b")->GetText())),
+        std::stof(objetoActual->FirstChildElement("nref")->FirstChildElement("valor")->GetText()),
         Vector(std::stof(objetoActual->FirstChildElement("kreflx")->FirstChildElement("r")->GetText()),
                std::stof(objetoActual->FirstChildElement("kreflx")->FirstChildElement("g")->GetText()),
                std::stof(objetoActual->FirstChildElement("kreflx")->FirstChildElement("b")->GetText())));
@@ -317,6 +320,7 @@ Escena_RR::Escena_RR(std::string pathConfig)
         Vector(std::stof(objetoActual->FirstChildElement("kt")->FirstChildElement("r")->GetText()),
                std::stof(objetoActual->FirstChildElement("kt")->FirstChildElement("g")->GetText()),
                std::stof(objetoActual->FirstChildElement("kt")->FirstChildElement("b")->GetText())),
+        std::stof(objetoActual->FirstChildElement("nref")->FirstChildElement("valor")->GetText()),
         Vector(std::stof(objetoActual->FirstChildElement("kreflx")->FirstChildElement("r")->GetText()),
                std::stof(objetoActual->FirstChildElement("kreflx")->FirstChildElement("g")->GetText()),
                std::stof(objetoActual->FirstChildElement("kreflx")->FirstChildElement("b")->GetText())));
