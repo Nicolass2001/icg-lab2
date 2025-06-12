@@ -2,8 +2,9 @@
 #include <FreeImage.h>
 #include "escena.h"
 #include "fileManager.h"
+#include <SDL.h>
 
-Escena_RR escena;
+Escena_RR escena("config.xml");
 
 Color_RR traza_RR(Rayo_RR rayo, int profundidad);
 
@@ -80,8 +81,21 @@ Color_RR traza_RR(Rayo_RR rayo, int profundidad)
     return sombra_RR(objMasCercano, rayo, interseccion, normal, profundidad);
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+    // SDL
+    // PAGINA DE REFERENCIA: https://stackoverflow.com/questions/20579658/how-to-draw-pixels-in-sdl-2-0
+    SDL_Event event;
+    SDL_Renderer* renderer;
+    SDL_Window* window;
+    SDL_Init(SDL_INIT_VIDEO);
+    SDL_CreateWindowAndRenderer(800, 600, 0, &window, &renderer);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+    SDL_RenderClear(renderer);
+    uint8_t* rojo = 0;
+    uint8_t* verde = 0;
+    uint8_t* azul = 0;
+
     // Inicializar FreeImage
     FreeImage_Initialise();
 
@@ -104,12 +118,22 @@ int main()
             // Convertir Color_RR a RGBQUAD
             RGBQUAD color = colorPixel.toRGBQUAD();
             FreeImage_SetPixelColor(bitmap, x, y, &color);
+
+            // SDL
+            rojo = &color.rgbRed;
+            verde = &color.rgbGreen;
+            azul = &color.rgbBlue;
+            SDL_SetRenderDrawColor(renderer, *rojo, *verde, *azul, 255);
+            SDL_RenderDrawPoint(renderer, x, 600 - y);
+            if (x == 0)
+                SDL_RenderPresent(renderer);
+
         }
     }
 
     // Guardar la imagen en un archivo
     std::string outputPath = getPathToFile();
-
+    
     if (FreeImage_Save(FIF_PNG, bitmap, outputPath.c_str(), 0))
     {
         std::cout << "Imagen guardada en: " << outputPath << std::endl;
@@ -122,6 +146,16 @@ int main()
     // Liberar memoria y finalizar FreeImage
     FreeImage_Unload(bitmap);
     FreeImage_DeInitialise();
+
+    while (1) {
+        if (SDL_PollEvent(&event) && event.type == SDL_QUIT)
+            break;
+    }
+
+    // SDL
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 
     return 0;
 }
