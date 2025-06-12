@@ -63,7 +63,7 @@ Rayo_RR Camara_RR::generarRayo(int i, int j)
     // Calcular el vector que apunta hacia el pixel
     Vector direccionRayo = (pixelPosition - position).normalize();
     // Crear y retornar el rayo
-    return Rayo_RR(position, direccionRayo);
+    return Rayo_RR(position, direccionRayo, CAMERA_REFRACTION_INDEX);
 }
 
 std::ostream &operator<<(std::ostream &os, const Camara_RR &camara)

@@ -15,6 +15,7 @@ public:
 	int brilloEspecular;
 	ColorRGB colorReflexionEspecular;
 	Vector coeficienteTransparencia;
+	float indiceRefraccion;
 	Vector coeficienteReflexion;
 
 	PropiedadesObjeto()
@@ -26,13 +27,19 @@ public:
 		  brilloEspecular(DEFAULT_SPECULAR_BRIGHTNESS),
 		  colorReflexionEspecular(ColorRGB(255, 255, 255)),
 		  coeficienteTransparencia(DEFAULT_TRANSPARENCY_COEFFICIENT),
+		  indiceRefraccion(DEFAULT_REFRACTION_INDEX),
 		  coeficienteReflexion(DEFAULT_REFLECTION_COEFFICIENT) {}
 
-	PropiedadesObjeto(float coefAmbiente, ColorRGB colorAmbiente,
-					  float coefRefDifusa, ColorRGB colorRefDifusa,
-					  float coefRefEspecular, int brilloEspecular,
+	PropiedadesObjeto(float coefAmbiente,
+					  ColorRGB colorAmbiente,
+					  float coefRefDifusa,
+					  ColorRGB colorRefDifusa,
+					  float coefRefEspecular,
+					  int brilloEspecular,
 					  ColorRGB colorRefEspecular,
-					  Vector coefTransparencia, Vector coefReflexion)
+					  Vector coefTransparencia,
+					  float indiceRefraccion,
+					  Vector coefReflexion)
 		: coeficienteAmbiente(coefAmbiente),
 		  colorAmbiente(colorAmbiente),
 		  coeficienteReflexionDifusa(coefRefDifusa),
@@ -41,6 +48,7 @@ public:
 		  brilloEspecular(brilloEspecular),
 		  colorReflexionEspecular(colorRefEspecular),
 		  coeficienteTransparencia(coefTransparencia),
+		  indiceRefraccion(indiceRefraccion),
 		  coeficienteReflexion(coefReflexion) {}
 	PropiedadesObjeto(const ColorRGB &color)
 		: coeficienteAmbiente(DEFAULT_AMBIENT_COEFFICIENT),
@@ -51,6 +59,7 @@ public:
 		  brilloEspecular(DEFAULT_SPECULAR_BRIGHTNESS),
 		  colorReflexionEspecular(ColorRGB(255, 255, 255)),
 		  coeficienteTransparencia(DEFAULT_TRANSPARENCY_COEFFICIENT),
+		  indiceRefraccion(DEFAULT_REFRACTION_INDEX),
 		  coeficienteReflexion(DEFAULT_REFLECTION_COEFFICIENT) {}
 };
 

@@ -14,6 +14,7 @@ public:
     Esfera_RR();
     Esfera_RR(Vector centro, float radio, PropiedadesObjeto prop);
     bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal) override;
+    bool estaDentro(Vector punto) override;
 };
 
 using EsferaPtr = std::shared_ptr<Esfera_RR>;
@@ -64,9 +65,19 @@ bool Esfera_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Ve
     *puntoInterseccion = rayo.getOrigen() + rayo.getDireccion() * t;
 
     // Calcular la normal en el punto de intersección
+    if ((rayo.getOrigen() - centro).length() < radio)
+        *normal = (centro - *puntoInterseccion).normalize();
+    else
+        *normal = (*puntoInterseccion - centro).normalize();
     *normal = (*puntoInterseccion - centro).normalize();
 
     return true;
+}
+
+bool Esfera_RR::estaDentro(Vector punto)
+{
+    // Verifica si el punto está dentro de la esfera
+    return (punto - centro).length() < radio;
 }
 
 #endif // ESFERA_H

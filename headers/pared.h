@@ -18,6 +18,7 @@ public:
     Pared_RR(Vector centro, Vector normal, float ancho, float alto, PropiedadesObjeto prop);
     Pared_RR(Vector centro, Vector normal, Vector up, float ancho, float alto, PropiedadesObjeto prop);
     bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal) override;
+    bool estaDentro(Vector punto) override;
 };
 
 using ParedPtr = std::shared_ptr<Pared_RR>;
@@ -98,6 +99,11 @@ bool Pared_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccionRet, 
         return true;
     }
     return false;
+}
+
+bool Pared_RR::estaDentro(Vector punto)
+{
+    return false; // Las paredes no tienen un interior definido, por lo que siempre devuelven false
 }
 
 #endif // PARED_H

@@ -69,7 +69,8 @@ ColorRGB Color_RR::getColorTotal() const
     return this->colorAmbiente * this->coeficienteAmbiente +
            this->colorReflexionDifusa * this->coeficienteReflexionDifusa +
            this->colorReflexionEspecular * this->coeficienteReflexionEspecular +
-           this->colorReflexion * this->coeficienteReflexion;
+           this->colorReflexion * this->coeficienteReflexion +
+           this->colorTransparencia * this->coeficienteTransparencia;
 }
 
 void Color_RR::setComponenteAmbiente(ColorRGB color, float coeficiente)

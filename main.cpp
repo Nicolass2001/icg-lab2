@@ -18,9 +18,50 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
         if (objeto->getCoeficienteReflexion().length() > 0.0f)
         {
             Vector direccionReflexion = rayo.getDireccion() - normal * 2.0f * (rayo.getDireccion().dot(normal));
-            Rayo_RR rayoReflexion(punto + normal * EPSILON, direccionReflexion.normalize());
+            Rayo_RR rayoReflexion(punto + normal * EPSILON, direccionReflexion.normalize(), rayo.getIndiceRefraccion());
             Color_RR colorReflexion = traza_RR(rayoReflexion, profundidad + 1);
             color.setComponenteReflexion(colorReflexion.getColorTotal(), objeto->getCoeficienteReflexion());
+        }
+        // Calcular Refraccion
+        if (objeto->getCoeficienteTransparencia().length() > 0.0f)
+        {
+            Vector puntoRefraccion = punto - normal * EPSILON;
+            float indiceRefraccionIncidente = rayo.getIndiceRefraccion();
+            float indiceRefraccionTransmitido = escena.indiceRefraccion(puntoRefraccion);
+            float indiceRefraccionRelativo = indiceRefraccionIncidente / indiceRefraccionTransmitido;
+            Vector direccionRefraccion;
+            if (indiceRefraccionRelativo == 1)
+            {
+                direccionRefraccion = rayo.getDireccion();
+                if (test == 0)
+                {
+                    std::cout << "Indice de refracción incidente: " << indiceRefraccionIncidente << std::endl;
+                    std::cout << "direccionRefraccion: " << direccionRefraccion << std::endl;
+                }
+            }
+            else
+            {
+                std::cout << "Indice de refracción incidente: " << indiceRefraccionIncidente << std::endl;
+                // Ley de Snell
+                float cosenoIncidencia = -rayo.getDireccion().dot(normal);
+                float senoCuadradoRefraccion = indiceRefraccionRelativo * indiceRefraccionRelativo * (1.0f - cosenoIncidencia * cosenoIncidencia);
+                if (senoCuadradoRefraccion > 1.0f)
+                {
+                    // Total internal reflection
+                    color.setComponenteTransparencia(ColorRGB(0, 0, 0), Vector(0, 0, 0));
+                    return color;
+                }
+                float cosenoRefraccion = sqrt(1.0f - senoCuadradoRefraccion);
+                direccionRefraccion = rayo.getDireccion() * indiceRefraccionRelativo + normal * (indiceRefraccionRelativo * cosenoIncidencia - cosenoRefraccion);
+            }
+            Rayo_RR rayoRefraccion(puntoRefraccion, direccionRefraccion.normalize(), indiceRefraccionTransmitido);
+            Color_RR colorRefraccion = traza_RR(rayoRefraccion, profundidad + 1);
+            if (test == 0)
+            {
+                std::cout << "colorRefraccion: " << colorRefraccion << std::endl;
+            }
+            test = 1;
+            color.setComponenteTransparencia(colorRefraccion.getColorTotal(), objeto->getCoeficienteTransparencia());
         }
     }
     return color;

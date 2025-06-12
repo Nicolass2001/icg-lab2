@@ -17,6 +17,7 @@ public:
     Cilindro_RR();
     Cilindro_RR(Vector base, Vector direccion, float radio, float altura, PropiedadesObjeto prop);
     bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal) override;
+    bool estaDentro(Vector punto) override;
 
 private:
     bool interseccionConTapa(Vector centroTapa, Vector normalTapa, Rayo_RR rayo, Vector *puntoInterseccion);
@@ -135,6 +136,18 @@ bool Cilindro_RR::interseccionConTapa(Vector centroTapa, Vector normalTapa, Rayo
     }
 
     return false;
+}
+
+bool Cilindro_RR::estaDentro(Vector punto)
+{
+    // Verifica si el punto está dentro del cilindro
+    Vector delta = punto - base;
+    float distanciaBase = delta.dot(direccion);
+    if (distanciaBase < 0 || distanciaBase > altura)
+        return false;
+
+    Vector proyeccion = delta - direccion * distanciaBase;
+    return proyeccion.length() <= radio;
 }
 
 #endif // CILINDRO_H

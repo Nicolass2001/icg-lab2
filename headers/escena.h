@@ -26,6 +26,7 @@ public:
     ObjetoPtr calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto, Vector *normal);
     void calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, Color_RR &color);
     Vector calcularLuzBloqueada(Rayo_RR rayo, Vector puntoLuz); // Método para calcular la luz bloqueada por otros objetos
+    float indiceRefraccion(Vector punto);
 };
 
 Color_RR Escena_RR::getFondo()
@@ -41,7 +42,7 @@ Camara_RR Escena_RR::getCamara()
 Escena_RR::Escena_RR()
 {
     camara = Camara_RR(
-        Vector(-6, 0, 0), // Posición de la cámara
+        Vector(2, 0, 0),  // Posición de la cámara
         Vector(1, 0, 0),  // Dirección hacia adelante de la cámara
         Vector(0, 1, 0)); // Vector hacia arriba de la cámara
 
@@ -138,14 +139,9 @@ Escena_RR::Escena_RR()
         0.8f,                      // Coeficiente de reflexión especular
         5,                         // Brillo especular
         ColorRGB(255, 255, 255),   // Color de reflexión especular
-        Vector(0.2f, 0.8f, 0.8f),  // Coeficiente de transparencia
-        Vector(0.5f, 0.5f, 0.5f)); // Coeficiente de reflexion
-
-    Esfera_RR esfera = Esfera_RR(
-        Vector(8, 0, 0), // Centro de la esfera
-        2.0f,            // Radio de la esfera
-        propEsfera);     // Propiedades de la esfera
-    objetos.push_back(std::make_shared<Esfera_RR>(esfera));
+        Vector(0.8f, 0.8f, 0.8f),  // Coeficiente de transparencia
+        1.0f,                      // Índice de refracción
+        Vector(0.0f, 0.0f, 0.0f)); // Coeficiente de reflexion
 
     PropiedadesObjeto propEsfera2(
         0.1f,
@@ -156,12 +152,19 @@ Escena_RR::Escena_RR()
         5,
         ColorRGB(255, 255, 255),
         Vector(0.0f, 0.0f, 0.0f),
+        1.0f,
         Vector(0.5f, 0.5f, 0.5f));
+
+    Esfera_RR esfera = Esfera_RR(
+        Vector(8, 0, 0), // Centro de la esfera
+        2.0f,            // Radio de la esfera
+        propEsfera2);    // Propiedades de la esfera
+    objetos.push_back(std::make_shared<Esfera_RR>(esfera));
 
     Esfera_RR esfera2 = Esfera_RR(
         Vector(4, -1, -1),
         1.0f,
-        propEsfera2);
+        propEsfera);
     objetos.push_back(std::make_shared<Esfera_RR>(esfera2));
 
     // CILINDROS
@@ -175,6 +178,7 @@ Escena_RR::Escena_RR()
         5,
         ColorRGB(255, 255, 255),
         Vector(0.0f, 0.0f, 0.0f),
+        1.0f,
         Vector(0.0f, 0.0f, 0.0f));
 
     Cilindro_RR cilindro = Cilindro_RR(
@@ -234,7 +238,7 @@ void Escena_RR::calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector 
         float factorAtenuacion = 1 / distanciaLuz * distanciaLuz;
 
         // Calcular atenuación por bloqueo
-        Vector factorAtenuacionPorBloqueo = calcularLuzBloqueada(Rayo_RR(punto + direccionLuz * EPSILON, direccionLuz), luz.getPosicion());
+        Vector factorAtenuacionPorBloqueo = calcularLuzBloqueada(Rayo_RR(punto + direccionLuz * EPSILON, direccionLuz, 0), luz.getPosicion());
         intensidad = intensidad * factorAtenuacionPorBloqueo;
 
         // Calcular iluminación difusa
@@ -280,6 +284,18 @@ Vector Escena_RR::calcularLuzBloqueada(Rayo_RR rayo, Vector puntoLuz)
         }
     }
     return factorDeAtenuacion;
+}
+
+float Escena_RR::indiceRefraccion(Vector punto)
+{
+    for (const auto &objeto : objetos)
+    {
+        if (objeto->estaDentro(punto))
+        {
+            return objeto->getIndiceRefraccion();
+        }
+    }
+    return DEFAULT_REFRACTION_INDEX; // Si no hay intersección, se asume el índice de refracción del aire
 }
 
 #endif // ESCENA_H
