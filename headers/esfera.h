@@ -30,45 +30,48 @@ Esfera_RR::Esfera_RR(Vector centro, float radio, PropiedadesObjeto prop)
 
 bool Esfera_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal)
 {
+
+    // Ecuacion de la esfera es: 
+    // ||P-C||^2 = r^2 
+    // Con:
+    // P punto en superficie, C centro de la esfera, r radio
+
+    // Rayo tiene origen O = (Ox, Oy, Oz) y direccion D = (Dx, Dy, Dz)
+    // Sustituyo en ecuacion de la esfera:
+    // ||O + tD - C||^2 = r^2
+    // (O+tD−C).(O+tD−C) = r^2
+    // (D.D)t^2 + 2D.(O-C)t + (O−C)⋅(O−C)−r^2 = 0
+    // At^2 + Bt + S = 0
+    // Si discriminante es < 0 no hay intersecc
+    // Si discriminante es >=0 calculo las raices con bhaskara
+
     // Vector desde el origen del rayo al centro de la esfera
-    Vector L = centro - rayo.getOrigen();
+    Vector oc = rayo.getOrigen() - centro;
 
-    // Proyección del vector L en la dirección del rayo
-    float tca = L.dot(rayo.getDireccion());
+    float A = rayo.getDireccion().dot(rayo.getDireccion());
+    float B = 2.0f * rayo.getDireccion().dot(oc);
+    float S = oc.dot(oc) - radio * radio;
 
-    // Distancia al punto más cercano desde el rayo al centro de la esfera
-    float d2 = L.dot(L) - tca * tca;
+    float discriminante = B * B - (4 * A * S);
 
-    // Si d2 es mayor que el radio al cuadrado, no hay intersección
-    if (d2 > radio * radio)
+    if (discriminante < 0) return false;
+
+    float sqrt_disc = sqrt(discriminante);
+    float t1 = (-B - sqrt_disc) / (2 * A);
+    float t2 = (-B + sqrt_disc) / (2 * A);
+
+    float t_esfera = -1;
+    if (t1 > 0) {
+        t_esfera = t1;
+    } else if (t2 > 0) {
+        t_esfera = t2;
+    } else {
         return false;
+    }
 
-    // Calcular la distancia desde el punto más cercano hasta el punto de intersección
-    float thc = sqrt(radio * radio - d2);
-
-    // Calcular los puntos de intersección
-    float t0 = tca - thc; // Intersección "frontal"
-    float t1 = tca + thc; // Intersección "posterior"
-
-    // Asegurarnos de que t0 sea la menor distancia positiva
-    if (t0 > t1)
-        std::swap(t0, t1);
-
-    // Si ambas distancias son negativas, el rayo no intersecta la esfera
-    if (t0 < 0 && t1 < 0)
-        return false;
-
-    // Usar el punto de intersección más cercano en dirección positiva
-    float t = (t0 < 0) ? t1 : t0;
-
-    // Calcular el punto de intersección
-    *puntoInterseccion = rayo.getOrigen() + rayo.getDireccion() * t;
-
-    // Calcular la normal en el punto de intersección
-    if ((rayo.getOrigen() - centro).length() < radio)
-        *normal = (centro - *puntoInterseccion).normalize();
-    else
-        *normal = (*puntoInterseccion - centro).normalize();
+    // El punto de interseccion esta dado por
+    // P = O + D*t
+    *puntoInterseccion = rayo.getOrigen() + rayo.getDireccion() * t_esfera;
     *normal = (*puntoInterseccion - centro).normalize();
 
     return true;

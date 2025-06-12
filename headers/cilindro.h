@@ -38,37 +38,68 @@ Cilindro_RR::Cilindro_RR(Vector base, Vector direccion, float radio, float altur
 
 bool Cilindro_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal)
 {
+    // PARA LA INTERSECCION CON LA SUPERFICIE LATERAL:
+    // La ecuacion del cilindro en eje Y es:
+    // (x−cx)^2 +(z−cz)^2 = r^2
+    // Con:
+    // C = (cx, cz) el centro del cilindro, r el radio (estos son atributos de la clase)
+
+    // Rayo tiene origen O = (Ox, Oy, Oz) y direccion D = (Dx, Dy, Dz)
+    // Posicion del rayo en el cilindro:
+    // x(t)=Ox+Dx⋅t
+    // z(t)=Oz+Dz⋅t
+    // Voy a tener que reemplazar esos valores en la ecuacion del cilindro:
+    // (x(t) - Cx)^2 + (z(t) - Cz)^2 = r^2
+    // Expando y tengo la ecuacion a resolver:
+    // [(Ox+Dx⋅t)−Cx]^2 + [(Oz+Dz⋅t)−Cz]^2 = r^2
+    // Y encuentro los puntos t de interseccion (si los hay) y me quedo con el mas cercano
+
     Vector puntoInterseccionLateral, normalLateral;
     Vector puntoInterseccionBase, puntoInterseccionTapa;
     bool hayInterseccionLateral = false;
     bool hayInterseccionBase = false;
     bool hayInterseccionTapa = false;
 
-    // Paso 1: Calcular intersección con la superficie lateral del cilindro
-    Vector rayoOrigenProy = rayo.getOrigen() - direccion * (rayo.getOrigen().dot(direccion));
-    Vector rayoDirProy = rayo.getDireccion() - direccion * (rayo.getDireccion().dot(direccion));
-    Vector baseProy = base - direccion * (base.dot(direccion));
+    // Paso 1: Calculo de interseccion con superficie lateral
+    float ox = rayo.getOrigen().x();
+    float oy = rayo.getOrigen().y();
+    float oz = rayo.getOrigen().z();
 
-    Vector delta = rayoOrigenProy - baseProy;
+    float dx = rayo.getDireccion().x();
+    float dy = rayo.getDireccion().y();
+    float dz = rayo.getDireccion().z();
 
-    float a = rayoDirProy.dot(rayoDirProy);
-    float b = 2 * delta.dot(rayoDirProy);
-    float c = delta.dot(delta) - radio * radio;
+    float cx = base.x();
+    float cz = base.z();
 
-    float discriminante = b * b - 4 * a * c;
+    // Resuelvo la ecuacion aplicando bhaskara
+    float a = dx * dx + dz * dz;
+    float b = 2 * ((ox - cx) * dx + (oz - cz) * dz);
+    float c = (ox - cx) * (ox - cx) + (oz - cz) * (oz - cz) - radio * radio;
+
+    float discriminante = b * b - (4 * a * c); // Si el discriminante de bhaskara da menor a 0 no hay solucion real
 
     if (discriminante >= 0)
     {
-        float t0 = (-b - sqrt(discriminante)) / (2 * a);
-        float t1 = (-b + sqrt(discriminante)) / (2 * a);
+        float sqrt_disc = sqrt(discriminante);
+        float t1 = (-b - sqrt_disc) / (2 * a);
+        float t2 = (-b + sqrt_disc) / (2 * a);
+        
+        // Me voy a quedar con el t positivo mas cercano
+        float t_cil = -1;
+        if (t1 > 0) {
+            t_cil = t1;
+        } else if (t2 > 0) {
+            t_cil = t2;
+        }
 
-        if (t0 > t1)
-            std::swap(t0, t1);
-
-        float t = t0 >= 0 ? t0 : t1;
-        if (t >= 0)
+        if (t_cil >= 0)
         {
-            Vector punto = rayo.getOrigen() + rayo.getDireccion() * t;
+            // El punto de interseccion esta dado por
+            // P = O + D*t
+            Vector punto = rayo.getOrigen() + rayo.getDireccion() * t_cil;
+
+            // Veo que este entre la altura definida para mi cilindro
             float distanciaAltura = (punto - base).dot(direccion);
             if (distanciaAltura >= 0 && distanciaAltura <= altura)
             {
@@ -79,14 +110,14 @@ bool Cilindro_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, 
         }
     }
 
-    // Paso 2: Calcular intersección con la base
+    // Paso 2: Calculo de interseccion con la base
     hayInterseccionBase = interseccionConTapa(base, direccion * (-1.0f), rayo, &puntoInterseccionBase);
 
-    // Paso 3: Calcular intersección con la tapa superior
+    // Paso 3: Calculo de interseccion con la base
     Vector centroTapa = base + direccion * altura;
     hayInterseccionTapa = interseccionConTapa(centroTapa, direccion, rayo, &puntoInterseccionTapa);
 
-    // Paso 4: Determinar la intersección más cercana
+    // Paso 4: Determinar interseccion mas cercana
     float distanciaLateral = hayInterseccionLateral ? (puntoInterseccionLateral - rayo.getOrigen()).length() : FLT_MAX;
     float distanciaBase = hayInterseccionBase ? (puntoInterseccionBase - rayo.getOrigen()).length() : FLT_MAX;
     float distanciaTapa = hayInterseccionTapa ? (puntoInterseccionTapa - rayo.getOrigen()).length() : FLT_MAX;
@@ -115,20 +146,30 @@ bool Cilindro_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, 
 
 bool Cilindro_RR::interseccionConTapa(Vector centroTapa, Vector normalTapa, Rayo_RR rayo, Vector *puntoInterseccion)
 {
+    // La escuacion para interseccion entre rayo y plano es asi:
+    // t = - (O-Po).N / D.N
+    // Rayo tiene origen O y direccion D
+    // Plano definido por un punto (origen) y una normal (estos son los atributos de la clase)
+    // Primero veo que el rayo intersecte con el plano, y luego que sea dentro del area de la tapa
+
     float denominador = normalTapa.dot(rayo.getDireccion());
 
-    // Verifica si el rayo es paralelo a la tapa
-    if (glm::abs(denominador) < 1e-6f)
+    // Si el denominador se aproxima a 0, entonces el rayo es paralelo a la tapa
+    if (glm::abs(denominador) < 1e-10f)
         return false;
 
-    float t = normalTapa.dot(centroTapa - rayo.getOrigen()) / denominador;
+    // Calculo nominador de la ecuacion: (O-Po).N
+    float nominador = normalTapa.dot(centroTapa - rayo.getOrigen());
+
+    float t = nominador / denominador;
 
     if (t < 0)
         return false;
 
+    // Calculo punto de interseccion P = O + t*D
     Vector punto = rayo.getOrigen() + rayo.getDireccion() * t;
 
-    // Verifica si el punto está dentro del círculo de la tapa
+    // Veo si el punto esta en la tapa
     if ((punto - centroTapa).length() <= radio)
     {
         *puntoInterseccion = punto;

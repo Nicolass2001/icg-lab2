@@ -19,6 +19,7 @@ public:
     Pared_RR(Vector centro, Vector normal, Vector up, float ancho, float alto, PropiedadesObjeto prop);
     bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal) override;
     bool estaDentro(Vector punto) override;
+    bool punto_en_pared(Vector punto);
 };
 
 using ParedPtr = std::shared_ptr<Pared_RR>;
@@ -61,44 +62,61 @@ Pared_RR::Pared_RR(Vector centro, Vector normal, Vector up, float ancho, float a
 
 bool Pared_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccionRet, Vector *normalRet)
 {
-    // Paso 1: Intersección con el plano
-    float denominator = normal.dot(rayo.getDireccion());
+
+    // La escuacion para interseccion entre rayo y plano es asi:
+    // t = - (O-Po).N / D.N
+    // Rayo tiene origen O y direccion D
+    // Plano definido por un punto (origen) y una normal (estos son los atributos de la clase)
+
+
+    float denominador = normal.dot(rayo.getDireccion());
 
     // Verifica si el rayo es paralelo al plano
-    if (glm::abs(denominator) < 1e-6f)
+    if (glm::abs(denominador) < 1e-6f)
         return false;
 
-    // Verifica si la normal y el rayo apuntan hacia el mismo lado (se ve desde atrás)
-    if (denominator > 0)
+    // Verifica si la normal y el rayo apuntan hacia el mismo lado (se ve desde atras)
+    if (denominador > 0)
         return false;
 
-    // Calcula el parámetro t (distancia a la intersección desde el origen del rayo)
-    float t = normal.dot(centro - rayo.getOrigen()) / denominator;
+    float nominador = normal.dot(centro - rayo.getOrigen());
 
-    // Verifica si la intersección está en la dirección positiva del rayo
-    if (t < 0) // La intersección está detrás del origen del rayo
+    // Calculo t (distancia a la interseccion desde el origen del rayo)
+    float t =  nominador / denominador;
+
+    // La intersecc esta atras del origen del rayo
+    if (t < 0) {
         return false;
+    }
 
-    // Calcula el punto de intersección
+    // Calculo punto de interseccion P = O + t*D
     Vector puntoInterseccion = rayo.getOrigen() + rayo.getDireccion() * t;
 
-    // Paso 2: Proyección en el espacio del semiplano
-    Vector relativePoint = puntoInterseccion - centro;
+    if (!punto_en_pared(puntoInterseccion)) return false;
 
-    float u = relativePoint.dot(anchoVec.normalize()); // Coordenada en la dirección del ancho
-    float v = relativePoint.dot(altoVec.normalize());  // Coordenada en la dirección del largo
+
+    *puntoInterseccionRet = Vector(puntoInterseccion);
+    *normalRet = Vector(normal);
+    return true;
+    
+}
+
+// Calculo vector desde centro del rectangulo hasta P, proyecto sobre los
+// lados del rectangulo, y veo si esta dentro
+bool Pared_RR::punto_en_pared(Vector punto){
+    Vector relativePoint = punto - centro;
+
+    float u = relativePoint.dot(anchoVec.normalize()); // Coordenada en la direcc del ancho
+    float v = relativePoint.dot(altoVec.normalize());  // Coordenada en la direcc del largo
 
     float width = anchoVec.length();
     float height = altoVec.length();
 
-    // Paso 3: Verificar si está dentro de los límites
-    if ((u >= -width / 2 && u <= width / 2) && (v >= -height / 2 && v <= height / 2))
-    {
-        *puntoInterseccionRet = Vector(puntoInterseccion);
-        *normalRet = Vector(normal);
+    if ((u >= -width / 2 && u <= width / 2) && (v >= -height / 2 && v <= height / 2)) {
         return true;
+    } else {
+        return false;
     }
-    return false;
 }
 
 bool Pared_RR::estaDentro(Vector punto)
