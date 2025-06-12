@@ -18,17 +18,17 @@
             <x>7</x>
             <y>4.5</y>
             <z>0</z>
-            <r>0.7</r>
-            <g>0.2</g>
-            <b>0.2</b>
+            <r>1.0</r>
+            <g>1.0</g>
+            <b>1.0</b>
         </luz>
         <luz>
             <x>3</x>
             <y>4.5</y>
             <z>0</z>
-            <r>0.8</r>
-            <g>0.8</g>
-            <b>0.1</b>
+            <r>1.0</r>
+            <g>1.0</g>
+            <b>1.0</b>
         </luz>
     </luces>
     <objetos>
@@ -125,7 +125,7 @@
         <esfera>
             <!-- Esfera 1 -->
             <centro>
-                <x>8</x>
+                <x>2</x>
                 <y>0</y>
                 <z>0</z>
             </centro>
@@ -155,16 +155,17 @@
                     <g>0.8</g>
                     <b>0.8</b>
                 </kt>
-                <kreflx>
-                    <indice>1.0</indice>
+                <krefracc>
+                    <indice>1.5</indice> <!-- indice refraccion vidrio -->
                     <r>0.5</r>
                     <g>0.5</g>
                     <b>0.5</b>
-                </kreflx>
+                </krefracc>
             </propObjeto>
         </esfera>
+        <!-- Esfera 2 -->
+        <!-- 
         <esfera>
-            <!-- Esfera 2 -->
             <centro>
                 <x>4</x>
                 <y>-1</y>
@@ -196,16 +197,18 @@
                     <g>0.0</g>
                     <b>0.0</b>
                 </kt>
-                <kreflx>
+                <krefracc>
                     <indice>1.0</indice>
                     <r>0.5</r>
                     <g>0.5</g>
                     <b>0.5</b>
-                </kreflx>
+                </krefracc>
             </propObjeto>
         </esfera>
+        -->
+        <!-- Cilindro 1 -->
+        <!--
         <cilindro>
-            <!-- Cilindro 1 -->
             <base>
                 <x>5</x>
                 <y>-5</y>
@@ -243,16 +246,18 @@
                     <g>0.0</g>
                     <b>0.0</b>
                 </kt>
-                <kreflx>
+                <krefracc>
                     <indice>1.0</indice>
                     <r>0.0</r>
                     <g>0.0</g>
                     <b>0.0</b>
-                </kreflx>
+                </krefracc>
             </propObjeto>
         </cilindro>
+        -->
+        <!-- Cilindro 2 -->
+        <!--
         <cilindro>
-            <!-- Cilindro 2 -->
             <base>
                 <x>8</x>
                 <y>3</y>
@@ -290,13 +295,14 @@
                     <g>0.0</g>
                     <b>0.0</b>
                 </kt>
-                <kreflx>
+                <krefracc>
                     <indice>1.0</indice>
                     <r>0.0</r>
                     <g>0.0</g>
                     <b>0.0</b>
-                </kreflx>
+                </krefracc>
             </propObjeto>
         </cilindro>
+        -->
     </objetos>
 </config>
