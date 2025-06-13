@@ -30,6 +30,10 @@ public:
     void setComponenteEspecular(ColorRGB color, float coeficiente);
     void setComponenteTransparencia(ColorRGB color, Vector coeficiente);
     void setComponenteReflexion(ColorRGB color, Vector coeficiente);
+
+    ColorRGB getComponenteReflexion() const;
+    ColorRGB getComponenteTransparencia() const;
+
 };
 
 Color_RR::Color_RR()
@@ -102,5 +106,14 @@ void Color_RR::setComponenteReflexion(ColorRGB color, Vector coeficiente)
     this->colorReflexion = color;
     this->coeficienteReflexion = coeficiente;
 }
+
+ColorRGB Color_RR::getComponenteReflexion() const {
+     return colorReflexion * coeficienteReflexion; 
+}
+
+ColorRGB Color_RR::getComponenteTransparencia() const { 
+    return colorTransparencia * coeficienteTransparencia; 
+}
+
 
 #endif // COLOR_H

@@ -125,7 +125,7 @@
         <esfera>
             <!-- Esfera 1 -->
             <centro>
-                <x>2</x>
+                <x>0.5</x>
                 <y>0</y>
                 <z>0</z>
             </centro>
@@ -134,13 +134,13 @@
                 <ka>
                     <valor>0.1</valor>
                     <r>255</r>
-                    <g>0</g>
+                    <g>255</g>
                     <b>255</b>
                 </ka>
                 <kd>
-                    <valor>0.5</valor>
+                    <valor>0.05</valor>
                     <r>255</r>
-                    <g>0</g>
+                    <g>255</g>
                     <b>255</b>
                 </kd>
                 <ks>
@@ -150,10 +150,10 @@
                     <g>255</g>
                     <b>255</b>
                 </ks>
-                <kt>
-                    <r>0.2</r>
-                    <g>0.8</g>
-                    <b>0.8</b>
+                <kt> <!-- para que transmita toda la luz sin coloracion -->
+                    <r>0.6</r> 
+                    <g>0.6</g>
+                    <b>0.6</b>
                 </kt>
                 <krefracc>
                     <indice>1.5</indice> <!-- indice refraccion vidrio -->
