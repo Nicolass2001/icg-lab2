@@ -32,78 +32,7 @@
         </luz>
     </luces>
     <objetos>
-        <pared>
-            <!-- Pared fondo -->
-            <normal>
-                <x>-1</x>
-                <y>0</y>
-                <z>0</z>
-            </normal>
-            <centro>
-                <x>10</x>
-                <y>0</y>
-                <z>0</z>
-            </centro>
-            <ancho>10</ancho>
-            <alto>10</alto>
-            <r>255</r>
-            <g>0</g>
-            <b>0</b>
-        </pared>
-        <pared>
-            <!-- Pared izquierda -->
-            <normal>
-                <x>0</x>
-                <y>0</y>
-                <z>1</z>
-            </normal>
-            <centro>
-                <x>5</x>
-                <y>0</y>
-                <z>-5</z>
-            </centro>
-            <ancho>10</ancho>
-            <alto>10</alto>
-            <r>0</r>
-            <g>255</g>
-            <b>0</b>
-        </pared>
-        <pared>
-            <!-- Pared Superior -->
-            <normal>
-                <x>0</x>
-                <y>-1</y>
-                <z>0</z>
-            </normal>
-            <centro>
-                <x>5</x>
-                <y>5</y>
-                <z>0</z>
-            </centro>
-            <ancho>10</ancho>
-            <alto>10</alto>
-            <r>255</r>
-            <g>255</g>
-            <b>0</b>
-        </pared>
-        <pared>
-            <!-- Pared derecha -->
-            <normal>
-                <x>0</x>
-                <y>0</y>
-                <z>-1</z>
-            </normal>
-            <centro>
-                <x>5</x>
-                <y>0</y>
-                <z>5</z>
-            </centro>
-            <ancho>10</ancho>
-            <alto>10</alto>
-            <r>0</r>
-            <g>0</g>
-            <b>255</b>
-        </pared>
+        
         <pared>
             <!-- Pared inferior -->
             <normal>
@@ -116,8 +45,8 @@
                 <y>-5</y>
                 <z>0</z>
             </centro>
-            <ancho>10</ancho>
-            <alto>10</alto>
+            <ancho>30</ancho>
+            <alto>30</alto>
             <r>255</r>
             <g>0</g>
             <b>255</b>
@@ -157,9 +86,9 @@
                 </kt>
                 <kreflx>
                     <indice>1.5</indice> <!-- indice refraccion vidrio -->
-                    <r>0.1</r>
-                    <g>0.1</g>
-                    <b>0.1</b>
+                    <r>0.7</r>
+                    <g>0.7</g>
+                    <b>0.7</b>
                 </kreflx>
             </propObjeto>
         </esfera>

@@ -48,15 +48,12 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
 
             float n1 = rayo.getIndiceRefraccion(); // indice de refraccion del medio 
             float n2 = objeto->getIndiceRefraccion(); // ind de refracc del objeto, en este caso vidrio 1.5
-
-            /*
+            
             bool entrando = (normal.dot(rayo.getDireccion()) < 0.0f);
             if (!entrando) {
                 std::swap(n1, n2);
                 normal = normal * -1.0f;
             }
-                */
-
             // La ley de Snell me dice que: sen(o1)/sen(o2) = n2/n1
             float n = n1 / n2;
 
@@ -65,7 +62,6 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
             // SIGO LOS PASOS DEL LIBRO PARA CALCULAR T, que lo simplifica a algo asi:
             // T = (η(N.I) − sqrt[1 − η^2 (1 − (N.I)^2)]) * N - η*I
  
-
             Vector I = rayo.getDireccion().normalize();
 
             // calculo: −(N.I)
@@ -108,11 +104,8 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
             Rayo_RR rayo_t(origenRefraccion, T, indiceRefraccionTransmitido);
 
             Color_RR colorRefraccion = traza_RR(rayo_t, profundidad + 1);
-            color.setComponenteTransparencia(colorRefraccion.getColorTotal(), objeto->getCoeficienteTransparencia());    
-
+            color.setComponenteTransparencia(colorRefraccion.getColorTotal(), objeto->getCoeficienteTransparencia()); 
         }
-
-       
     }
     return color;
 }
