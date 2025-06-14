@@ -155,12 +155,12 @@
                     <g>0.6</g>
                     <b>0.6</b>
                 </kt>
-                <krefracc>
+                <kreflx>
                     <indice>1.5</indice> <!-- indice refraccion vidrio -->
-                    <r>0.5</r>
-                    <g>0.5</g>
-                    <b>0.5</b>
-                </krefracc>
+                    <r>0.1</r>
+                    <g>0.1</g>
+                    <b>0.1</b>
+                </kreflx>
             </propObjeto>
         </esfera>
         <!-- Esfera 2 -->
@@ -197,12 +197,12 @@
                     <g>0.0</g>
                     <b>0.0</b>
                 </kt>
-                <krefracc>
+                <kreflx>
                     <indice>1.0</indice>
                     <r>0.5</r>
                     <g>0.5</g>
                     <b>0.5</b>
-                </krefracc>
+                </kreflx>
             </propObjeto>
         </esfera>
         -->
@@ -246,12 +246,12 @@
                     <g>0.0</g>
                     <b>0.0</b>
                 </kt>
-                <krefracc>
+                <kreflx>
                     <indice>1.0</indice>
                     <r>0.0</r>
                     <g>0.0</g>
                     <b>0.0</b>
-                </krefracc>
+                </kreflx>
             </propObjeto>
         </cilindro>
         -->
@@ -295,12 +295,12 @@
                     <g>0.0</g>
                     <b>0.0</b>
                 </kt>
-                <krefracc>
+                <kreflx>
                     <indice>1.0</indice>
                     <r>0.0</r>
                     <g>0.0</g>
                     <b>0.0</b>
-                </krefracc>
+                </kreflx>
             </propObjeto>
         </cilindro>
         -->

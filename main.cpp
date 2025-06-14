@@ -8,45 +8,54 @@ Escena_RR escena("config.xml");
 
 Color_RR traza_RR(Rayo_RR rayo, int profundidad);
 
-Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, int profundidad)
-{
+Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, int profundidad) {
     Color_RR color; // Color a devolver
 
+    Rayo_RR rayo_r, rayo_t; // Rayo reflejado, refractado y sombra
+    Color_RR color_r, color_t; // color de los rayos reflejado y refractado
+
+    // Color = termino de ambiente
     color.setComponenteAmbiente(objeto->getColorAmbiente(), objeto->getCoeficienteAmbiente());
+
+    // for (cada luz)
+    // rayos = rayo desde punto a la luz;
+    //if (el producto punto de normal y la dirección a la luz es positivo) {
+    //calcular cuánta luz es bloqueada por superficie opacas y transparentes, y usarla
+    //para escalar los términos difusos y especulares antes de añadirlos a color;
+
     escena.calcularColorIluminacion(objeto, rayo, punto, normal, color);
 
     if (profundidad < PROFUNDIDAD_MAXIMA) {
-        // Calcular Reflexion
 
         // If objeto es reflejante
-        /*
-        if (objeto->getCoeficienteReflexion().length() > 0.0f)
-        {
-            Vector direccionReflexion = rayo.getDireccion() - normal * 2.0f * (rayo.getDireccion().dot(normal));
-            Rayo_RR rayoReflexion(punto + normal * EPSILON, direccionReflexion.normalize(), rayo.getIndiceRefraccion());
-            Color_RR colorReflexion = traza_RR(rayoReflexion, profundidad + 1);
-            color.setComponenteReflexion(colorReflexion.getColorTotal(), objeto->getCoeficienteReflexion());
-        }
-        */
-        // Calcular Refraccion
+        if (objeto->getCoeficienteReflexion().length() > 0.0f) {
 
+            Vector dirReflexion = rayo.getDireccion() - normal * 2.0f * (rayo.getDireccion().dot(normal));
+            dirReflexion = dirReflexion.normalize();
+
+            Rayo_RR rayo_r(punto + normal * EPSILON, dirReflexion, rayo.getIndiceRefraccion());
+            Color_RR colorReflexion = traza_RR(rayo_r, profundidad + 1);
+            color.setComponenteReflexion(colorReflexion.getColorTotal(), objeto->getCoeficienteReflexion());
+
+        }
+        
         // If objeto es transparente
 
         // Si el indice de refraccion es distinto de 0, el objeto es transparente
         if (objeto->getIndiceRefraccion() > 0.0f) {
             // rayo en la direccion de refraccion
 
-            //float n1 =  1.00029f; // ESTO VIENE A SER EL INDICE DE REFRACCION DEL AMBIENTE, EL DEL AIRE POR AHORA
-            //float n2 = objeto->getIndiceRefraccion(); // EL IND DE REFR DEL OBJETO!!!
 
-            float n1 = rayo.getIndiceRefraccion();
-            float n2 = objeto->getIndiceRefraccion();
+            float n1 = rayo.getIndiceRefraccion(); // indice de refraccion del medio 
+            float n2 = objeto->getIndiceRefraccion(); // ind de refracc del objeto, en este caso vidrio 1.5
 
+            /*
             bool entrando = (normal.dot(rayo.getDireccion()) < 0.0f);
             if (!entrando) {
                 std::swap(n1, n2);
                 normal = normal * -1.0f;
             }
+                */
 
             // La ley de Snell me dice que: sen(o1)/sen(o2) = n2/n1
             float n = n1 / n2;
@@ -55,26 +64,24 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
             // Con M un vector unidad perpendicular a N en el plano del rayo incidente T
             // SIGO LOS PASOS DEL LIBRO PARA CALCULAR T, que lo simplifica a algo asi:
             // T = (η(N.I) − sqrt[1 − η^2 (1 − (N.I)^2)]) * N - η*I
-  
  
 
-            Vector rayo_normalizado = rayo.getDireccion().normalize();
+            Vector I = rayo.getDireccion().normalize();
 
             // calculo: −(N.I)
-            float expr1 = -normal.dot(rayo_normalizado);
+            float expr1 = -normal.dot(I); // nota: va el - aca?
 
             // calculo: η^2 (1 − (N.I)^2)
-            float expr2 = n * n * (1.0f - (expr1 * expr1));
+            float expr2 = n * n * (1.0f - expr1 * expr1);
 
             // En el libro dice que "...La reflexión interna total ocurre cuando la raíz 
             // cuadrada en la ecuación (14.30) es imaginaria."
             if (expr2 > 1) {
-                // ACA EN VEZ DE HABER REFRACCION SOLO HAY REFLEXION INTERNA TOTAL (angulo critico.....)
-                Vector R = rayo_normalizado - normal * 2.0f * (rayo_normalizado.dot(normal));
-                Rayo_RR rayoReflexion(punto + normal * EPSILON, R.normalize(), rayo.getIndiceRefraccion());
+                Vector R = (I - normal * 2.0f * (I.dot(normal))).normalize();
+                Rayo_RR rayoReflexion(punto + normal * EPSILON, R, rayo.getIndiceRefraccion());
                 Color_RR colorReflexion = traza_RR(rayoReflexion, profundidad + 1);
                 color.setComponenteReflexion(colorReflexion.getColorTotal(), objeto->getCoeficienteReflexion());
-                return color;                
+                return color;              
             }
 
             // calculo: sqrt[1 − η^2 (1 − (N.I)^2)]
@@ -84,78 +91,24 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
             // T = (η(N.I) − expr3) * N - η*I
 
             // Calculo η(N.I)
-            float expr4 = (normal.dot(rayo.getDireccion())) * n;
+            float expr4 = (normal.dot(I)) * n;
 
             // Calculo (η(N.I) − expr3) * N
             Vector expr5 = normal * (expr4 - expr3);
   
-            Vector T = expr5 - (rayo.getDireccion() * n);
+            Vector T = expr5 - (I * n);
             T = T.normalize();
 
             Vector origenRefraccion = punto - normal * EPSILON;
-
-            float indRefraccionTransmitido;
-
-            // Para saber el indice de refraccion transmitido, 
+            //if (!entrando) {
+            //    origenRefraccion = punto + normal * EPSILON;
+            //}
 
             float indiceRefraccionTransmitido = escena.indiceRefraccion(origenRefraccion);
+            Rayo_RR rayo_t(origenRefraccion, T, indiceRefraccionTransmitido);
 
-
-            // origen direccion indice_refr
-            Rayo_RR rayoRefraccion(origenRefraccion, T, indiceRefraccionTransmitido);
-          
-
-            Color_RR colorRefraccion = traza_RR(rayoRefraccion, profundidad + 1);
-            
-            Vector direccionReflexion = rayo.getDireccion() - normal * 2.0f * (rayo.getDireccion().dot(normal));
-            Rayo_RR rayoReflexion(punto + normal * EPSILON, direccionReflexion.normalize(), rayo.getIndiceRefraccion());
-            Color_RR colorReflexion = traza_RR(rayoReflexion, profundidad + 1);
-            
-            //color.setComponenteReflexion(colorReflexion.getColorTotal(), objeto->getCoeficienteReflexion());
-
-
-
-           
-            color.setComponenteTransparencia(colorRefraccion.getColorTotal(), objeto->getCoeficienteTransparencia());
-
-            
-
-            // Buscar la salida del objeto
-            
-            Vector punto_salida, normal_salida;
-            ObjetoPtr obj_salida = escena.calcularInterseccionMasCercana(rayoRefraccion, &punto_salida, &normal_salida);
-
-            if (obj_salida && obj_salida.get() == objeto.get()) {
-                float n3 = 1.0f; // índice de refracción del aire
-                float n4 = objeto->getIndiceRefraccion();
-
-                float n_rel = n4 / n3;
-                Vector dir_in = rayoRefraccion.getDireccion().normalize();
-                Vector normal_out = normal_salida;
-
-                if (normal_out.dot(dir_in) > 0.0f) {
-                    normal_out = normal_out * -1.0f;
-                }
-
-                float cos_i = -normal_out.dot(dir_in);
-                float sin2_t = n_rel * n_rel * (1.0f - cos_i * cos_i);
-
-                if (sin2_t < 1.0f) { // No hay reflexión interna total
-                    float cos_t = sqrtf(1.0f - sin2_t);
-                    Vector dir_refractada_salida = (dir_in * n_rel) + (normal_out * (n_rel * cos_i - cos_t));
-                    dir_refractada_salida = dir_refractada_salida.normalize();
-
-                    Vector origen_salida = punto_salida + dir_refractada_salida * EPSILON;
-
-                    Rayo_RR rayo_salida(origen_salida, dir_refractada_salida, n3);
-
-
-                    Color_RR color_salida = traza_RR(rayo_salida, profundidad + 2);
-                    color.setComponenteTransparencia(color_salida.getColorTotal(), objeto->getCoeficienteTransparencia());
-                }
-            }
-            
-
+            Color_RR colorRefraccion = traza_RR(rayo_t, profundidad + 1);
+            color.setComponenteTransparencia(colorRefraccion.getColorTotal(), objeto->getCoeficienteTransparencia());    
 
         }
 

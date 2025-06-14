@@ -142,11 +142,11 @@ PropiedadesObjeto XMLHandler::getPropidadesObjeto(tinyxml2::XMLElement *propElem
         std::stof(propElement->FirstChildElement("kt")->FirstChildElement("g")->GetText()),
         std::stof(propElement->FirstChildElement("kt")->FirstChildElement("b")->GetText()));
 
-    float indiceRefraccion = std::stof(propElement->FirstChildElement("krefracc")->FirstChildElement("indice")->GetText());
+    float indiceRefraccion = std::stof(propElement->FirstChildElement("kreflx")->FirstChildElement("indice")->GetText());
     Vector coeficienteReflexion(
-        std::stof(propElement->FirstChildElement("krefracc")->FirstChildElement("r")->GetText()),
-        std::stof(propElement->FirstChildElement("krefracc")->FirstChildElement("g")->GetText()),
-        std::stof(propElement->FirstChildElement("krefracc")->FirstChildElement("b")->GetText()));
+        std::stof(propElement->FirstChildElement("kreflx")->FirstChildElement("r")->GetText()),
+        std::stof(propElement->FirstChildElement("kreflx")->FirstChildElement("g")->GetText()),
+        std::stof(propElement->FirstChildElement("kreflx")->FirstChildElement("b")->GetText()));
 
     return PropiedadesObjeto(coeficienteAmbiente, colorAmbiente,
                              coeficienteReflexionDifusa, colorReflexionDifusa,
