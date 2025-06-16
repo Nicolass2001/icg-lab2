@@ -151,15 +151,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\camara.h" />
+    <ClInclude Include="headers\cilindro.h" />
     <ClInclude Include="headers\color.h" />
     <ClInclude Include="headers\color_rgb.h" />
     <ClInclude Include="headers\escena.h" />
     <ClInclude Include="headers\esfera.h" />
+    <ClInclude Include="headers\fileManager.h" />
     <ClInclude Include="headers\globalVariables.h" />
+    <ClInclude Include="headers\luz.h" />
     <ClInclude Include="headers\objeto.h" />
     <ClInclude Include="headers\pared.h" />
+    <ClInclude Include="headers\propObjetos.h" />
     <ClInclude Include="headers\rayo.h" />
     <ClInclude Include="headers\vector.h" />
+    <ClInclude Include="headers\xmlHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

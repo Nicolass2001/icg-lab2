@@ -14,9 +14,9 @@ public:
 	float coeficienteReflexionEspecular;
 	int brilloEspecular;
 	ColorRGB colorReflexionEspecular;
-	Vector coeficienteTransparencia;
+	float coeficienteTransparencia;
 	float indiceRefraccion;
-	Vector coeficienteReflexion;
+	float coeficienteReflexion;
 
 	PropiedadesObjeto()
 		: coeficienteAmbiente(DEFAULT_AMBIENT_COEFFICIENT),
@@ -37,9 +37,9 @@ public:
 					  float coefRefEspecular,
 					  int brilloEspecular,
 					  ColorRGB colorRefEspecular,
-					  Vector coefTransparencia,
+					  float coefTransparencia,
 					  float indiceRefraccion,
-					  Vector coefReflexion)
+					  float coefReflexion)
 		: coeficienteAmbiente(coefAmbiente),
 		  colorAmbiente(colorAmbiente),
 		  coeficienteReflexionDifusa(coefRefDifusa),

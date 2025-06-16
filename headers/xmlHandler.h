@@ -24,7 +24,7 @@ public:
     std::vector<ObjetoPtr> getObjetos();
 
 private:
-    PropiedadesObjeto getPropidadesObjeto(tinyxml2::XMLElement *propElement);
+    PropiedadesObjeto getPropiedadesObjeto(tinyxml2::XMLElement *propElement);
     ObjetoPtr getPared(tinyxml2::XMLElement *objetoElement);
     ObjetoPtr getEsfera(tinyxml2::XMLElement *objetoElement);
     ObjetoPtr getCilindro(tinyxml2::XMLElement *objetoElement);
@@ -116,7 +116,7 @@ std::vector<ObjetoPtr> XMLHandler::getObjetos()
     return objetos;
 }
 
-PropiedadesObjeto XMLHandler::getPropidadesObjeto(tinyxml2::XMLElement *propElement)
+PropiedadesObjeto XMLHandler::getPropiedadesObjeto(tinyxml2::XMLElement *propElement)
 {
     float coeficienteAmbiente = std::stof(propElement->FirstChildElement("ka")->FirstChildElement("valor")->GetText());
     ColorRGB colorAmbiente(
@@ -137,16 +137,10 @@ PropiedadesObjeto XMLHandler::getPropidadesObjeto(tinyxml2::XMLElement *propElem
         std::stoi(propElement->FirstChildElement("ks")->FirstChildElement("g")->GetText()),
         std::stoi(propElement->FirstChildElement("ks")->FirstChildElement("b")->GetText()));
 
-    Vector coeficienteTransparencia(
-        std::stof(propElement->FirstChildElement("kt")->FirstChildElement("r")->GetText()),
-        std::stof(propElement->FirstChildElement("kt")->FirstChildElement("g")->GetText()),
-        std::stof(propElement->FirstChildElement("kt")->FirstChildElement("b")->GetText()));
+    float coeficienteTransparencia = std::stof(propElement->FirstChildElement("kt")->GetText());
 
-    float indiceRefraccion = std::stof(propElement->FirstChildElement("kreflx")->FirstChildElement("indice")->GetText());
-    Vector coeficienteReflexion(
-        std::stof(propElement->FirstChildElement("kreflx")->FirstChildElement("r")->GetText()),
-        std::stof(propElement->FirstChildElement("kreflx")->FirstChildElement("g")->GetText()),
-        std::stof(propElement->FirstChildElement("kreflx")->FirstChildElement("b")->GetText()));
+    float indiceRefraccion = std::stof(propElement->FirstChildElement("indiceRefraccion")->GetText());
+    float coeficienteReflexion = std::stof(propElement->FirstChildElement("kreflexion")->GetText());
 
     return PropiedadesObjeto(coeficienteAmbiente, colorAmbiente,
                              coeficienteReflexionDifusa, colorReflexionDifusa,
@@ -179,7 +173,7 @@ ObjetoPtr XMLHandler::getPared(tinyxml2::XMLElement *objetoElement)
         return std::make_shared<Pared_RR>(centro, normal, ancho, alto, color);
     }
 
-    PropiedadesObjeto prop = getPropidadesObjeto(objetoElement->FirstChildElement("propObjeto"));
+    PropiedadesObjeto prop = getPropiedadesObjeto(objetoElement->FirstChildElement("propObjeto"));
 
     return std::make_shared<Pared_RR>(centro, normal, ancho, alto, prop);
 }
@@ -203,7 +197,7 @@ ObjetoPtr XMLHandler::getEsfera(tinyxml2::XMLElement *objetoElement)
         return std::make_shared<Esfera_RR>(centro, radio, color);
     }
 
-    PropiedadesObjeto prop = getPropidadesObjeto(objetoElement->FirstChildElement("propObjeto"));
+    PropiedadesObjeto prop = getPropiedadesObjeto(objetoElement->FirstChildElement("propObjeto"));
 
     return std::make_shared<Esfera_RR>(centro, radio, prop);
 }
@@ -233,7 +227,7 @@ ObjetoPtr XMLHandler::getCilindro(tinyxml2::XMLElement *objetoElement)
         return std::make_shared<Cilindro_RR>(centro, direccion, radio, altura, color);
     }
 
-    PropiedadesObjeto prop = getPropidadesObjeto(objetoElement->FirstChildElement("propObjeto"));
+    PropiedadesObjeto prop = getPropiedadesObjeto(objetoElement->FirstChildElement("propObjeto"));
 
     return std::make_shared<Cilindro_RR>(centro, direccion, radio, altura, prop);
 }

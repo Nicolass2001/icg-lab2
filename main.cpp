@@ -8,15 +8,19 @@ Escena_RR escena("config.xml");
 
 Color_RR traza_RR(Rayo_RR rayo, int profundidad);
 
+Color_RR traza_RR_coeficientes(Rayo_RR rayo, int profundidad, int eleccion);
+
 Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, int profundidad)
 {
     Color_RR color;
     color.setComponenteAmbiente(objeto->getColorAmbiente(), objeto->getCoeficienteAmbiente());
+
     escena.calcularColorIluminacion(objeto, rayo, punto, normal, color);
+
     if (profundidad < PROFUNDIDAD_MAXIMA)
     {
         // Calcular Reflexion
-        if (objeto->getCoeficienteReflexion().length() > 0.0f)
+        if (objeto->getCoeficienteReflexion() > 0.0f)
         {
             Vector direccionReflexion = rayo.getDireccion() - normal * 2.0f * (rayo.getDireccion().dot(normal));
             Rayo_RR rayoReflexion(punto + normal * EPSILON, direccionReflexion.normalize(), rayo.getIndiceRefraccion());
@@ -24,13 +28,55 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
             color.setComponenteReflexion(colorReflexion.getColorTotal(), objeto->getCoeficienteReflexion());
         }
         // Calcular Refraccion
-        if (objeto->getCoeficienteTransparencia().length() > 0.0f)
+        if (objeto->getCoeficienteTransparencia() > 0.0f)
         {
-            Vector puntoRefraccion = punto - normal * EPSILON;
+            Vector puntoRefraccion;
             float indiceRefraccionIncidente = rayo.getIndiceRefraccion();
+
+            // Si estoy dentro de la esfera, entonces corro el punto hacia afuera,
+            // no hacia adentro
+            if (indiceRefraccionIncidente == 1.5f) {
+                puntoRefraccion = punto + normal * EPSILON;
+            }
+            else {
+                puntoRefraccion = punto - normal * EPSILON;
+            }
+
             float indiceRefraccionTransmitido = escena.indiceRefraccion(puntoRefraccion);
             float indiceRefraccionRelativo = indiceRefraccionIncidente / indiceRefraccionTransmitido;
             Vector direccionRefraccion;
+            Color_RR colorRefraccion(0, 0, 0);
+
+            float productoPuntoRayoNormal = rayo.getDireccion().dot(normal);
+
+            float segundoTerminoRaiz = 1 - ((1 - powf(productoPuntoRayoNormal, 2.0f)) * (powf(indiceRefraccionRelativo, 2.0f)));
+            
+            if (segundoTerminoRaiz < 0.0f) {
+                // Reflexion interna total
+                int i = 0;
+            }
+            else {
+                Vector primerTermino = (rayo.getDireccion() - normal * productoPuntoRayoNormal) * (indiceRefraccionRelativo);
+                Vector segundoTermino = (normal * sqrt(segundoTerminoRaiz)) * (- 1.0f);
+
+                direccionRefraccion = primerTermino + segundoTermino;
+                
+                /*
+                std::cout << "Indice de refraccion de origen del rayo: " << indiceRefraccionIncidente << std::endl;
+                std::cout << "Indice de refraccion de punto de corte: " << indiceRefraccionTransmitido << std::endl;
+                std::cout << "Punto de corte (con epsilon): " << puntoRefraccion << std::endl;
+                std::cout << "Punto direccion calculado: " << direccionRefraccion << std::endl;
+                std::cout << "Coeficiente de refraccion del objeto: " << objeto->getCoeficienteTransparencia() << std::endl;
+                std::cout << "Profundidad traza: " << profundidad << std::endl;
+                std::cout << std::endl;
+                */
+
+                Rayo_RR rayoRefraccion(puntoRefraccion, direccionRefraccion.normalize(), indiceRefraccionTransmitido);
+                colorRefraccion = traza_RR(rayoRefraccion, profundidad + 1);
+
+            }
+
+            /*
             if (indiceRefraccionRelativo == 1)
             {
                 direccionRefraccion = rayo.getDireccion();
@@ -49,7 +95,7 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
                 if (senoCuadradoRefraccion > 1.0f)
                 {
                     // Total internal reflection
-                    color.setComponenteTransparencia(ColorRGB(0, 0, 0), Vector(0, 0, 0));
+                    color.setComponenteTransparencia(ColorRGB(0, 0, 0), 0.0f);
                     return color;
                 }
                 float cosenoRefraccion = sqrt(1.0f - senoCuadradoRefraccion);
@@ -62,6 +108,7 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
                 std::cout << "colorRefraccion: " << colorRefraccion << std::endl;
             }
             test = 1;
+            */
             color.setComponenteTransparencia(colorRefraccion.getColorTotal(), objeto->getCoeficienteTransparencia());
         }
     }
@@ -79,6 +126,40 @@ Color_RR traza_RR(Rayo_RR rayo, int profundidad)
     }
 
     return sombra_RR(objMasCercano, rayo, interseccion, normal, profundidad);
+}
+
+Color_RR traza_RR_coeficientes(Rayo_RR rayo, int profundidad, int eleccion)
+{
+    Vector interseccion;
+    Vector normal;
+    ObjetoPtr objMasCercano = escena.calcularInterseccionMasCercana(rayo, &interseccion, &normal);
+    if (objMasCercano == nullptr)
+    {
+        return escena.getFondo();
+    }
+
+    Color_RR color;
+    ColorRGB colorFigura(255, 255, 255);
+
+    switch (eleccion) {
+    case 2:
+        color.setComponenteAmbiente(colorFigura, objMasCercano->getCoeficienteReflexion());
+        break;
+    case 3:
+        color.setComponenteAmbiente(colorFigura, objMasCercano->getCoeficienteTransparencia());
+        break;
+    case 4:
+        color.setComponenteAmbiente(colorFigura, objMasCercano->getCoeficienteAmbiente());
+        break;
+    case 5:
+        color.setComponenteAmbiente(colorFigura, objMasCercano->getCoeficienteReflexionDifusa());
+        break;
+    case 6:
+        color.setComponenteAmbiente(colorFigura, objMasCercano->getCoeficienteReflexionEspecular());
+        break;
+    }
+
+    return color;
 }
 
 int main(int argc, char* argv[])
@@ -108,13 +189,26 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+    int eleccion;
+
+    std::cout << "Elija que imagen desea generar: " << std::endl;
+    std::cout << "1 - Escena | 2 - Coeficientes reflexion | 3 - Coeficientes refraccion" << std::endl;
+    std::cout << "4 - Coeficientes ambiente | 5 - Coeficientes difuso | 6 - Coeficientes especular" << std::endl;
+    std::cin >> eleccion;
+
     Camara_RR camara = escena.getCamara();
+    Color_RR colorPixel;
     // Llenar la imagen utilizando la función `colorFunction`
     for (int y = 0; y < IMAGE_HEIGHT; ++y)
     {
         for (int x = 0; x < IMAGE_WIDTH; ++x)
         {
-            Color_RR colorPixel = traza_RR(camara.generarRayo(x, y), 1);
+            if (eleccion != 1) {
+                colorPixel = traza_RR_coeficientes(camara.generarRayo(x, y), 1, eleccion);
+            }
+            else {
+                colorPixel = traza_RR(camara.generarRayo(x, y), 1);
+            }
             // Convertir Color_RR a RGBQUAD
             RGBQUAD color = colorPixel.toRGBQUAD();
             FreeImage_SetPixelColor(bitmap, x, y, &color);
@@ -133,7 +227,7 @@ int main(int argc, char* argv[])
 
     // Guardar la imagen en un archivo
     std::string outputPath = getPathToFile();
-    
+    /*
     if (FreeImage_Save(FIF_PNG, bitmap, outputPath.c_str(), 0))
     {
         std::cout << "Imagen guardada en: " << outputPath << std::endl;
@@ -142,6 +236,7 @@ int main(int argc, char* argv[])
     {
         std::cerr << "Error al guardar la imagen." << std::endl;
     }
+    */
 
     // Liberar memoria y finalizar FreeImage
     FreeImage_Unload(bitmap);

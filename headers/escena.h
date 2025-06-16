@@ -131,8 +131,8 @@ Vector Escena_RR::calcularLuzBloqueada(Rayo_RR rayo, Vector puntoLuz)
             float distancia = (punto - origenRayo).length();
             if (distancia < distanciaLuz)
             {
-                Vector coeficienteTransparencia = objeto->getCoeficienteTransparencia();
-                if (coeficienteTransparencia.length() == 0.0f)
+                float coeficienteTransparencia = objeto->getCoeficienteTransparencia();
+                if (coeficienteTransparencia == 0.0f)
                     return Vector(0.0f, 0.0f, 0.0f); // La luz está bloqueada
                 factorDeAtenuacion = factorDeAtenuacion * coeficienteTransparencia;
             }

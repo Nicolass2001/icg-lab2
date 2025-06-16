@@ -13,9 +13,9 @@ private:
     ColorRGB colorReflexionDifusa;
     float coeficienteReflexionEspecular = DEFAULT_SPECULAR_REFLECTION_COEFFICIENT;
     ColorRGB colorReflexionEspecular;
-    Vector coeficienteTransparencia = DEFAULT_TRANSPARENCY_COEFFICIENT;
+    float coeficienteTransparencia = DEFAULT_TRANSPARENCY_COEFFICIENT;
     ColorRGB colorTransparencia;
-    Vector coeficienteReflexion = DEFAULT_REFLECTION_COEFFICIENT;
+    float coeficienteReflexion = DEFAULT_REFLECTION_COEFFICIENT;
     ColorRGB colorReflexion;
 
 public:
@@ -28,8 +28,8 @@ public:
     void setComponenteAmbiente(ColorRGB color, float coeficiente);
     void setComponenteDifusa(ColorRGB color, float coeficiente);
     void setComponenteEspecular(ColorRGB color, float coeficiente);
-    void setComponenteTransparencia(ColorRGB color, Vector coeficiente);
-    void setComponenteReflexion(ColorRGB color, Vector coeficiente);
+    void setComponenteTransparencia(ColorRGB color, float coeficiente);
+    void setComponenteReflexion(ColorRGB color, float coeficiente);
 };
 
 Color_RR::Color_RR()
@@ -91,13 +91,13 @@ void Color_RR::setComponenteEspecular(ColorRGB color, float coeficiente)
     this->coeficienteReflexionEspecular = coeficiente;
 }
 
-void Color_RR::setComponenteTransparencia(ColorRGB color, Vector coeficiente)
+void Color_RR::setComponenteTransparencia(ColorRGB color, float coeficiente)
 {
     this->colorTransparencia = color;
     this->coeficienteTransparencia = coeficiente;
 }
 
-void Color_RR::setComponenteReflexion(ColorRGB color, Vector coeficiente)
+void Color_RR::setComponenteReflexion(ColorRGB color, float coeficiente)
 {
     this->colorReflexion = color;
     this->coeficienteReflexion = coeficiente;
