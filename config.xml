@@ -3,7 +3,7 @@
     <width>800</width>
     <height>600</height>
     <camara>
-        <x>-6</x>
+        <x>-4</x>
         <y>0</y>
         <z>0</z>
         <upx>0</upx>
@@ -15,16 +15,16 @@
     </camara>
     <luces>
         <luz>
-            <x>5</x>
-            <y>4.6</y>
+            <x>3</x>
+            <y>3.35</y>
             <z>0</z>
             <r>1.0</r>
             <g>1.0</g>
             <b>1.0</b>
         </luz>
         <luz>
-            <x>0.5</x>
-            <y>4.6</y>
+            <x>0.0</x>
+            <y>3.35</y>
             <z>0</z>
             <r>1.0</r>
             <g>1.0</g>
@@ -40,7 +40,7 @@
                 <z>0</z>
             </normal>
             <centro>
-                <x>10</x>
+                <x>5</x>
                 <y>0</y>
                 <z>0</z>
             </centro>
@@ -60,10 +60,10 @@
             <centro>
                 <x>5</x>
                 <y>0</y>
-                <z>-5</z>
+                <z>-4</z>
             </centro>
             <ancho>10</ancho>
-            <alto>10</alto>
+            <alto>7.5</alto>
             <r>255</r>
             <g>0</g>
             <b>0</b>
@@ -77,10 +77,10 @@
             </normal>
             <centro>
                 <x>5</x>
-                <y>5</y>
+                <y>3.75</y>
                 <z>0</z>
             </centro>
-            <ancho>10</ancho>
+            <ancho>8</ancho>
             <alto>10</alto>
             <r>255</r>
             <g>255</g>
@@ -96,10 +96,10 @@
             <centro>
                 <x>5</x>
                 <y>0</y>
-                <z>5</z>
+                <z>4</z>
             </centro>
             <ancho>10</ancho>
-            <alto>10</alto>
+            <alto>7.5</alto>
             <r>0</r>
             <g>255</g>
             <b>0</b>
@@ -113,11 +113,11 @@
             </normal>
             <centro>
                 <x>5</x>
-                <y>-5</y>
+                <y>-3.75</y>
                 <z>0</z>
             </centro>
-            <ancho>30</ancho>
-            <alto>30</alto>
+            <ancho>8</ancho>
+            <alto>10</alto>
             <r>255</r>
             <g>255</g>
             <b>255</b>
@@ -125,17 +125,17 @@
         <esfera>
             <!-- Esfera 1 -->
             <centro>
-                <x>3</x>
-                <y>0</y>
+                <x>2.5</x>
+                <y>-0.5</y>
                 <z>-2.5</z>
             </centro>
             <radio>1.5</radio>
             <propObjeto>
                 <ka>
-                    <valor>0.0</valor>
+                    <valor>0.1</valor>
                     <r>255</r>
-                    <g>255</g>
-                    <b>255</b>
+                    <g>0</g>
+                    <b>0</b>
                 </ka>
                 <kd>
                     <valor>0.0</valor>
@@ -144,22 +144,22 @@
                     <b>255</b>
                 </kd>
                 <ks>
-                    <valor>0.0</valor>
-                    <brillo>5</brillo>
+                    <valor>0.5</valor>
+                    <brillo>50</brillo>
                     <r>255</r>
                     <g>255</g>
                     <b>255</b>
                 </ks>
-                <kt>0.6</kt>
+                <kt>1.0</kt>
                 <indiceRefraccion>1.5</indiceRefraccion>
-                <kreflexion>0.7</kreflexion>
+                <kreflexion>0.0</kreflexion>
             </propObjeto>
         </esfera>
         <!-- Esfera 2 -->
         <esfera>
             <centro>
-                <x>3</x>
-                <y>0</y>
+                <x>2.5</x>
+                <y>-1</y>
                 <z>2.5</z>
             </centro>
             <radio>1.0</radio>
@@ -191,8 +191,8 @@
         <!-- Cilindro 1 -->
         <cilindro>
             <base>
-                <x>3</x>
-                <y>-1</y>
+                <x>2.5</x>
+                <y>-2</y>
                 <z>0</z>
             </base>
             <direccion>
@@ -204,13 +204,13 @@
             <altura>2.0</altura>
             <propObjeto>
                 <ka>
-                    <valor>0.1</valor>
+                    <valor>0.4</valor>
                     <r>0</r>
                     <g>255</g>
                     <b>0</b>
                 </ka>
                 <kd>
-                    <valor>0.9</valor>
+                    <valor>0.6</valor>
                     <r>0</r>
                     <g>255</g>
                     <b>0</b>
@@ -228,6 +228,7 @@
             </propObjeto>
         </cilindro>
         <!-- Cilindro 2 -->
+        <!--
         <cilindro>
             <base>
                 <x>8</x>
@@ -266,5 +267,6 @@
                 <kreflexion>0.0</kreflexion>
             </propObjeto>
         </cilindro>
+        -->
     </objetos>
 </config>

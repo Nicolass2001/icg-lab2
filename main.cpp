@@ -48,7 +48,7 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
             // rayo en la direccion de refraccion
 
 
-            float n1 = rayo.getIndiceRefraccion(); // indice de refraccion del medio 
+            float n1 = 1; // indice de refraccion del medio 
             float n2 = objeto->getIndiceRefraccion(); // ind de refracc del objeto, en este caso vidrio 1.5
             
             bool entrando = (normal.dot(rayo.getDireccion()) < 0.0f);
@@ -64,7 +64,7 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
             // SIGO LOS PASOS DEL LIBRO PARA CALCULAR T, que lo simplifica a algo asi:
             // T = (η(N.I) − sqrt[1 − η^2 (1 − (N.I)^2)]) * N - η*I
  
-            Vector I = rayo.getDireccion().normalize();
+            Vector I = rayo.getDireccion().normalize() * (-1.0f);
 
             // calculo: −(N.I)
             float expr1 = -normal.dot(I); // nota: va el - aca?
@@ -163,7 +163,7 @@ int main(int argc, char* argv[])
 {
     // SDL
     // PAGINA DE REFERENCIA: https://stackoverflow.com/questions/20579658/how-to-draw-pixels-in-sdl-2-0
-    /*
+
     SDL_Event event;
     SDL_Renderer* renderer;
     SDL_Window* window;
@@ -174,7 +174,6 @@ int main(int argc, char* argv[])
     uint8_t* rojo = 0;
     uint8_t* verde = 0;
     uint8_t* azul = 0;
-    */
 
     // Inicializar FreeImage
     FreeImage_Initialise();
@@ -213,7 +212,6 @@ int main(int argc, char* argv[])
             FreeImage_SetPixelColor(bitmap, x, y, &color);
 
             // SDL
-            /*
             rojo = &color.rgbRed;
             verde = &color.rgbGreen;
             azul = &color.rgbBlue;
@@ -221,13 +219,12 @@ int main(int argc, char* argv[])
             SDL_RenderDrawPoint(renderer, x, 600 - y);
             if (x == 0)
                 SDL_RenderPresent(renderer);
-            */
         }
     }
 
     // Guardar la imagen en un archivo
     std::string outputPath = getPathToFile();
-    /*
+
     if (FreeImage_Save(FIF_PNG, bitmap, outputPath.c_str(), 0))
     {
         std::cout << "Imagen guardada en: " << outputPath << std::endl;
@@ -236,13 +233,11 @@ int main(int argc, char* argv[])
     {
         std::cerr << "Error al guardar la imagen." << std::endl;
     }
-    */
 
     // Liberar memoria y finalizar FreeImage
     FreeImage_Unload(bitmap);
     FreeImage_DeInitialise();
 
-    /*
     while (1) {
         if (SDL_PollEvent(&event) && event.type == SDL_QUIT)
             break;
@@ -252,7 +247,6 @@ int main(int argc, char* argv[])
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
-    */
 
     return 0;
 }
