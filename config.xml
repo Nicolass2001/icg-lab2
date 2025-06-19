@@ -116,8 +116,8 @@
                 <y>-5</y>
                 <z>0</z>
             </centro>
-            <ancho>10</ancho>
-            <alto>10</alto>
+            <ancho>30</ancho>
+            <alto>30</alto>
             <r>255</r>
             <g>255</g>
             <b>255</b>
@@ -134,14 +134,14 @@
                 <ka>
                     <valor>0.0</valor>
                     <r>255</r>
-                    <g>0</g>
-                    <b>0</b>
+                    <g>255</g>
+                    <b>255</b>
                 </ka>
                 <kd>
                     <valor>0.0</valor>
                     <r>255</r>
-                    <g>0</g>
-                    <b>0</b>
+                    <g>255</g>
+                    <b>255</b>
                 </kd>
                 <ks>
                     <valor>0.0</valor>
@@ -150,13 +150,13 @@
                     <g>255</g>
                     <b>255</b>
                 </ks>
-                <kt>1.0</kt>
+                <kt>0.6</kt>
                 <indiceRefraccion>1.5</indiceRefraccion>
-                <kreflexion>0.0</kreflexion>
+                <kreflexion>0.7</kreflexion>
             </propObjeto>
         </esfera>
+        <!-- Esfera 2 -->
         <esfera>
-            <!-- Esfera 2 -->
             <centro>
                 <x>3</x>
                 <y>0</y>
@@ -188,8 +188,8 @@
                 <kreflexion>1.0</kreflexion>
             </propObjeto>
         </esfera>
+        <!-- Cilindro 1 -->
         <cilindro>
-            <!-- Cilindro 1 -->
             <base>
                 <x>3</x>
                 <y>-1</y>
@@ -227,8 +227,8 @@
                 <kreflexion>0.0</kreflexion>
             </propObjeto>
         </cilindro>
+        <!-- Cilindro 2 -->
         <cilindro>
-            <!-- Cilindro 2 -->
             <base>
                 <x>8</x>
                 <y>3</y>

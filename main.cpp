@@ -10,106 +10,103 @@ Color_RR traza_RR(Rayo_RR rayo, int profundidad);
 
 Color_RR traza_RR_coeficientes(Rayo_RR rayo, int profundidad, int eleccion);
 
-Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, int profundidad)
-{
-    Color_RR color;
+Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, int profundidad) {
+    Color_RR color; // Color a devolver
+
+    Rayo_RR rayo_r, rayo_t; // Rayo reflejado, refractado y sombra
+    Color_RR color_r, color_t; // color de los rayos reflejado y refractado
+
+    // Color = termino de ambiente
     color.setComponenteAmbiente(objeto->getColorAmbiente(), objeto->getCoeficienteAmbiente());
+
+    // for (cada luz)
+    // rayos = rayo desde punto a la luz;
+    //if (el producto punto de normal y la dirección a la luz es positivo) {
+    //calcular cuánta luz es bloqueada por superficie opacas y transparentes, y usarla
+    //para escalar los términos difusos y especulares antes de añadirlos a color;
 
     escena.calcularColorIluminacion(objeto, rayo, punto, normal, color);
 
-    if (profundidad < PROFUNDIDAD_MAXIMA)
-    {
-        // Calcular Reflexion
-        if (objeto->getCoeficienteReflexion() > 0.0f)
-        {
-            Vector direccionReflexion = rayo.getDireccion() - normal * 2.0f * (rayo.getDireccion().dot(normal));
-            Rayo_RR rayoReflexion(punto + normal * EPSILON, direccionReflexion.normalize(), rayo.getIndiceRefraccion());
-            Color_RR colorReflexion = traza_RR(rayoReflexion, profundidad + 1);
+    if (profundidad < PROFUNDIDAD_MAXIMA) {
+
+        // If objeto es reflejante
+        if (objeto->getCoeficienteReflexion() > 0.0f) {
+
+            Vector dirReflexion = rayo.getDireccion() - normal * 2.0f * (rayo.getDireccion().dot(normal));
+            dirReflexion = dirReflexion.normalize();
+
+            Rayo_RR rayo_r(punto + normal * EPSILON, dirReflexion, rayo.getIndiceRefraccion());
+            Color_RR colorReflexion = traza_RR(rayo_r, profundidad + 1);
             color.setComponenteReflexion(colorReflexion.getColorTotal(), objeto->getCoeficienteReflexion());
+
         }
-        // Calcular Refraccion
-        if (objeto->getCoeficienteTransparencia() > 0.0f)
-        {
-            Vector puntoRefraccion;
-            float indiceRefraccionIncidente = rayo.getIndiceRefraccion();
+        
+        // If objeto es transparente
 
-            // Si estoy dentro de la esfera, entonces corro el punto hacia afuera,
-            // no hacia adentro
-            if (indiceRefraccionIncidente == 1.5f) {
-                puntoRefraccion = punto + normal * EPSILON;
-            }
-            else {
-                puntoRefraccion = punto - normal * EPSILON;
-            }
+        // Si el indice de refraccion es distinto de 0, el objeto es transparente
+        if (objeto->getIndiceRefraccion() > 0.0f) {
+            // rayo en la direccion de refraccion
 
-            float indiceRefraccionTransmitido = escena.indiceRefraccion(puntoRefraccion);
-            float indiceRefraccionRelativo = indiceRefraccionIncidente / indiceRefraccionTransmitido;
-            Vector direccionRefraccion;
-            Color_RR colorRefraccion(0, 0, 0);
 
-            float productoPuntoRayoNormal = rayo.getDireccion().dot(normal);
-
-            float segundoTerminoRaiz = 1 - ((1 - powf(productoPuntoRayoNormal, 2.0f)) * (powf(indiceRefraccionRelativo, 2.0f)));
+            float n1 = rayo.getIndiceRefraccion(); // indice de refraccion del medio 
+            float n2 = objeto->getIndiceRefraccion(); // ind de refracc del objeto, en este caso vidrio 1.5
             
-            if (segundoTerminoRaiz < 0.0f) {
-                // Reflexion interna total
-                int i = 0;
+            bool entrando = (normal.dot(rayo.getDireccion()) < 0.0f);
+            if (!entrando) {
+                std::swap(n1, n2);
+                normal = normal * -1.0f;
             }
-            else {
-                Vector primerTermino = (rayo.getDireccion() - normal * productoPuntoRayoNormal) * (indiceRefraccionRelativo);
-                Vector segundoTermino = (normal * sqrt(segundoTerminoRaiz)) * (- 1.0f);
+            // La ley de Snell me dice que: sen(o1)/sen(o2) = n2/n1
+            float n = n1 / n2;
 
-                direccionRefraccion = primerTermino + segundoTermino;
-                
-                /*
-                std::cout << "Indice de refraccion de origen del rayo: " << indiceRefraccionIncidente << std::endl;
-                std::cout << "Indice de refraccion de punto de corte: " << indiceRefraccionTransmitido << std::endl;
-                std::cout << "Punto de corte (con epsilon): " << puntoRefraccion << std::endl;
-                std::cout << "Punto direccion calculado: " << direccionRefraccion << std::endl;
-                std::cout << "Coeficiente de refraccion del objeto: " << objeto->getCoeficienteTransparencia() << std::endl;
-                std::cout << "Profundidad traza: " << profundidad << std::endl;
-                std::cout << std::endl;
-                */
+            // DEL LIBRO: El vector de refraccion es: T = sen(o2)*M - cos(o1)*N 
+            // Con M un vector unidad perpendicular a N en el plano del rayo incidente T
+            // SIGO LOS PASOS DEL LIBRO PARA CALCULAR T, que lo simplifica a algo asi:
+            // T = (η(N.I) − sqrt[1 − η^2 (1 − (N.I)^2)]) * N - η*I
+ 
+            Vector I = rayo.getDireccion().normalize();
 
-                Rayo_RR rayoRefraccion(puntoRefraccion, direccionRefraccion.normalize(), indiceRefraccionTransmitido);
-                colorRefraccion = traza_RR(rayoRefraccion, profundidad + 1);
+            // calculo: −(N.I)
+            float expr1 = -normal.dot(I); // nota: va el - aca?
 
+            // calculo: η^2 (1 − (N.I)^2)
+            float expr2 = n * n * (1.0f - expr1 * expr1);
+
+            // En el libro dice que "...La reflexión interna total ocurre cuando la raíz 
+            // cuadrada en la ecuación (14.30) es imaginaria."
+            if (expr2 > 1) {
+                Vector R = (I - normal * 2.0f * (I.dot(normal))).normalize();
+                Rayo_RR rayoReflexion(punto + normal * EPSILON, R, rayo.getIndiceRefraccion());
+                Color_RR colorReflexion = traza_RR(rayoReflexion, profundidad + 1);
+                color.setComponenteReflexion(colorReflexion.getColorTotal(), objeto->getCoeficienteReflexion());
+                return color;              
             }
 
-            /*
-            if (indiceRefraccionRelativo == 1)
-            {
-                direccionRefraccion = rayo.getDireccion();
-                if (test == 0)
-                {
-                    std::cout << "Indice de refracción incidente: " << indiceRefraccionIncidente << std::endl;
-                    std::cout << "direccionRefraccion: " << direccionRefraccion << std::endl;
-                }
-            }
-            else
-            {
-                std::cout << "Indice de refracción incidente: " << indiceRefraccionIncidente << std::endl;
-                // Ley de Snell
-                float cosenoIncidencia = -rayo.getDireccion().dot(normal);
-                float senoCuadradoRefraccion = indiceRefraccionRelativo * indiceRefraccionRelativo * (1.0f - cosenoIncidencia * cosenoIncidencia);
-                if (senoCuadradoRefraccion > 1.0f)
-                {
-                    // Total internal reflection
-                    color.setComponenteTransparencia(ColorRGB(0, 0, 0), 0.0f);
-                    return color;
-                }
-                float cosenoRefraccion = sqrt(1.0f - senoCuadradoRefraccion);
-                direccionRefraccion = rayo.getDireccion() * indiceRefraccionRelativo + normal * (indiceRefraccionRelativo * cosenoIncidencia - cosenoRefraccion);
-            }
-            Rayo_RR rayoRefraccion(puntoRefraccion, direccionRefraccion.normalize(), indiceRefraccionTransmitido);
-            Color_RR colorRefraccion = traza_RR(rayoRefraccion, profundidad + 1);
-            if (test == 0)
-            {
-                std::cout << "colorRefraccion: " << colorRefraccion << std::endl;
-            }
-            test = 1;
-            */
-            color.setComponenteTransparencia(colorRefraccion.getColorTotal(), objeto->getCoeficienteTransparencia());
+            // calculo: sqrt[1 − η^2 (1 − (N.I)^2)]
+            float expr3 = sqrt(1.0f - expr2);
+
+            // A esta altura tengo:
+            // T = (η(N.I) − expr3) * N - η*I
+
+            // Calculo η(N.I)
+            float expr4 = (normal.dot(I)) * n;
+
+            // Calculo (η(N.I) − expr3) * N
+            Vector expr5 = normal * (expr4 - expr3);
+  
+            Vector T = expr5 - (I * n);
+            T = T.normalize();
+
+            Vector origenRefraccion = punto - normal * EPSILON;
+            //if (!entrando) {
+            //    origenRefraccion = punto + normal * EPSILON;
+            //}
+
+            float indiceRefraccionTransmitido = escena.indiceRefraccion(origenRefraccion);
+            Rayo_RR rayo_t(origenRefraccion, T, indiceRefraccionTransmitido);
+
+            Color_RR colorRefraccion = traza_RR(rayo_t, profundidad + 1);
+            color.setComponenteTransparencia(colorRefraccion.getColorTotal(), objeto->getCoeficienteTransparencia()); 
         }
     }
     return color;
@@ -166,6 +163,7 @@ int main(int argc, char* argv[])
 {
     // SDL
     // PAGINA DE REFERENCIA: https://stackoverflow.com/questions/20579658/how-to-draw-pixels-in-sdl-2-0
+    /*
     SDL_Event event;
     SDL_Renderer* renderer;
     SDL_Window* window;
@@ -176,6 +174,7 @@ int main(int argc, char* argv[])
     uint8_t* rojo = 0;
     uint8_t* verde = 0;
     uint8_t* azul = 0;
+    */
 
     // Inicializar FreeImage
     FreeImage_Initialise();
@@ -214,6 +213,7 @@ int main(int argc, char* argv[])
             FreeImage_SetPixelColor(bitmap, x, y, &color);
 
             // SDL
+            /*
             rojo = &color.rgbRed;
             verde = &color.rgbGreen;
             azul = &color.rgbBlue;
@@ -221,7 +221,7 @@ int main(int argc, char* argv[])
             SDL_RenderDrawPoint(renderer, x, 600 - y);
             if (x == 0)
                 SDL_RenderPresent(renderer);
-
+            */
         }
     }
 
@@ -242,6 +242,7 @@ int main(int argc, char* argv[])
     FreeImage_Unload(bitmap);
     FreeImage_DeInitialise();
 
+    /*
     while (1) {
         if (SDL_PollEvent(&event) && event.type == SDL_QUIT)
             break;
@@ -251,6 +252,7 @@ int main(int argc, char* argv[])
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+    */
 
     return 0;
 }
