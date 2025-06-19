@@ -6,18 +6,18 @@
 
 Escena_RR escena("config.xml");
 
-Color_RR traza_RR(Rayo_RR rayo, int profundidad);
+Color_RR traza_RR(Rayo_RR rayo, int profundidad, int eleccion);
 
-Color_RR traza_RR_coeficientes(Rayo_RR rayo, int profundidad, int eleccion);
-
-Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, int profundidad) {
+Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, int profundidad, int eleccion) {
     Color_RR color; // Color a devolver
 
     Rayo_RR rayo_r, rayo_t; // Rayo reflejado, refractado y sombra
     Color_RR color_r, color_t; // color de los rayos reflejado y refractado
 
     // Color = termino de ambiente
-    color.setComponenteAmbiente(objeto->getColorAmbiente(), objeto->getCoeficienteAmbiente());
+    if (eleccion == 1 || eleccion == 4) {
+        color.setComponenteAmbiente(objeto->getColorAmbiente(), objeto->getCoeficienteAmbiente());
+    }
 
     // for (cada luz)
     // rayos = rayo desde punto a la luz;
@@ -25,18 +25,20 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
     //calcular cuánta luz es bloqueada por superficie opacas y transparentes, y usarla
     //para escalar los términos difusos y especulares antes de añadirlos a color;
 
-    escena.calcularColorIluminacion(objeto, rayo, punto, normal, color);
+    if (eleccion == 1 || eleccion == 5 || eleccion == 6) {
+        escena.calcularColorIluminacion(objeto, rayo, punto, normal, color, eleccion);
+    }
 
     if (profundidad < PROFUNDIDAD_MAXIMA) {
 
         // If objeto es reflejante
-        if (objeto->getCoeficienteReflexion() > 0.0f) {
+        if (objeto->getCoeficienteReflexion() > 0.0f && eleccion == 1 || eleccion == 7) {
 
             Vector dirReflexion = rayo.getDireccion() - normal * 2.0f * (rayo.getDireccion().dot(normal));
             dirReflexion = dirReflexion.normalize();
 
             Rayo_RR rayo_r(punto + normal * EPSILON, dirReflexion, rayo.getIndiceRefraccion());
-            Color_RR colorReflexion = traza_RR(rayo_r, profundidad + 1);
+            Color_RR colorReflexion = traza_RR(rayo_r, profundidad + 1, 1);
             color.setComponenteReflexion(colorReflexion.getColorTotal(), objeto->getCoeficienteReflexion());
 
         }
@@ -44,7 +46,7 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
         // If objeto es transparente
 
         // Si el indice de refraccion es distinto de 0, el objeto es transparente
-        if (objeto->getIndiceRefraccion() > 0.0f) {
+        if (objeto->getIndiceRefraccion() > 0.0f && eleccion == 1 || eleccion == 8) {
             // rayo en la direccion de refraccion
 
 
@@ -77,7 +79,7 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
             if (expr2 > 1) {
                 Vector R = (I - normal * 2.0f * (I.dot(normal))).normalize();
                 Rayo_RR rayoReflexion(punto + normal * EPSILON, R, rayo.getIndiceRefraccion());
-                Color_RR colorReflexion = traza_RR(rayoReflexion, profundidad + 1);
+                Color_RR colorReflexion = traza_RR(rayoReflexion, profundidad + 1, 1);
                 color.setComponenteReflexion(colorReflexion.getColorTotal(), objeto->getCoeficienteReflexion());
                 return color;              
             }
@@ -105,27 +107,14 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
             float indiceRefraccionTransmitido = escena.indiceRefraccion(origenRefraccion);
             Rayo_RR rayo_t(origenRefraccion, T, indiceRefraccionTransmitido);
 
-            Color_RR colorRefraccion = traza_RR(rayo_t, profundidad + 1);
+            Color_RR colorRefraccion = traza_RR(rayo_t, profundidad + 1, 1);
             color.setComponenteTransparencia(colorRefraccion.getColorTotal(), objeto->getCoeficienteTransparencia()); 
         }
     }
     return color;
 }
 
-Color_RR traza_RR(Rayo_RR rayo, int profundidad)
-{
-    Vector interseccion;
-    Vector normal;
-    ObjetoPtr objMasCercano = escena.calcularInterseccionMasCercana(rayo, &interseccion, &normal);
-    if (objMasCercano == nullptr)
-    {
-        return escena.getFondo();
-    }
-
-    return sombra_RR(objMasCercano, rayo, interseccion, normal, profundidad);
-}
-
-Color_RR traza_RR_coeficientes(Rayo_RR rayo, int profundidad, int eleccion)
+Color_RR traza_RR(Rayo_RR rayo, int profundidad, int eleccion)
 {
     Vector interseccion;
     Vector normal;
@@ -138,25 +127,17 @@ Color_RR traza_RR_coeficientes(Rayo_RR rayo, int profundidad, int eleccion)
     Color_RR color;
     ColorRGB colorFigura(255, 255, 255);
 
-    switch (eleccion) {
-    case 2:
+    if (eleccion == 2) {
         color.setComponenteAmbiente(colorFigura, objMasCercano->getCoeficienteReflexion());
-        break;
-    case 3:
+        return color;
+    }
+    else if (eleccion == 3) {
         color.setComponenteAmbiente(colorFigura, objMasCercano->getCoeficienteTransparencia());
-        break;
-    case 4:
-        color.setComponenteAmbiente(colorFigura, objMasCercano->getCoeficienteAmbiente());
-        break;
-    case 5:
-        color.setComponenteAmbiente(colorFigura, objMasCercano->getCoeficienteReflexionDifusa());
-        break;
-    case 6:
-        color.setComponenteAmbiente(colorFigura, objMasCercano->getCoeficienteReflexionEspecular());
-        break;
+        return color;
     }
 
-    return color;
+    return sombra_RR(objMasCercano, rayo, interseccion, normal, profundidad, eleccion);
+
 }
 
 int main(int argc, char* argv[])
@@ -191,7 +172,8 @@ int main(int argc, char* argv[])
 
     std::cout << "Elija que imagen desea generar: " << std::endl;
     std::cout << "1 - Escena | 2 - Coeficientes reflexion | 3 - Coeficientes refraccion" << std::endl;
-    std::cout << "4 - Coeficientes ambiente | 5 - Coeficientes difuso | 6 - Coeficientes especular" << std::endl;
+    std::cout << "4 - Componentes ambiente | 5 - Componentes difuso | 6 - Componentes especular" << std::endl;
+    std::cout << "7 - Componentes reflexion | 8 - Componentes refraccion" << std::endl;
     std::cin >> eleccion;
 
     Camara_RR camara = escena.getCamara();
@@ -201,12 +183,8 @@ int main(int argc, char* argv[])
     {
         for (int x = 0; x < IMAGE_WIDTH; ++x)
         {
-            if (eleccion != 1) {
-                colorPixel = traza_RR_coeficientes(camara.generarRayo(x, y), 1, eleccion);
-            }
-            else {
-                colorPixel = traza_RR(camara.generarRayo(x, y), 1);
-            }
+            colorPixel = traza_RR(camara.generarRayo(x, y), 1, eleccion);
+
             // Convertir Color_RR a RGBQUAD
             RGBQUAD color = colorPixel.toRGBQUAD();
             FreeImage_SetPixelColor(bitmap, x, y, &color);
