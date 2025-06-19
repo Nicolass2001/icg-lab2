@@ -42,15 +42,16 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
         // If objeto es transparente
 
         // Si el indice de refraccion es distinto de 0, el objeto es transparente
-        if (objeto->getIndiceRefraccion() > 0.0f) {
+        if (objeto->getCoeficienteTransparencia().length() > 0.0f) {
             // rayo en la direccion de refraccion
 
 
-            float n1 = rayo.getIndiceRefraccion(); // indice de refraccion del medio 
+            float n1 = 1; // indice de refraccion del medio 
             float n2 = objeto->getIndiceRefraccion(); // ind de refracc del objeto, en este caso vidrio 1.5
-            
+
             bool entrando = (normal.dot(rayo.getDireccion()) < 0.0f);
-            if (!entrando) {
+            
+            if (!entrando) { // Rayo saliente
                 std::swap(n1, n2);
                 normal = normal * -1.0f;
             }
@@ -62,16 +63,17 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
             // SIGO LOS PASOS DEL LIBRO PARA CALCULAR T, que lo simplifica a algo asi:
             // T = (η(N.I) − sqrt[1 − η^2 (1 − (N.I)^2)]) * N - η*I
  
-            Vector I = rayo.getDireccion().normalize();
+            Vector I = rayo.getDireccion().normalize() * (-1.0f);
 
-            // calculo: −(N.I)
-            float expr1 = -normal.dot(I); // nota: va el - aca?
+            // calculo: (N.I)
+            float expr1 = normal.dot(I); 
 
             // calculo: η^2 (1 − (N.I)^2)
-            float expr2 = n * n * (1.0f - expr1 * expr1);
+            float expr2 = n * n * (1.0f - (expr1 * expr1));
 
             // En el libro dice que "...La reflexión interna total ocurre cuando la raíz 
             // cuadrada en la ecuación (14.30) es imaginaria."
+            
             if (expr2 > 1) {
                 Vector R = (I - normal * 2.0f * (I.dot(normal))).normalize();
                 Rayo_RR rayoReflexion(punto + normal * EPSILON, R, rayo.getIndiceRefraccion());
@@ -79,6 +81,7 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
                 color.setComponenteReflexion(colorReflexion.getColorTotal(), objeto->getCoeficienteReflexion());
                 return color;              
             }
+                
 
             // calculo: sqrt[1 − η^2 (1 − (N.I)^2)]
             float expr3 = sqrt(1.0f - expr2);
@@ -96,9 +99,6 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
             T = T.normalize();
 
             Vector origenRefraccion = punto - normal * EPSILON;
-            //if (!entrando) {
-            //    origenRefraccion = punto + normal * EPSILON;
-            //}
 
             float indiceRefraccionTransmitido = escena.indiceRefraccion(origenRefraccion);
             Rayo_RR rayo_t(origenRefraccion, T, indiceRefraccionTransmitido);

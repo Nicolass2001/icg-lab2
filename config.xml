@@ -15,7 +15,7 @@
     </camara>
     <luces>
         <luz>
-            <x>7</x>
+            <x>8</x>
             <y>4.5</y>
             <z>0</z>
             <r>1.0</r>
@@ -23,7 +23,7 @@
             <b>1.0</b>
         </luz>
         <luz>
-            <x>3</x>
+            <x>2</x>
             <y>4.5</y>
             <z>0</z>
             <r>1.0</r>
@@ -32,7 +32,78 @@
         </luz>
     </luces>
     <objetos>
-        
+        <pared>
+            <!-- Pared fondo -->
+            <normal>
+                <x>-1</x>
+                <y>0</y>
+                <z>0</z>
+            </normal>
+            <centro>
+                <x>10</x>
+                <y>0</y>
+                <z>0</z>
+            </centro>
+            <ancho>10</ancho>
+            <alto>10</alto>
+            <r>255</r>
+            <g>255</g>
+            <b>255</b>
+        </pared>
+        <pared>
+            <!-- Pared izquierda -->
+            <normal>
+                <x>0</x>
+                <y>0</y>
+                <z>1</z>
+            </normal>
+            <centro>
+                <x>5</x>
+                <y>0</y>
+                <z>-5</z>
+            </centro>
+            <ancho>10</ancho>
+            <alto>10</alto>
+            <r>0</r>
+            <g>255</g>
+            <b>0</b>
+        </pared>
+        <pared>
+            <!-- Pared Superior -->
+            <normal>
+                <x>0</x>
+                <y>-1</y>
+                <z>0</z>
+            </normal>
+            <centro>
+                <x>5</x>
+                <y>5</y>
+                <z>0</z>
+            </centro>
+            <ancho>10</ancho>
+            <alto>10</alto>
+            <r>255</r>
+            <g>255</g>
+            <b>0</b>
+        </pared>
+        <pared>
+            <!-- Pared derecha -->
+            <normal>
+                <x>0</x>
+                <y>0</y>
+                <z>-1</z>
+            </normal>
+            <centro>
+                <x>5</x>
+                <y>0</y>
+                <z>5</z>
+            </centro>
+            <ancho>10</ancho>
+            <alto>10</alto>
+            <r>0</r>
+            <g>0</g>
+            <b>255</b>
+        </pared>
         <pared>
             <!-- Pared inferior -->
             <normal>
@@ -45,16 +116,16 @@
                 <y>-5</y>
                 <z>0</z>
             </centro>
-            <ancho>30</ancho>
-            <alto>30</alto>
+            <ancho>10</ancho>
+            <alto>10</alto>
             <r>255</r>
-            <g>0</g>
+            <g>255</g>
             <b>255</b>
         </pared>
         <esfera>
             <!-- Esfera 1 -->
             <centro>
-                <x>0.5</x>
+                <x>5</x>
                 <y>0</y>
                 <z>0</z>
             </centro>
@@ -67,28 +138,28 @@
                     <b>255</b>
                 </ka>
                 <kd>
-                    <valor>0.05</valor>
+                    <valor>0.00</valor>
                     <r>255</r>
                     <g>255</g>
                     <b>255</b>
                 </kd>
                 <ks>
-                    <valor>0.8</valor>
+                    <valor>0.0</valor>
                     <brillo>5</brillo>
                     <r>255</r>
                     <g>255</g>
                     <b>255</b>
                 </ks>
                 <kt> <!-- para que transmita toda la luz sin coloracion -->
-                    <r>0.6</r> 
-                    <g>0.6</g>
-                    <b>0.6</b>
+                    <r>1.0</r> 
+                    <g>1.0</g>
+                    <b>1.0</b>
                 </kt>
                 <kreflx>
                     <indice>1.5</indice> <!-- indice refraccion vidrio -->
-                    <r>0.7</r>
-                    <g>0.7</g>
-                    <b>0.7</b>
+                    <r>0.0</r>
+                    <g>0.0</g>
+                    <b>0.0</b> 
                 </kreflx>
             </propObjeto>
         </esfera>
@@ -136,20 +207,19 @@
         </esfera>
         -->
         <!-- Cilindro 1 -->
-        <!--
         <cilindro>
             <base>
-                <x>5</x>
-                <y>-5</y>
-                <z>3</z>
+                <x>4</x>
+                <y>-2</y>
+                <z>2</z>
             </base>
             <direccion>
                 <x>0</x>
                 <y>1</y>
                 <z>0</z>
             </direccion>
-            <radio>1.0</radio>
-            <altura>2.0</altura>
+            <radio>1.5</radio>
+            <altura>3.5</altura>
             <propObjeto>
                 <ka>
                     <valor>0.1</valor>
@@ -183,7 +253,6 @@
                 </kreflx>
             </propObjeto>
         </cilindro>
-        -->
         <!-- Cilindro 2 -->
         <!--
         <cilindro>
