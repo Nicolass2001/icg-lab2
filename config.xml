@@ -122,8 +122,9 @@
             <g>255</g>
             <b>255</b>
         </pared>
+        <!-- Esfera 1 -->
+        <!--
         <esfera>
-            <!-- Esfera 1 -->
             <centro>
                 <x>5</x>
                 <y>0</y>
@@ -150,19 +151,20 @@
                     <g>255</g>
                     <b>255</b>
                 </ks>
-                <kt> <!-- para que transmita toda la luz sin coloracion -->
+                <kt> 
                     <r>1.0</r> 
                     <g>1.0</g>
                     <b>1.0</b>
                 </kt>
                 <kreflx>
-                    <indice>1.5</indice> <!-- indice refraccion vidrio -->
+                    <indice>1.5</indice>
                     <r>0.0</r>
                     <g>0.0</g>
                     <b>0.0</b> 
                 </kreflx>
             </propObjeto>
         </esfera>
+        -->
         <!-- Esfera 2 -->
         <!-- 
         <esfera>

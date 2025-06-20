@@ -10,6 +10,7 @@
 #include "tinyxml2.h"
 #include <string>
 #include "xmlHandler.h"
+#include "malla.h"
 
 #ifndef ESCENA_H
 #define ESCENA_H
@@ -51,6 +52,10 @@ Escena_RR::Escena_RR(std::string pathConfig)
     camara = xmlHandler.getCamera();
     luces = xmlHandler.getLuces();
     objetos = xmlHandler.getObjetos();
+
+    ColorRGB color_malla = {255,0,0}; 
+    std::shared_ptr<Malla_RR> mallaPtr = std::make_shared<Malla_RR>(color_malla);
+    objetos.push_back(mallaPtr);
 }
 
 ObjetoPtr Escena_RR::calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto, Vector *normal)

@@ -20,11 +20,13 @@ public:
     Vector normalize();
     Vector operator+(const Vector &other);
     Vector operator-(const Vector &other);
+    Vector operator-(const Vector &other) const;
     Vector operator*(float scalar);
     Vector operator/(float scalar);
     Vector operator*(const Vector &other);
     Vector cross(const Vector &other);
     float dot(const Vector &other);
+    float dot(const Vector &other) const;
     friend std::ostream &operator<<(std::ostream &os, const Vector &vec);
 };
 
@@ -89,6 +91,11 @@ Vector Vector::operator-(const Vector &other)
     return Vector(components - other.components);
 }
 
+Vector Vector::operator-(const Vector &other) const
+{
+    return Vector(components - other.components);
+}
+
 Vector Vector::operator*(float scalar)
 {
     return Vector(components * scalar);
@@ -110,6 +117,11 @@ Vector Vector::cross(const Vector &other)
 }
 
 float Vector::dot(const Vector &other)
+{
+    return glm::dot(components, other.components);
+}
+
+float Vector::dot(const Vector &other) const
 {
     return glm::dot(components, other.components);
 }
