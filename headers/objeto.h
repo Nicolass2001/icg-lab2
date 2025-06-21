@@ -12,6 +12,7 @@ protected:
 public:
     Objeto_RR() {}
     Objeto_RR(PropiedadesObjeto prop) : prop(prop) {}
+    int getTipoObjeto() const { return prop.tipoObjeto; }
     ColorRGB getColorAmbiente() const { return prop.colorAmbiente; }
     float getCoeficienteAmbiente() const { return prop.coeficienteAmbiente; }
     float getCoeficienteReflexionDifusa() const { return prop.coeficienteReflexionDifusa; }
@@ -24,6 +25,7 @@ public:
     float getCoeficienteReflexion() const { return prop.coeficienteReflexion; }
     virtual bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal) = 0;
     virtual bool estaDentro(Vector punto) = 0;
+    virtual void setColoresTextura(Vector punto, datosTextura textura) = 0;
 };
 
 using ObjetoPtr = std::shared_ptr<Objeto_RR>;

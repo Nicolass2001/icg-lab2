@@ -150,6 +150,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="texturas.h" />
     <ClInclude Include="headers\camara.h" />
     <ClInclude Include="headers\cilindro.h" />
     <ClInclude Include="headers\color.h" />

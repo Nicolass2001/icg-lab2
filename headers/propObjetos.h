@@ -7,6 +7,17 @@
 class PropiedadesObjeto
 {
 public:
+	// Tipo objeto agregado, del 1 al 5 corresponden a las paredes fondo, izquierda,
+	// superior, derecha e inferior respectivamente. Su identificador se carga
+	// en el XML. El 6 corresponde a la esfera y el 7 al cilindro, cargados
+	// estaticamente en xmlHandler.h.
+	// Se necesita el tipoObjeto para las texturas en la interseccion para saber
+	// si se alcanzo alguna de las paredes, y en tal caso, setear su color segun
+	// la coordenada de textura correspondiente.
+	//
+	// Predeterminado en 0 para (por ahora) no romper el constructor predeterminado.
+	int tipoObjeto = 0;
+
 	float coeficienteAmbiente;
 	ColorRGB colorAmbiente;
 	float coeficienteReflexionDifusa;
@@ -17,6 +28,10 @@ public:
 	float coeficienteTransparencia;
 	float indiceRefraccion;
 	float coeficienteReflexion;
+
+	void setTipoObjeto(int tipo) {
+		this->tipoObjeto = tipo;
+	};
 
 	PropiedadesObjeto()
 		: coeficienteAmbiente(DEFAULT_AMBIENT_COEFFICIENT),

@@ -68,5 +68,8 @@
     <ClInclude Include="headers\propObjetos.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="texturas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

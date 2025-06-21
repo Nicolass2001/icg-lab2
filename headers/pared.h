@@ -20,6 +20,7 @@ public:
     bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal) override;
     bool estaDentro(Vector punto) override;
     bool punto_en_pared(Vector punto);
+    void setColoresTextura(Vector punto, datosTextura textura) override;
 };
 
 using ParedPtr = std::shared_ptr<Pared_RR>;
@@ -122,6 +123,80 @@ bool Pared_RR::punto_en_pared(Vector punto){
 bool Pared_RR::estaDentro(Vector punto)
 {
     return false; // Las paredes no tienen un interior definido, por lo que siempre devuelven false
+}
+
+void Pared_RR::setColoresTextura(Vector punto, datosTextura textura) {
+
+    float puntoX, puntoY, puntoZ;
+
+    float paredWidth = anchoVec.length();
+    float paredHeight = altoVec.length();
+
+    float imageWidth = textura.width;
+    float imageHeight = textura.height;
+
+    RGBQUAD color;
+
+    // Calculo paredes izquierda y derecha
+    if (this->getTipoObjeto() == 4 || this->getTipoObjeto() == 2) {
+        puntoY = punto.y() + (paredHeight / 2.0f);
+        puntoX = (punto.x() * (-1.0f)) + paredWidth;
+
+        puntoX = std::trunc((puntoX / paredWidth) * imageWidth);
+        puntoY = std::trunc((puntoY / paredHeight) * imageHeight);
+
+        if (puntoX < 0.0f) {
+            puntoX = 0.0f;
+        }
+        if (puntoY < 0.0f) {
+            puntoY = 0.0f;
+        }
+
+        FreeImage_GetPixelColor(textura.datos, (unsigned int)puntoX, (unsigned int)puntoY, &color);
+    }
+    // Calculo paredes superior e inferior
+    else if (this->getTipoObjeto() == 5 || this->getTipoObjeto() == 3) {
+        puntoZ = punto.z() + 4.0f;
+        puntoX = punto.x();
+
+        puntoZ = std::trunc((puntoZ / paredWidth) * imageWidth);
+        puntoX = std::trunc((puntoX / paredHeight) * imageHeight);
+
+        if (puntoX < 0.0f) {
+            puntoX = 0.0f;
+        }
+        if (puntoZ < 0.0f) {
+            puntoZ = 0.0f;
+        }
+
+        FreeImage_GetPixelColor(textura.datos, (unsigned int)puntoZ, (unsigned int)puntoX, &color);
+    }
+    // Calculo pared fondo
+    else {
+        puntoZ = punto.z() + 4.0f;
+        puntoY = punto.y() + 5.0f;
+
+        puntoZ = std::trunc((puntoZ / paredWidth) * imageWidth);
+        puntoY = std::trunc((puntoY / paredHeight) * imageHeight);
+
+        if (puntoY < 0.0f) {
+            puntoY = 0.0f;
+        }
+        if (puntoZ < 0.0f) {
+            puntoZ = 0.0f;
+        }
+
+        FreeImage_GetPixelColor(textura.datos, (unsigned int)puntoZ, (unsigned int)puntoY, &color);
+    }
+
+    int r = color.rgbRed;
+    int g = color.rgbGreen;
+    int b = color.rgbBlue;
+
+    this->prop.colorAmbiente = { r, g, b };
+    this->prop.colorReflexionDifusa = { r, g, b };
+    this->prop.colorReflexionEspecular = { r, g, b };
+
 }
 
 #endif // PARED_H

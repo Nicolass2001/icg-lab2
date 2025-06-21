@@ -15,6 +15,7 @@ public:
     Esfera_RR(Vector centro, float radio, PropiedadesObjeto prop);
     bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal) override;
     bool estaDentro(Vector punto) override;
+    void setColoresTextura(Vector punto, datosTextura textura) override {};
 };
 
 using EsferaPtr = std::shared_ptr<Esfera_RR>;

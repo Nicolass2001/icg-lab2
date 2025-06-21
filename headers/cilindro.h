@@ -18,6 +18,7 @@ public:
     Cilindro_RR(Vector base, Vector direccion, float radio, float altura, PropiedadesObjeto prop);
     bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal) override;
     bool estaDentro(Vector punto) override;
+    void setColoresTextura(Vector punto, datosTextura textura) override {};
 
 private:
     bool interseccionConTapa(Vector centroTapa, Vector normalTapa, Rayo_RR rayo, Vector *puntoInterseccion);

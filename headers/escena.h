@@ -113,10 +113,10 @@ void Escena_RR::calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector 
             colorEspecular = colorEspecular + colorBaseEspecular * intensidad * intensidadEspecular * factorAtenuacion;
         }
     }
-    if (eleccion == 1 || eleccion == 5) {
+    if (eleccion == 1 || eleccion == 5 || eleccion == 9) {
         color.setComponenteDifusa(colorDifuso, objeto->getCoeficienteReflexionDifusa());
     }
-    if (eleccion == 1 || eleccion == 6) {
+    if (eleccion == 1 || eleccion == 6 || eleccion == 9) {
         color.setComponenteEspecular(colorEspecular, objeto->getCoeficienteReflexionEspecular());
     }
 }
