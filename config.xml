@@ -209,6 +209,7 @@
         </esfera>
         -->
         <!-- Cilindro 1 -->
+        <!--
         <cilindro>
             <base>
                 <x>4</x>
@@ -255,6 +256,7 @@
                 </kreflx>
             </propObjeto>
         </cilindro>
+        -->
         <!-- Cilindro 2 -->
         <!--
         <cilindro>

@@ -38,14 +38,14 @@ Malla_RR::Malla_RR() {}
 // cada elemento es de la forma {0, 1, 2}, lo cual dice que esa figura se define por esos vertices
 
 Malla_RR::Malla_RR(PropiedadesObjeto prop) : Objeto_RR(prop) {
-    Vector v0 = Vector(1.0, -4.0, -4.0);
-    Vector v1 = Vector(3.0, -4.0, -4.0);
-    Vector v2 = Vector(3.0, -1.0, -4.0);
-    Vector v3 = Vector(1.0, -1.0, -4.0);
-    Vector v4 = Vector(1.0, -4.0, -2.0);
-    Vector v5 = Vector(3.0, -4.0, -2.0);
-    Vector v6 = Vector(3.0, -1.0, -2.0);
-    Vector v7 = Vector(1.0, -1.0, -2.0);
+    Vector v0 = Vector(3.5, -5.0, -4.0);
+    Vector v1 = Vector(6.5, -5.0, -4.0);
+    Vector v2 = Vector(6.5, -3.5, -4.0);
+    Vector v3 = Vector(3.5, -3.5, -4.0);  
+    Vector v4 = Vector(3.5, -5.0,  2.0); // PARTE INFERIOR DELANTERA DER
+    Vector v5 = Vector(6.5, -5.0,  2.0); // PARTE INFERIOR TRASERA DER
+    Vector v6 = Vector(6.5, -3.5,  2.0);
+    Vector v7 = Vector(3.5, -3.5,  2.0);
     this->vertices = {v0, v1, v2, v3, v4, v5, v6, v7};
 
     //"El polígono se define con una lista de índices a la lista de vértices"
