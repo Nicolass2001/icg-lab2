@@ -10,6 +10,7 @@
 #include "tinyxml2.h"
 #include <string>
 #include "xmlHandler.h"
+#include "malla.h"
 
 #ifndef ESCENA_H
 #define ESCENA_H
@@ -51,6 +52,27 @@ Escena_RR::Escena_RR(std::string pathConfig)
     camara = xmlHandler.getCamera();
     luces = xmlHandler.getLuces();
     objetos = xmlHandler.getObjetos();
+
+
+    float coeficienteAmbiente = 0.1;
+    ColorRGB colorAmbiente(255,255,255);
+    float coeficienteReflexionDifusa = 0.5;
+    ColorRGB colorReflexionDifusa(255,255,255);
+    float coeficienteReflexionEspecular = 1.0;
+    int brilloEspecular = 5;
+    ColorRGB colorReflexionEspecular(255,255,255);
+    Vector coeficienteTransparencia(0,0,0);
+    float indiceRefraccion = 0;
+    Vector coeficienteReflexion(0,0,0);
+
+    PropiedadesObjeto prop = PropiedadesObjeto(coeficienteAmbiente, colorAmbiente,
+                             coeficienteReflexionDifusa, colorReflexionDifusa,
+                             coeficienteReflexionEspecular, brilloEspecular, colorReflexionEspecular,
+                             coeficienteTransparencia, indiceRefraccion, coeficienteReflexion);
+
+
+    std::shared_ptr<Malla_RR> mallaPtr = std::make_shared<Malla_RR>(prop);
+    objetos.push_back(mallaPtr);
 }
 
 ObjetoPtr Escena_RR::calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto, Vector *normal)
