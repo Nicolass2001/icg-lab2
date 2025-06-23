@@ -10,7 +10,7 @@ public:
 	// Tipo objeto agregado, del 1 al 5 corresponden a las paredes fondo, izquierda,
 	// superior, derecha e inferior respectivamente. Su identificador se carga
 	// en el XML. El 6 corresponde a la esfera y el 7 al cilindro, cargados
-	// estaticamente en xmlHandler.h.
+	// estaticamente en xmlHandler.h. El 8 corresponde a la malla.
 	// Se necesita el tipoObjeto para las texturas en la interseccion para saber
 	// si se alcanzo alguna de las paredes, y en tal caso, setear su color segun
 	// la coordenada de textura correspondiente.

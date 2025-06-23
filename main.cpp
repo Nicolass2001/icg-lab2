@@ -242,6 +242,7 @@ int main(int argc, char* argv[])
     // Guardar la imagen en un archivo
     std::string outputPath = getPathToFile();
     
+    /*
     if (FreeImage_Save(FIF_PNG, bitmap, outputPath.c_str(), 0))
     {
         std::cout << "Imagen guardada en: " << outputPath << std::endl;
@@ -250,7 +251,7 @@ int main(int argc, char* argv[])
     {
         std::cerr << "Error al guardar la imagen." << std::endl;
     }
-    
+    */
 
     // Liberar memoria y finalizar FreeImage
     texturas.liberarTexturas();

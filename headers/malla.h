@@ -25,6 +25,7 @@ public:
     bool estaDentro(Vector punto);
 
     bool punto_en_triangulo(const Vector& P, const Triangle& tri, const Vector& normal);
+    void setColoresTextura(Vector punto, datosTextura textura) override {};
 
 };
 
@@ -41,14 +42,14 @@ Malla_RR::Malla_RR(PropiedadesObjeto prop) : Objeto_RR(prop) {
     // Por como lo tenemos hecho interpretamos el eje x y z intercambiados, entonces 
     // anoto lo que viene a ser cada vertice en esta realidad que usamos para evitar confusiones
 
-    Vector v0 = Vector(3.5, -5.0, -4.0); // adelante - abajo - izquierda
-    Vector v1 = Vector(6.5, -5.0, -4.0); // atras - abajo - izquierda
-    Vector v2 = Vector(6.5, -3.5, -4.0); // atras - arriba - izquierda
-    Vector v3 = Vector(3.5, -3.5, -4.0); // adelante - arriba - izquierda
-    Vector v4 = Vector(3.5, -5.0,  2.0); // adelante - abajo - derecha
-    Vector v5 = Vector(6.5, -5.0,  2.0); // atras - abajo - derecha
-    Vector v6 = Vector(6.5, -3.5,  2.0); // atras - arriba - derecha
-    Vector v7 = Vector(3.5, -3.5,  2.0); // adelante - arriba - derecha
+    Vector v0 = Vector(0.5, -3.75, -3.0); // adelante - abajo - izquierda
+    Vector v1 = Vector(2.5, -3.75, -3.0); // atras - abajo - izquierda
+    Vector v2 = Vector(2.5, -1.75, -3.0); // atras - arriba - izquierda
+    Vector v3 = Vector(0.5, -1.75, -3.0); // adelante - arriba - izquierda
+    Vector v4 = Vector(0.5, -3.75,  2.5); // adelante - abajo - derecha
+    Vector v5 = Vector(2.5, -3.75,  2.5); // atras - abajo - derecha
+    Vector v6 = Vector(2.5, -1.75,  2.5); // atras - arriba - derecha
+    Vector v7 = Vector(0.5, -1.75,  2.5); // adelante - arriba - derecha
     this->vertices = {v0, v1, v2, v3, v4, v5, v6, v7};
 
     //"El polígono se define con una lista de índices a la lista de vértices"

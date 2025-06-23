@@ -61,15 +61,16 @@ Escena_RR::Escena_RR(std::string pathConfig)
     float coeficienteReflexionEspecular = 1.0;
     int brilloEspecular = 5;
     ColorRGB colorReflexionEspecular(255,255,255);
-    Vector coeficienteTransparencia(0,0,0);
+    float coeficienteTransparencia = 0.0f;
     float indiceRefraccion = 0;
-    Vector coeficienteReflexion(0,0,0);
+    float coeficienteReflexion = 0.0f;
 
     PropiedadesObjeto prop = PropiedadesObjeto(coeficienteAmbiente, colorAmbiente,
                              coeficienteReflexionDifusa, colorReflexionDifusa,
                              coeficienteReflexionEspecular, brilloEspecular, colorReflexionEspecular,
                              coeficienteTransparencia, indiceRefraccion, coeficienteReflexion);
 
+    prop.setTipoObjeto(8);
 
     std::shared_ptr<Malla_RR> mallaPtr = std::make_shared<Malla_RR>(prop);
     objetos.push_back(mallaPtr);
