@@ -56,20 +56,20 @@ Malla_RR::Malla_RR(PropiedadesObjeto prop) : Objeto_RR(prop) {
     triangulos.push_back({0, 2, 3}); 
 
     // CARA TRASERA
-    triangulos.push_back({4, 6, 5}); 
-    triangulos.push_back({4, 7, 6});
+    triangulos.push_back({4, 5, 6});
+    triangulos.push_back({4, 6, 7});    
 
     // CARA INFERIOR
     triangulos.push_back({0, 5, 1});
     triangulos.push_back({0, 4, 5}); 
 
     // CARA SUPERIOR
-    triangulos.push_back({3, 2, 6});
-    triangulos.push_back({3, 6, 7});
+    triangulos.push_back({3, 6, 2});
+    triangulos.push_back({3, 7, 6});
 
     // CARA IZQUIERDA
-    triangulos.push_back({0, 3, 7});
-    triangulos.push_back({0, 7, 4});
+    triangulos.push_back({0, 7, 3});
+    triangulos.push_back({0, 4, 7});
 
     // CARA DERECHA
     triangulos.push_back({1, 5, 6});
