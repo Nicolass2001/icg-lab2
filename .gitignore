@@ -367,3 +367,6 @@ FodyWeavers.xsd
 
 # VSC
 .vscode
+
+# Add all from dep folder
+!dep/**
