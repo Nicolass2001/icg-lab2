@@ -141,20 +141,6 @@ Color_RR traza_RR(Rayo_RR rayo, int profundidad)
 
 int main(int argc, char *argv[])
 {
-
-    int eleccion;
-
-    std::cout << "Elija que imagen desea generar: " << std::endl;
-    std::cout << "1 - Escena | 2 - Coeficientes reflexion | 3 - Coeficientes refraccion" << std::endl;
-    std::cout << "4 - Componentes ambiente | 5 - Componentes difuso | 6 - Componentes especular" << std::endl;
-    std::cout << "7 - Componentes reflexion | 8 - Componentes refraccion | 9 - Texturas" << std::endl;
-    std::cin >> eleccion;
-
-    if (eleccion == 9)
-    {
-        TEXTURAS_ACTIVADAS = true;
-    }
-
     // SDL
     // PAGINA DE REFERENCIA: https://stackoverflow.com/questions/20579658/how-to-draw-pixels-in-sdl-2-0
 
@@ -173,7 +159,16 @@ int main(int argc, char *argv[])
 
     // Crear una imagen vacía de 24 bits
     FIBITMAP *bitmap = FreeImage_Allocate(IMAGE_WIDTH, IMAGE_HEIGHT, 24);
-    if (!bitmap)
+    FIBITMAP *bitmapCoeficienteReflexion = FreeImage_Allocate(IMAGE_WIDTH, IMAGE_HEIGHT, 24);
+    FIBITMAP *bitmapCoeficienteRefraccion = FreeImage_Allocate(IMAGE_WIDTH, IMAGE_HEIGHT, 24);
+    FIBITMAP *bitmapComponentesAmbiente = FreeImage_Allocate(IMAGE_WIDTH, IMAGE_HEIGHT, 24);
+    FIBITMAP *bitmapComponentesDifuso = FreeImage_Allocate(IMAGE_WIDTH, IMAGE_HEIGHT, 24);
+    FIBITMAP *bitmapComponentesEspecular = FreeImage_Allocate(IMAGE_WIDTH, IMAGE_HEIGHT, 24);
+    FIBITMAP *bitmapComponentesReflexion = FreeImage_Allocate(IMAGE_WIDTH, IMAGE_HEIGHT, 24);
+    FIBITMAP *bitmapComponentesRefraccion = FreeImage_Allocate(IMAGE_WIDTH, IMAGE_HEIGHT, 24);
+    if (!bitmap || !bitmapCoeficienteReflexion || !bitmapCoeficienteRefraccion ||
+        !bitmapComponentesAmbiente || !bitmapComponentesDifuso || !bitmapComponentesEspecular ||
+        !bitmapComponentesReflexion || !bitmapComponentesRefraccion)
     {
         std::cerr << "No se pudo crear la imagen." << std::endl;
         FreeImage_DeInitialise();
@@ -189,40 +184,22 @@ int main(int argc, char *argv[])
         {
             colorPixel = traza_RR(camara.generarRayo(x, y), 1);
 
-            // Convertir Color_RR a RGBQUAD
-            RGBQUAD color;
-            switch (eleccion)
-            {
-            case 1: // Escena
-                color = colorPixel.toRGBQUAD();
-                break;
-            case 2: // Coeficientes reflexion
-                color = colorPixel.getColorCoeficienteReflexion().toRGBQUAD();
-                break;
-            case 3: // Coeficientes refraccion
-                color = colorPixel.getColorCoeficienteTransparencia().toRGBQUAD();
-                break;
-            case 4: // Componentes ambiente
-                color = colorPixel.getComponenteAmbiente().toRGBQUAD();
-                break;
-            case 5: // Componentes difuso
-                color = colorPixel.getComponenteDifusa().toRGBQUAD();
-                break;
-            case 6: // Componentes especular
-                color = colorPixel.getComponenteEspecular().toRGBQUAD();
-                break;
-            case 7: // Componentes reflexion
-                color = colorPixel.getComponenteReflexion().toRGBQUAD();
-                break;
-            case 8: // Componentes refraccion
-                color = colorPixel.getComponenteTransparencia().toRGBQUAD();
-                break;
-
-            default:
-                color = colorPixel.toRGBQUAD();
-                break;
-            }
+            RGBQUAD color = colorPixel.getColorTotal().toRGBQUAD();
             FreeImage_SetPixelColor(bitmap, x, y, &color);
+            RGBQUAD colorCoeficienteReflexion = colorPixel.getColorCoeficienteReflexion().toRGBQUAD();
+            FreeImage_SetPixelColor(bitmapCoeficienteReflexion, x, y, &colorCoeficienteReflexion);
+            RGBQUAD colorCoeficienteRefraccion = colorPixel.getColorCoeficienteTransparencia().toRGBQUAD();
+            FreeImage_SetPixelColor(bitmapCoeficienteRefraccion, x, y, &colorCoeficienteRefraccion);
+            RGBQUAD colorComponentesAmbiente = colorPixel.getComponenteAmbiente().toRGBQUAD();
+            FreeImage_SetPixelColor(bitmapComponentesAmbiente, x, y, &colorComponentesAmbiente);
+            RGBQUAD colorComponentesDifuso = colorPixel.getComponenteDifusa().toRGBQUAD();
+            FreeImage_SetPixelColor(bitmapComponentesDifuso, x, y, &colorComponentesDifuso);
+            RGBQUAD colorComponentesEspecular = colorPixel.getComponenteEspecular().toRGBQUAD();
+            FreeImage_SetPixelColor(bitmapComponentesEspecular, x, y, &colorComponentesEspecular);
+            RGBQUAD colorComponentesReflexion = colorPixel.getComponenteReflexion().toRGBQUAD();
+            FreeImage_SetPixelColor(bitmapComponentesReflexion, x, y, &colorComponentesReflexion);
+            RGBQUAD colorComponentesRefraccion = colorPixel.getComponenteTransparencia().toRGBQUAD();
+            FreeImage_SetPixelColor(bitmapComponentesRefraccion, x, y, &colorComponentesRefraccion);
 
             // SDL
             rojo = &color.rgbRed;
@@ -237,8 +214,16 @@ int main(int argc, char *argv[])
 
     // Guardar la imagen en un archivo
     std::string outputPath = getPathToFile();
-
-    if (FreeImage_Save(FIF_PNG, bitmap, outputPath.c_str(), 0))
+    bool exito = true;
+    exito = FreeImage_Save(FIF_PNG, bitmap, (outputPath + ".png").c_str(), 0) || exito;
+    exito = FreeImage_Save(FIF_PNG, bitmapCoeficienteReflexion, (outputPath + "_coeficiente_reflexion.png").c_str(), 0) || exito;
+    exito = FreeImage_Save(FIF_PNG, bitmapCoeficienteRefraccion, (outputPath + "_coeficiente_refraccion.png").c_str(), 0) || exito;
+    exito = FreeImage_Save(FIF_PNG, bitmapComponentesAmbiente, (outputPath + "_componentes_ambiente.png").c_str(), 0) || exito;
+    exito = FreeImage_Save(FIF_PNG, bitmapComponentesDifuso, (outputPath + "_componentes_difuso.png").c_str(), 0) || exito;
+    exito = FreeImage_Save(FIF_PNG, bitmapComponentesEspecular, (outputPath + "_componentes_especular.png").c_str(), 0) || exito;
+    exito = FreeImage_Save(FIF_PNG, bitmapComponentesReflexion, (outputPath + "_componentes_reflexion.png").c_str(), 0) || exito;
+    exito = FreeImage_Save(FIF_PNG, bitmapComponentesRefraccion, (outputPath + "_componentes_refraccion.png").c_str(), 0) || exito;
+    if (exito)
     {
         std::cout << "Imagen guardada en: " << outputPath << std::endl;
     }
