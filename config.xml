@@ -18,17 +18,17 @@
             <x>2.0</x>
             <y>3.35</y>
             <z>0</z>
-            <r>1.0</r>
-            <g>1.0</g>
-            <b>1.0</b>
+            <r>0.7</r>
+            <g>0.7</g>
+            <b>0.7</b>
         </luz>
         <luz>
             <x>0.0</x>
             <y>3.35</y>
             <z>0</z>
-            <r>1.0</r>
-            <g>1.0</g>
-            <b>1.0</b>
+            <r>0.7</r>
+            <g>0.7</g>
+            <b>0.7</b>
         </luz>
     </luces>
     <objetos>
@@ -41,7 +41,7 @@
                 <z>0</z>
             </normal>
             <centro>
-                <x>3</x>
+                <x>7</x>
                 <y>0</y>
                 <z>0</z>
             </centro>
@@ -55,7 +55,7 @@
                     <b>255</b>
                 </ka>
                 <kd>
-                    <valor>0.9</valor>
+                    <valor>0.7</valor>
                     <r>255</r>
                     <g>255</g>
                     <b>255</b>
@@ -95,7 +95,7 @@
                     <b>40</b>
                 </ka>
                 <kd>
-                    <valor>0.9</valor>
+                    <valor>0.7</valor>
                     <r>130</r>
                     <g>40</g>
                     <b>40</b>
@@ -135,7 +135,7 @@
                     <b>255</b>
                 </ka>
                 <kd>
-                    <valor>0.9</valor>
+                    <valor>0.7</valor>
                     <r>255</r>
                     <g>255</g>
                     <b>255</b>
@@ -175,7 +175,7 @@
                     <b>40</b>
                 </ka>
                 <kd>
-                    <valor>0.9</valor>
+                    <valor>0.7</valor>
                     <r>40</r>
                     <g>90</g>
                     <b>40</b>
@@ -215,7 +215,7 @@
                     <b>255</b>
                 </ka>
                 <kd>
-                    <valor>0.9</valor>
+                    <valor>0.7</valor>
                     <r>255</r>
                     <g>255</g>
                     <b>255</b>
@@ -261,7 +261,7 @@
                     <b>255</b>
                 </ks>
                 <kt>1.0</kt>
-                <indiceRefraccion>1.5</indiceRefraccion>
+                <indiceRefraccion>1.6</indiceRefraccion>
                 <kreflexion>0.0</kreflexion>
             </propObjeto>
         </esfera>
@@ -314,13 +314,13 @@
             <altura>1.5</altura>
             <propObjeto>
                 <ka>
-                    <valor>0.4</valor>
+                    <valor>0.3</valor>
                     <r>0</r>
                     <g>255</g>
                     <b>0</b>
                 </ka>
                 <kd>
-                    <valor>0.6</valor>
+                    <valor>0.5</valor>
                     <r>0</r>
                     <g>255</g>
                     <b>0</b>

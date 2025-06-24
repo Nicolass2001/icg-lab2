@@ -55,10 +55,10 @@ Escena_RR::Escena_RR(std::string pathConfig)
 
     float coeficienteAmbiente = 0.1;
     ColorRGB colorAmbiente(255, 255, 255);
-    float coeficienteReflexionDifusa = 0.5;
+    float coeficienteReflexionDifusa = 0.7;
     ColorRGB colorReflexionDifusa(255, 255, 255);
-    float coeficienteReflexionEspecular = 1.0;
-    int brilloEspecular = 5;
+    float coeficienteReflexionEspecular = 0.0;
+    int brilloEspecular = 0;
     ColorRGB colorReflexionEspecular(255, 255, 255);
     float coeficienteTransparencia = 0.0f;
     float indiceRefraccion = 0;
