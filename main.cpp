@@ -158,16 +158,16 @@ int main(int argc, char *argv[])
     // SDL
     // PAGINA DE REFERENCIA: https://stackoverflow.com/questions/20579658/how-to-draw-pixels-in-sdl-2-0
 
-    // SDL_Event event;
-    // SDL_Renderer *renderer;
-    // SDL_Window *window;
-    // SDL_Init(SDL_INIT_VIDEO);
-    // SDL_CreateWindowAndRenderer(800, 600, 0, &window, &renderer);
-    // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-    // SDL_RenderClear(renderer);
-    // uint8_t *rojo = 0;
-    // uint8_t *verde = 0;
-    // uint8_t *azul = 0;
+    SDL_Event event;
+    SDL_Renderer *renderer;
+    SDL_Window *window;
+    SDL_Init(SDL_INIT_VIDEO);
+    SDL_CreateWindowAndRenderer(800, 600, 0, &window, &renderer);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+    SDL_RenderClear(renderer);
+    uint8_t *rojo = 0;
+    uint8_t *verde = 0;
+    uint8_t *azul = 0;
 
     // Inicializo FreeImage en texturas.h
 
@@ -225,13 +225,13 @@ int main(int argc, char *argv[])
             FreeImage_SetPixelColor(bitmap, x, y, &color);
 
             // SDL
-            // rojo = &color.rgbRed;
-            // verde = &color.rgbGreen;
-            // azul = &color.rgbBlue;
-            // SDL_SetRenderDrawColor(renderer, *rojo, *verde, *azul, 255);
-            // SDL_RenderDrawPoint(renderer, x, 600 - y);
-            // if (x == 0)
-            //     SDL_RenderPresent(renderer);
+            rojo = &color.rgbRed;
+            verde = &color.rgbGreen;
+            azul = &color.rgbBlue;
+            SDL_SetRenderDrawColor(renderer, *rojo, *verde, *azul, 255);
+            SDL_RenderDrawPoint(renderer, x, 600 - y);
+            if (x == 0)
+                SDL_RenderPresent(renderer);
         }
     }
 
@@ -252,16 +252,16 @@ int main(int argc, char *argv[])
     FreeImage_Unload(bitmap);
     FreeImage_DeInitialise();
 
-    // while (1)
-    // {
-    //     if (SDL_PollEvent(&event) && event.type == SDL_QUIT)
-    //         break;
-    // }
+    while (1)
+    {
+        if (SDL_PollEvent(&event) && event.type == SDL_QUIT)
+            break;
+    }
 
-    // // SDL
-    // SDL_DestroyRenderer(renderer);
-    // SDL_DestroyWindow(window);
-    // SDL_Quit();
+    // SDL
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 
     return 0;
 }
