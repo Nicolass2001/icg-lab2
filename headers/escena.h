@@ -53,22 +53,21 @@ Escena_RR::Escena_RR(std::string pathConfig)
     luces = xmlHandler.getLuces();
     objetos = xmlHandler.getObjetos();
 
-
     float coeficienteAmbiente = 0.1;
-    ColorRGB colorAmbiente(255,255,255);
+    ColorRGB colorAmbiente(255, 255, 255);
     float coeficienteReflexionDifusa = 0.5;
-    ColorRGB colorReflexionDifusa(255,255,255);
+    ColorRGB colorReflexionDifusa(255, 255, 255);
     float coeficienteReflexionEspecular = 1.0;
     int brilloEspecular = 5;
-    ColorRGB colorReflexionEspecular(255,255,255);
+    ColorRGB colorReflexionEspecular(255, 255, 255);
     float coeficienteTransparencia = 0.0f;
     float indiceRefraccion = 0;
     float coeficienteReflexion = 0.0f;
 
     PropiedadesObjeto prop = PropiedadesObjeto(coeficienteAmbiente, colorAmbiente,
-                             coeficienteReflexionDifusa, colorReflexionDifusa,
-                             coeficienteReflexionEspecular, brilloEspecular, colorReflexionEspecular,
-                             coeficienteTransparencia, indiceRefraccion, coeficienteReflexion);
+                                               coeficienteReflexionDifusa, colorReflexionDifusa,
+                                               coeficienteReflexionEspecular, brilloEspecular, colorReflexionEspecular,
+                                               coeficienteTransparencia, indiceRefraccion, coeficienteReflexion);
 
     prop.setTipoObjeto(8);
 
@@ -136,10 +135,12 @@ void Escena_RR::calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector 
             colorEspecular = colorEspecular + colorBaseEspecular * intensidad * intensidadEspecular * factorAtenuacion;
         }
     }
-    if (eleccion == 1 || eleccion == 5 || eleccion == 9) {
+    if (eleccion == 1 || eleccion == 5 || eleccion == 9)
+    {
         color.setComponenteDifusa(colorDifuso, objeto->getCoeficienteReflexionDifusa());
     }
-    if (eleccion == 1 || eleccion == 6 || eleccion == 9) {
+    if (eleccion == 1 || eleccion == 6 || eleccion == 9)
+    {
         color.setComponenteEspecular(colorEspecular, objeto->getCoeficienteReflexionEspecular());
     }
 }
@@ -161,7 +162,9 @@ Vector Escena_RR::calcularLuzBloqueada(Rayo_RR rayo, Vector puntoLuz)
                 float coeficienteTransparencia = objeto->getCoeficienteTransparencia();
                 if (coeficienteTransparencia == 0.0f)
                     return Vector(0.0f, 0.0f, 0.0f); // La luz está bloqueada
-                factorDeAtenuacion = factorDeAtenuacion * coeficienteTransparencia;
+                ColorRGB color = objeto->getColorAmbiente();
+                Vector atenuacionColor(color.getR() / 255.0f, color.getG() / 255.0f, color.getB() / 255.0f);
+                factorDeAtenuacion = atenuacionColor * factorDeAtenuacion * coeficienteTransparencia;
             }
         }
     }

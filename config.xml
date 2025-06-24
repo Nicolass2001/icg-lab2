@@ -244,14 +244,14 @@
                 <ka>
                     <valor>0.1</valor>
                     <r>255</r>
-                    <g>0</g>
-                    <b>0</b>
+                    <g>120</g>
+                    <b>120</b>
                 </ka>
                 <kd>
                     <valor>0.0</valor>
                     <r>255</r>
-                    <g>0</g>
-                    <b>0</b>
+                    <g>120</g>
+                    <b>120</b>
                 </kd>
                 <ks>
                     <valor>0.5</valor>
