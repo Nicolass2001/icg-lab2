@@ -31,9 +31,14 @@ public:
     void setComponenteTransparencia(ColorRGB color, float coeficiente);
     void setComponenteReflexion(ColorRGB color, float coeficiente);
 
+    ColorRGB getComponenteAmbiente() const;
+    ColorRGB getComponenteDifusa() const;
+    ColorRGB getComponenteEspecular() const;
     ColorRGB getComponenteReflexion() const;
     ColorRGB getComponenteTransparencia() const;
 
+    ColorRGB getColorCoeficienteReflexion() const;
+    ColorRGB getColorCoeficienteTransparencia() const;
 };
 
 Color_RR::Color_RR()
@@ -107,13 +112,39 @@ void Color_RR::setComponenteReflexion(ColorRGB color, float coeficiente)
     this->coeficienteReflexion = coeficiente;
 }
 
-ColorRGB Color_RR::getComponenteReflexion() const {
-     return colorReflexion * coeficienteReflexion; 
+ColorRGB Color_RR::getComponenteAmbiente() const
+{
+    return colorAmbiente * coeficienteAmbiente;
 }
 
-ColorRGB Color_RR::getComponenteTransparencia() const { 
-    return colorTransparencia * coeficienteTransparencia; 
+ColorRGB Color_RR::getComponenteDifusa() const
+{
+    return colorReflexionDifusa * coeficienteReflexionDifusa;
 }
 
+ColorRGB Color_RR::getComponenteEspecular() const
+{
+    return colorReflexionEspecular * coeficienteReflexionEspecular;
+}
+
+ColorRGB Color_RR::getComponenteReflexion() const
+{
+    return colorReflexion * coeficienteReflexion;
+}
+
+ColorRGB Color_RR::getComponenteTransparencia() const
+{
+    return colorTransparencia * coeficienteTransparencia;
+}
+
+ColorRGB Color_RR::getColorCoeficienteReflexion() const
+{
+    return ColorRGB(255, 255, 255) * coeficienteReflexion;
+}
+
+ColorRGB Color_RR::getColorCoeficienteTransparencia() const
+{
+    return ColorRGB(255, 255, 255) * coeficienteTransparencia;
+}
 
 #endif // COLOR_H

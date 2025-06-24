@@ -28,7 +28,7 @@ public:
     Color_RR getFondo();
     Camara_RR getCamara();
     ObjetoPtr calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto, Vector *normal);
-    void calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, Color_RR &color, int eleccion);
+    void calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, Color_RR &color);
     Vector calcularLuzBloqueada(Rayo_RR rayo, Vector puntoLuz); // Método para calcular la luz bloqueada por otros objetos
     float indiceRefraccion(Vector punto);
 };
@@ -99,7 +99,7 @@ ObjetoPtr Escena_RR::calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto,
     return objMasCercano;
 }
 
-void Escena_RR::calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, Color_RR &color, int eleccion)
+void Escena_RR::calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, Color_RR &color)
 {
 
     ColorRGB colorDifuso = ColorRGB(0, 0, 0);
@@ -135,14 +135,8 @@ void Escena_RR::calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector 
             colorEspecular = colorEspecular + colorBaseEspecular * intensidad * intensidadEspecular * factorAtenuacion;
         }
     }
-    if (eleccion == 1 || eleccion == 5 || eleccion == 9)
-    {
-        color.setComponenteDifusa(colorDifuso, objeto->getCoeficienteReflexionDifusa());
-    }
-    if (eleccion == 1 || eleccion == 6 || eleccion == 9)
-    {
-        color.setComponenteEspecular(colorEspecular, objeto->getCoeficienteReflexionEspecular());
-    }
+    color.setComponenteDifusa(colorDifuso, objeto->getCoeficienteReflexionDifusa());
+    color.setComponenteEspecular(colorEspecular, objeto->getCoeficienteReflexionEspecular());
 }
 
 Vector Escena_RR::calcularLuzBloqueada(Rayo_RR rayo, Vector puntoLuz)

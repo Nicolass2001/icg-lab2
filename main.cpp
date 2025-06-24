@@ -9,42 +9,29 @@ Escena_RR escena("config.xml");
 
 Texturas texturas(3);
 
-Color_RR traza_RR(Rayo_RR rayo, int profundidad, int eleccion);
+Color_RR traza_RR(Rayo_RR rayo, int profundidad);
 
-Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, int profundidad, int eleccion)
+Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, int profundidad)
 {
     Color_RR color; // Color a devolver
 
-    Rayo_RR rayo_r, rayo_t;    // Rayo reflejado, refractado y sombra
-    Color_RR color_r, color_t; // color de los rayos reflejado y refractado
-
     // OPCIONAL TEXTURAS
-    if (eleccion == 9 && objeto->getTipoObjeto() == 4)
+    if (TEXTURAS_ACTIVADAS)
     {
-        objeto->setColoresTextura(punto, texturas.texturasCargadas[0]);
-    }
-    else if (eleccion == 9 && objeto->getTipoObjeto() == 2)
-    {
-        objeto->setColoresTextura(punto, texturas.texturasCargadas[0]);
-    }
-    else if (eleccion == 9 && objeto->getTipoObjeto() == 5)
-    {
-        objeto->setColoresTextura(punto, texturas.texturasCargadas[1]);
-    }
-    else if (eleccion == 9 && objeto->getTipoObjeto() == 3)
-    {
-        objeto->setColoresTextura(punto, texturas.texturasCargadas[2]);
-    }
-    else if (eleccion == 9 && objeto->getTipoObjeto() == 1)
-    {
-        objeto->setColoresTextura(punto, texturas.texturasCargadas[0]);
+        if (objeto->getTipoObjeto() == 4)
+            objeto->setColoresTextura(punto, texturas.texturasCargadas[0]);
+        else if (objeto->getTipoObjeto() == 2)
+            objeto->setColoresTextura(punto, texturas.texturasCargadas[0]);
+        else if (objeto->getTipoObjeto() == 5)
+            objeto->setColoresTextura(punto, texturas.texturasCargadas[1]);
+        else if (objeto->getTipoObjeto() == 3)
+            objeto->setColoresTextura(punto, texturas.texturasCargadas[2]);
+        else if (objeto->getTipoObjeto() == 1)
+            objeto->setColoresTextura(punto, texturas.texturasCargadas[0]);
     }
 
     // Color = termino de ambiente
-    if (eleccion == 1 || eleccion == 4 || eleccion == 9)
-    {
-        color.setComponenteAmbiente(objeto->getColorAmbiente(), objeto->getCoeficienteAmbiente());
-    }
+    color.setComponenteAmbiente(objeto->getColorAmbiente(), objeto->getCoeficienteAmbiente());
 
     // for (cada luz)
     // rayos = rayo desde punto a la luz;
@@ -52,16 +39,13 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
     // calcular cuánta luz es bloqueada por superficie opacas y transparentes, y usarla
     // para escalar los términos difusos y especulares antes de añadirlos a color;
 
-    if (eleccion == 1 || eleccion == 5 || eleccion == 6 || eleccion == 9)
-    {
-        escena.calcularColorIluminacion(objeto, rayo, punto, normal, color, eleccion);
-    }
+    escena.calcularColorIluminacion(objeto, rayo, punto, normal, color);
 
     if (profundidad < PROFUNDIDAD_MAXIMA)
     {
 
         // If objeto es reflejante
-        if (objeto->getCoeficienteReflexion() > 0.0f && eleccion == 1 || eleccion == 7 || eleccion == 9)
+        if (objeto->getCoeficienteReflexion() > 0.0f)
         {
 
             Vector dirReflexion = rayo.getDireccion() - normal * 2.0f * (rayo.getDireccion().dot(normal));
@@ -71,14 +55,7 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
 
             Color_RR colorReflexion;
 
-            if (eleccion != 9)
-            {
-                colorReflexion = traza_RR(rayo_r, profundidad + 1, 1);
-            }
-            else
-            {
-                colorReflexion = traza_RR(rayo_r, profundidad + 1, 9);
-            }
+            colorReflexion = traza_RR(rayo_r, profundidad + 1);
 
             color.setComponenteReflexion(colorReflexion.getColorTotal(), objeto->getCoeficienteReflexion());
         }
@@ -86,7 +63,7 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
         // If objeto es transparente
 
         // Si el indice de refraccion es distinto de 0, el objeto es transparente
-        if (objeto->getIndiceRefraccion() > 0.0f && eleccion == 1 || eleccion == 8 || eleccion == 9)
+        if (objeto->getIndiceRefraccion() > 0.0f)
         {
             // rayo en la direccion de refraccion
 
@@ -119,25 +96,8 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
             // En el libro dice que "...La reflexión interna total ocurre cuando la raíz
             // cuadrada en la ecuación (14.30) es imaginaria."
 
-            if (expr2 > 1)
-            {
-                Vector R = (I - normal * 2.0f * (I.dot(normal))).normalize();
-                Rayo_RR rayoReflexion(punto + normal * EPSILON, R, rayo.getIndiceRefraccion());
-
-                Color_RR colorRefraccion;
-
-                if (eleccion != 9)
-                {
-                    colorRefraccion = traza_RR(rayoReflexion, profundidad + 1, 1);
-                }
-                else
-                {
-                    colorRefraccion = traza_RR(rayoReflexion, profundidad + 1, 9);
-                }
-
-                color.setComponenteReflexion(colorRefraccion.getColorTotal(), objeto->getCoeficienteReflexion());
+            if (expr2 > 1) // Reflexión interna total
                 return color;
-            }
 
             // calculo: sqrt[1 − η^2 (1 − (N.I)^2)]
             float expr3 = sqrt(1.0f - expr2);
@@ -159,14 +119,14 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
             float indiceRefraccionTransmitido = escena.indiceRefraccion(origenRefraccion);
             Rayo_RR rayo_t(origenRefraccion, T, indiceRefraccionTransmitido);
 
-            Color_RR colorRefraccion = traza_RR(rayo_t, profundidad + 1, 1);
+            Color_RR colorRefraccion = traza_RR(rayo_t, profundidad + 1);
             color.setComponenteTransparencia(colorRefraccion.getColorTotal(), objeto->getCoeficienteTransparencia());
         }
     }
     return color;
 }
 
-Color_RR traza_RR(Rayo_RR rayo, int profundidad, int eleccion)
+Color_RR traza_RR(Rayo_RR rayo, int profundidad)
 {
     Vector interseccion;
     Vector normal;
@@ -176,21 +136,7 @@ Color_RR traza_RR(Rayo_RR rayo, int profundidad, int eleccion)
         return escena.getFondo();
     }
 
-    Color_RR color;
-    ColorRGB colorFigura(255, 255, 255);
-
-    if (eleccion == 2)
-    {
-        color.setComponenteAmbiente(colorFigura, objMasCercano->getCoeficienteReflexion());
-        return color;
-    }
-    else if (eleccion == 3)
-    {
-        color.setComponenteAmbiente(colorFigura, objMasCercano->getCoeficienteTransparencia());
-        return color;
-    }
-
-    return sombra_RR(objMasCercano, rayo, interseccion, normal, profundidad, eleccion);
+    return sombra_RR(objMasCercano, rayo, interseccion, normal, profundidad);
 }
 
 int main(int argc, char *argv[])
@@ -204,19 +150,24 @@ int main(int argc, char *argv[])
     std::cout << "7 - Componentes reflexion | 8 - Componentes refraccion | 9 - Texturas" << std::endl;
     std::cin >> eleccion;
 
+    if (eleccion == 9)
+    {
+        TEXTURAS_ACTIVADAS = true;
+    }
+
     // SDL
     // PAGINA DE REFERENCIA: https://stackoverflow.com/questions/20579658/how-to-draw-pixels-in-sdl-2-0
 
-    SDL_Event event;
-    SDL_Renderer *renderer;
-    SDL_Window *window;
-    SDL_Init(SDL_INIT_VIDEO);
-    SDL_CreateWindowAndRenderer(800, 600, 0, &window, &renderer);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-    SDL_RenderClear(renderer);
-    uint8_t *rojo = 0;
-    uint8_t *verde = 0;
-    uint8_t *azul = 0;
+    // SDL_Event event;
+    // SDL_Renderer *renderer;
+    // SDL_Window *window;
+    // SDL_Init(SDL_INIT_VIDEO);
+    // SDL_CreateWindowAndRenderer(800, 600, 0, &window, &renderer);
+    // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+    // SDL_RenderClear(renderer);
+    // uint8_t *rojo = 0;
+    // uint8_t *verde = 0;
+    // uint8_t *azul = 0;
 
     // Inicializo FreeImage en texturas.h
 
@@ -236,20 +187,51 @@ int main(int argc, char *argv[])
     {
         for (int x = 0; x < IMAGE_WIDTH; ++x)
         {
-            colorPixel = traza_RR(camara.generarRayo(x, y), 1, eleccion);
+            colorPixel = traza_RR(camara.generarRayo(x, y), 1);
 
             // Convertir Color_RR a RGBQUAD
-            RGBQUAD color = colorPixel.toRGBQUAD();
+            RGBQUAD color;
+            switch (eleccion)
+            {
+            case 1: // Escena
+                color = colorPixel.toRGBQUAD();
+                break;
+            case 2: // Coeficientes reflexion
+                color = colorPixel.getColorCoeficienteReflexion().toRGBQUAD();
+                break;
+            case 3: // Coeficientes refraccion
+                color = colorPixel.getColorCoeficienteTransparencia().toRGBQUAD();
+                break;
+            case 4: // Componentes ambiente
+                color = colorPixel.getComponenteAmbiente().toRGBQUAD();
+                break;
+            case 5: // Componentes difuso
+                color = colorPixel.getComponenteDifusa().toRGBQUAD();
+                break;
+            case 6: // Componentes especular
+                color = colorPixel.getComponenteEspecular().toRGBQUAD();
+                break;
+            case 7: // Componentes reflexion
+                color = colorPixel.getComponenteReflexion().toRGBQUAD();
+                break;
+            case 8: // Componentes refraccion
+                color = colorPixel.getComponenteTransparencia().toRGBQUAD();
+                break;
+
+            default:
+                color = colorPixel.toRGBQUAD();
+                break;
+            }
             FreeImage_SetPixelColor(bitmap, x, y, &color);
 
             // SDL
-            rojo = &color.rgbRed;
-            verde = &color.rgbGreen;
-            azul = &color.rgbBlue;
-            SDL_SetRenderDrawColor(renderer, *rojo, *verde, *azul, 255);
-            SDL_RenderDrawPoint(renderer, x, 600 - y);
-            if (x == 0)
-                SDL_RenderPresent(renderer);
+            // rojo = &color.rgbRed;
+            // verde = &color.rgbGreen;
+            // azul = &color.rgbBlue;
+            // SDL_SetRenderDrawColor(renderer, *rojo, *verde, *azul, 255);
+            // SDL_RenderDrawPoint(renderer, x, 600 - y);
+            // if (x == 0)
+            //     SDL_RenderPresent(renderer);
         }
     }
 
@@ -270,16 +252,16 @@ int main(int argc, char *argv[])
     FreeImage_Unload(bitmap);
     FreeImage_DeInitialise();
 
-    while (1)
-    {
-        if (SDL_PollEvent(&event) && event.type == SDL_QUIT)
-            break;
-    }
+    // while (1)
+    // {
+    //     if (SDL_PollEvent(&event) && event.type == SDL_QUIT)
+    //         break;
+    // }
 
-    // SDL
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+    // // SDL
+    // SDL_DestroyRenderer(renderer);
+    // SDL_DestroyWindow(window);
+    // SDL_Quit();
 
     return 0;
 }

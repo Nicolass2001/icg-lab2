@@ -19,6 +19,7 @@ public:
     ColorRGB operator+(const ColorRGB &other) const;
     ColorRGB operator/(float factor) const;
     ColorRGB operator*(const Vector &other) const;
+    RGBQUAD toRGBQUAD();
 };
 
 ColorRGB::ColorRGB()
@@ -65,6 +66,16 @@ ColorRGB ColorRGB::operator/(float factor) const
 ColorRGB ColorRGB::operator*(const Vector &other) const
 {
     return ColorRGB(r * other.x(), g * other.y(), b * other.z());
+}
+
+RGBQUAD ColorRGB::toRGBQUAD()
+{
+    RGBQUAD color;
+    color.rgbRed = static_cast<BYTE>(r);
+    color.rgbGreen = static_cast<BYTE>(g);
+    color.rgbBlue = static_cast<BYTE>(b);
+    color.rgbReserved = 0; // Reservado, no se usa en este contexto
+    return color;
 }
 
 #endif // COLOR_RGB_H

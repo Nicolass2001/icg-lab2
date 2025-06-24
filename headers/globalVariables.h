@@ -23,4 +23,6 @@ float CAMERA_REFRACTION_INDEX = 1.0f; // Índice de refracción del medio de la 
 
 int test = 0; // Variable de prueba para depuración
 
+bool TEXTURAS_ACTIVADAS = false; // Indica si las texturas están activadas
+
 #endif // GLOBAL_VARIABLES_H
