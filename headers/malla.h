@@ -163,8 +163,7 @@ bool Malla_RR::punto_en_triangulo(const Vector &P, const Triangle &triangulo, co
 
 bool Malla_RR::estaDentro(Vector punto)
 {
-    // Verifica si el punto está dentro de la esfera
-    return (punto - centro).length() < radio;
+    return false; // No implementado, por ahora no se considera que una malla pueda ser transparente
 }
 
 #endif // MALLA_H

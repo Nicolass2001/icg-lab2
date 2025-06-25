@@ -51,7 +51,7 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
             Vector dirReflexion = rayo.getDireccion() - normal * 2.0f * (rayo.getDireccion().dot(normal));
             dirReflexion = dirReflexion.normalize();
 
-            Rayo_RR rayo_r(punto + normal * EPSILON, dirReflexion, rayo.getIndiceRefraccion());
+            Rayo_RR rayo_r(punto + normal * EPSILON, dirReflexion);
 
             Color_RR colorReflexion;
 
@@ -116,8 +116,7 @@ Color_RR sombra_RR(ObjetoPtr objeto, Rayo_RR rayo, Vector punto, Vector normal, 
 
             Vector origenRefraccion = punto - normal * EPSILON;
 
-            float indiceRefraccionTransmitido = escena.indiceRefraccion(origenRefraccion);
-            Rayo_RR rayo_t(origenRefraccion, T, indiceRefraccionTransmitido);
+            Rayo_RR rayo_t(origenRefraccion, T);
 
             Color_RR colorRefraccion = traza_RR(rayo_t, profundidad + 1);
             color.setComponenteTransparencia(colorRefraccion.getColorTotal(), objeto->getCoeficienteTransparencia());

@@ -24,7 +24,6 @@ public:
     float getIndiceRefraccion() const { return prop.indiceRefraccion; }
     float getCoeficienteReflexion() const { return prop.coeficienteReflexion; }
     virtual bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal) = 0;
-    virtual bool estaDentro(Vector punto) = 0;
     virtual void setColoresTextura(Vector punto, datosTextura textura) = 0;
 };
 

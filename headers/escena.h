@@ -94,7 +94,7 @@ void Escena_RR::calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector 
         float factorAtenuacion = 1 / distanciaLuz * distanciaLuz;
 
         // Calcular atenuación por bloqueo
-        Vector factorAtenuacionPorBloqueo = calcularLuzBloqueada(Rayo_RR(punto + direccionLuz * EPSILON, direccionLuz, 0), luz.getPosicion());
+        Vector factorAtenuacionPorBloqueo = calcularLuzBloqueada(Rayo_RR(punto + direccionLuz * EPSILON, direccionLuz), luz.getPosicion());
         intensidad = intensidad * factorAtenuacionPorBloqueo;
 
         // Calcular iluminación difusa
@@ -142,18 +142,6 @@ Vector Escena_RR::calcularLuzBloqueada(Rayo_RR rayo, Vector puntoLuz)
         }
     }
     return factorDeAtenuacion;
-}
-
-float Escena_RR::indiceRefraccion(Vector punto)
-{
-    for (const auto &objeto : objetos)
-    {
-        if (objeto->estaDentro(punto))
-        {
-            return objeto->getIndiceRefraccion();
-        }
-    }
-    return DEFAULT_REFRACTION_INDEX; // Si no hay intersección, se asume el índice de refracción del aire
 }
 
 #endif // ESCENA_H
