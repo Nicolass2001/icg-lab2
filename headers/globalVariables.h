@@ -25,4 +25,6 @@ int test = 0; // Variable de prueba para depuración
 
 bool TEXTURAS_ACTIVADAS = false; // Indica si las texturas están activadas
 
+bool GENERAR_TODAS_LAS_IMAGENES = false; // Indica si se deben generar todas las imágenes
+
 #endif // GLOBAL_VARIABLES_H

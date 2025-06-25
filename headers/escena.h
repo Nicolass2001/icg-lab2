@@ -45,34 +45,13 @@ Camara_RR Escena_RR::getCamara()
 
 Escena_RR::Escena_RR(std::string pathConfig)
 {
-    fondo = Color_RR(51, 221, 221); // Fondo
-
     // Leer XML
     XMLHandler xmlHandler(pathConfig);
+    xmlHandler.setGlobalVariables();
+    fondo = xmlHandler.getFondo();
     camara = xmlHandler.getCamera();
     luces = xmlHandler.getLuces();
     objetos = xmlHandler.getObjetos();
-
-    float coeficienteAmbiente = 0.1;
-    ColorRGB colorAmbiente(255, 255, 255);
-    float coeficienteReflexionDifusa = 0.7;
-    ColorRGB colorReflexionDifusa(255, 255, 255);
-    float coeficienteReflexionEspecular = 0.0;
-    int brilloEspecular = 0;
-    ColorRGB colorReflexionEspecular(255, 255, 255);
-    float coeficienteTransparencia = 0.0f;
-    float indiceRefraccion = 0;
-    float coeficienteReflexion = 0.0f;
-
-    PropiedadesObjeto prop = PropiedadesObjeto(coeficienteAmbiente, colorAmbiente,
-                                               coeficienteReflexionDifusa, colorReflexionDifusa,
-                                               coeficienteReflexionEspecular, brilloEspecular, colorReflexionEspecular,
-                                               coeficienteTransparencia, indiceRefraccion, coeficienteReflexion);
-
-    prop.setTipoObjeto(8);
-
-    std::shared_ptr<Malla_RR> mallaPtr = std::make_shared<Malla_RR>(prop);
-    objetos.push_back(mallaPtr);
 }
 
 ObjetoPtr Escena_RR::calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto, Vector *normal)

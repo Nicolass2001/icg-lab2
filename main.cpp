@@ -216,13 +216,16 @@ int main(int argc, char *argv[])
     std::string outputPath = getPathToFile();
     bool exito = true;
     exito = FreeImage_Save(FIF_PNG, bitmap, (outputPath + ".png").c_str(), 0) || exito;
-    exito = FreeImage_Save(FIF_PNG, bitmapCoeficienteReflexion, (outputPath + "_coeficiente_reflexion.png").c_str(), 0) || exito;
-    exito = FreeImage_Save(FIF_PNG, bitmapCoeficienteRefraccion, (outputPath + "_coeficiente_refraccion.png").c_str(), 0) || exito;
-    exito = FreeImage_Save(FIF_PNG, bitmapComponentesAmbiente, (outputPath + "_componentes_ambiente.png").c_str(), 0) || exito;
-    exito = FreeImage_Save(FIF_PNG, bitmapComponentesDifuso, (outputPath + "_componentes_difuso.png").c_str(), 0) || exito;
-    exito = FreeImage_Save(FIF_PNG, bitmapComponentesEspecular, (outputPath + "_componentes_especular.png").c_str(), 0) || exito;
-    exito = FreeImage_Save(FIF_PNG, bitmapComponentesReflexion, (outputPath + "_componentes_reflexion.png").c_str(), 0) || exito;
-    exito = FreeImage_Save(FIF_PNG, bitmapComponentesRefraccion, (outputPath + "_componentes_refraccion.png").c_str(), 0) || exito;
+    if (GENERAR_TODAS_LAS_IMAGENES)
+    {
+        exito = FreeImage_Save(FIF_PNG, bitmapCoeficienteReflexion, (outputPath + "_coeficiente_reflexion.png").c_str(), 0) || exito;
+        exito = FreeImage_Save(FIF_PNG, bitmapCoeficienteRefraccion, (outputPath + "_coeficiente_refraccion.png").c_str(), 0) || exito;
+        exito = FreeImage_Save(FIF_PNG, bitmapComponentesAmbiente, (outputPath + "_componentes_ambiente.png").c_str(), 0) || exito;
+        exito = FreeImage_Save(FIF_PNG, bitmapComponentesDifuso, (outputPath + "_componentes_difuso.png").c_str(), 0) || exito;
+        exito = FreeImage_Save(FIF_PNG, bitmapComponentesEspecular, (outputPath + "_componentes_especular.png").c_str(), 0) || exito;
+        exito = FreeImage_Save(FIF_PNG, bitmapComponentesReflexion, (outputPath + "_componentes_reflexion.png").c_str(), 0) || exito;
+        exito = FreeImage_Save(FIF_PNG, bitmapComponentesRefraccion, (outputPath + "_componentes_refraccion.png").c_str(), 0) || exito;
+    }
     if (exito)
     {
         std::cout << "Imagen guardada en: " << outputPath << std::endl;

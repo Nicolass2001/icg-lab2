@@ -2,6 +2,15 @@
 <config>
     <width>800</width>
     <height>600</height>
+    <epsilon>0.001f</epsilon>
+    <profundidadMaxWhitted>5</profundidadMaxWhitted>
+    <texturas>1</texturas>
+    <generarTodasLasImagenes>0</generarTodasLasImagenes>
+    <fondo>
+        <r>51</r>
+        <g>221</g>
+        <b>221</b>
+    </fondo>
     <camara>
         <x>-4</x>
         <y>0</y>
@@ -337,21 +346,112 @@
                 <kreflexion>0.0</kreflexion>
             </propObjeto>
         </cilindro>
-        <!-- Cilindro 2 -->
-        <!--
-        <cilindro>
-            <base>
-                <x>8</x>
-                <y>3</y>
-                <z>3</z>
-            </base>
-            <direccion>
-                <x>0</x>
-                <y>1</y>
-                <z>0</z>
-            </direccion>
-            <radio>1.0</radio>
-            <altura>2.0</altura>
+        <!-- Malla mesa -->
+        <malla>
+            <vertices>
+                <vertice>
+                    <x>0.5</x>
+                    <y>-3.75</y>
+                    <z>-3.0</z>
+                </vertice>
+                <vertice>
+                    <x>2.5</x>
+                    <y>-3.75</y>
+                    <z>-3.0</z>
+                </vertice>
+                <vertice>
+                    <x>2.5</x>
+                    <y>-1.75</y>
+                    <z>-3.0</z>
+                </vertice>
+                <vertice>
+                    <x>0.5</x>
+                    <y>-1.75</y>
+                    <z>-3.0</z>
+                </vertice>
+                <vertice>
+                    <x>0.5</x>
+                    <y>-3.75</y>
+                    <z>2.5</z>
+                </vertice>
+                <vertice>
+                    <x>2.5</x>
+                    <y>-3.75</y>
+                    <z>2.5</z>
+                </vertice>
+                <vertice>
+                    <x>2.5</x>
+                    <y>-1.75</y>
+                    <z>2.5</z>
+                </vertice>
+                <vertice>
+                    <x>0.5</x>
+                    <y>-1.75</y>
+                    <z>2.5</z>
+                </vertice>
+            </vertices>
+            <triangulos>
+                <triangulo>
+                    <v0>0</v0>
+                    <v1>1</v1>
+                    <v2>2</v2>
+                </triangulo>
+                <triangulo>
+                    <v0>0</v0>
+                    <v1>2</v1>
+                    <v2>3</v2>
+                </triangulo>
+                <triangulo>
+                    <v0>4</v0>
+                    <v1>5</v1>
+                    <v2>6</v2>
+                </triangulo>
+                <triangulo>
+                    <v0>4</v0>
+                    <v1>6</v1>
+                    <v2>7</v2>
+                </triangulo>
+                <triangulo>
+                    <v0>0</v0>
+                    <v1>5</v1>
+                    <v2>1</v2>
+                </triangulo>
+                <triangulo>
+                    <v0>0</v0>
+                    <v1>4</v1>
+                    <v2>5</v2>
+                </triangulo>
+                <triangulo>
+                    <v0>3</v0>
+                    <v1>6</v1>
+                    <v2>2</v2>
+                </triangulo>
+                <triangulo>
+                    <v0>3</v0>
+                    <v1>7</v1>
+                    <v2>6</v2>
+                </triangulo>
+                <triangulo>
+                    <v0>0</v0>
+                    <v1>7</v1>
+                    <v2>3</v2>
+                </triangulo>
+                <triangulo>
+                    <v0>0</v0>
+                    <v1>4</v1>
+                    <v2>7</v2>
+                </triangulo>
+                <triangulo>
+                    <v0>1</v0>
+                    <v1>5</v1>
+                    <v2>6</v2>
+                </triangulo>
+                <triangulo>
+                    <v0>1</v0>
+                    <v1>6</v1>
+                    <v2>2</v2>
+                </triangulo>
+            </triangulos>
             <propObjeto>
                 <ka>
                     <valor>0.1</valor>
@@ -360,14 +460,14 @@
                     <b>255</b>
                 </ka>
                 <kd>
-                    <valor>0.5</valor>
+                    <valor>0.7</valor>
                     <r>255</r>
                     <g>255</g>
                     <b>255</b>
                 </kd>
                 <ks>
-                    <valor>0.8</valor>
-                    <brillo>5</brillo>
+                    <valor>0.0</valor>
+                    <brillo>0</brillo>
                     <r>255</r>
                     <g>255</g>
                     <b>255</b>
@@ -376,7 +476,6 @@
                 <indiceRefraccion>1.0</indiceRefraccion>
                 <kreflexion>0.0</kreflexion>
             </propObjeto>
-        </cilindro>
-        -->
+        </malla>
     </objetos>
 </config>

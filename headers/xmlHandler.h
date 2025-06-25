@@ -7,6 +7,7 @@
 #include "pared.h"
 #include "esfera.h"
 #include "cilindro.h"
+#include "malla.h"
 
 #ifndef XML_HANDLER_H
 #define XML_HANDLER_H
@@ -19,6 +20,8 @@ private:
 
 public:
     XMLHandler(std::string pathConfig);
+    void setGlobalVariables();
+    ColorRGB getFondo();
     Camara_RR getCamera();
     std::vector<Luz> getLuces();
     std::vector<ObjetoPtr> getObjetos();
@@ -28,6 +31,7 @@ private:
     ObjetoPtr getPared(tinyxml2::XMLElement *objetoElement);
     ObjetoPtr getEsfera(tinyxml2::XMLElement *objetoElement);
     ObjetoPtr getCilindro(tinyxml2::XMLElement *objetoElement);
+    ObjetoPtr getMalla(tinyxml2::XMLElement *objetoElement);
 };
 
 XMLHandler::XMLHandler(std::string pathConfig)
@@ -44,6 +48,40 @@ XMLHandler::XMLHandler(std::string pathConfig)
     }
 
     root = datos.FirstChildElement("config");
+}
+
+void XMLHandler::setGlobalVariables()
+{
+    tinyxml2::XMLElement *widthElement = root->FirstChildElement("width");
+    tinyxml2::XMLElement *heightElement = root->FirstChildElement("height");
+    tinyxml2::XMLElement *epsilonElement = root->FirstChildElement("epsilon");
+    tinyxml2::XMLElement *profundidadMaxWhittedElement = root->FirstChildElement("profundidadMaxWhitted");
+    tinyxml2::XMLElement *texturasElement = root->FirstChildElement("texturas");
+    tinyxml2::XMLElement *generarTodasLasImagenesElement = root->FirstChildElement("generarTodasLasImagenes");
+
+    IMAGE_WIDTH = std::stoi(widthElement->GetText());
+    IMAGE_HEIGHT = std::stoi(heightElement->GetText());
+    EPSILON = std::stof(epsilonElement->GetText());
+    PROFUNDIDAD_MAXIMA = std::stoi(profundidadMaxWhittedElement->GetText());
+    TEXTURAS_ACTIVADAS = std::stoi(texturasElement->GetText()) == 1;
+    GENERAR_TODAS_LAS_IMAGENES = std::stoi(generarTodasLasImagenesElement->GetText()) == 1;
+
+    std::cout << "Global variables set: " << std::endl;
+    std::cout << "IMAGE_WIDTH: " << IMAGE_WIDTH << std::endl;
+    std::cout << "IMAGE_HEIGHT: " << IMAGE_HEIGHT << std::endl;
+    std::cout << "EPSILON: " << EPSILON << std::endl;
+    std::cout << "PROFUNDIDAD_MAXIMA: " << PROFUNDIDAD_MAXIMA << std::endl;
+    std::cout << "TEXTURAS_ACTIVADAS: " << (TEXTURAS_ACTIVADAS ? "true" : "false") << std::endl;
+    std::cout << "GENERAR_TODAS_LAS_IMAGENES: " << (GENERAR_TODAS_LAS_IMAGENES ? "true" : "false") << std::endl;
+}
+
+ColorRGB XMLHandler::getFondo()
+{
+    tinyxml2::XMLElement *fondoElement = root->FirstChildElement("fondo");
+    return ColorRGB(
+        std::stoi(fondoElement->FirstChildElement("r")->GetText()),
+        std::stoi(fondoElement->FirstChildElement("g")->GetText()),
+        std::stoi(fondoElement->FirstChildElement("b")->GetText()));
 }
 
 Camara_RR XMLHandler::getCamera()
@@ -109,6 +147,11 @@ std::vector<ObjetoPtr> XMLHandler::getObjetos()
         if (tipo == "cilindro")
         {
             objetos.push_back(getCilindro(objetoElement));
+            continue;
+        }
+        if (tipo == "malla")
+        {
+            objetos.push_back(getMalla(objetoElement));
             continue;
         }
     }
@@ -237,6 +280,47 @@ ObjetoPtr XMLHandler::getCilindro(tinyxml2::XMLElement *objetoElement)
     PropiedadesObjeto prop = getPropiedadesObjeto(7, objetoElement->FirstChildElement("propObjeto"));
 
     return std::make_shared<Cilindro_RR>(centro, direccion, radio, altura, prop);
+}
+
+ObjetoPtr XMLHandler::getMalla(tinyxml2::XMLElement *objetoElement)
+{
+    std::vector<Vector> vertices;
+    tinyxml2::XMLElement *verticesElement = objetoElement->FirstChildElement("vertices");
+    for (tinyxml2::XMLElement *vertexElement = verticesElement->FirstChildElement();
+         vertexElement; vertexElement = vertexElement->NextSiblingElement())
+    {
+        Vector vertex(
+            std::stof(vertexElement->FirstChildElement("x")->GetText()),
+            std::stof(vertexElement->FirstChildElement("y")->GetText()),
+            std::stof(vertexElement->FirstChildElement("z")->GetText()));
+        vertices.push_back(vertex);
+    }
+
+    std::vector<Triangle> triangulos;
+    tinyxml2::XMLElement *triangulosElement = objetoElement->FirstChildElement("triangulos");
+    for (tinyxml2::XMLElement *trianguloElement = triangulosElement->FirstChildElement();
+         trianguloElement; trianguloElement = trianguloElement->NextSiblingElement())
+    {
+        Triangle triangulo;
+        triangulo.i0 = std::stoi(trianguloElement->FirstChildElement("v0")->GetText());
+        triangulo.i1 = std::stoi(trianguloElement->FirstChildElement("v1")->GetText());
+        triangulo.i2 = std::stoi(trianguloElement->FirstChildElement("v2")->GetText());
+        triangulos.push_back(triangulo);
+    }
+
+    if (objetoElement->FirstChildElement("propObjeto") == nullptr)
+    {
+        ColorRGB color(
+            std::stoi(objetoElement->FirstChildElement("r")->GetText()),
+            std::stoi(objetoElement->FirstChildElement("g")->GetText()),
+            std::stoi(objetoElement->FirstChildElement("b")->GetText()));
+
+        return std::make_shared<Malla_RR>(vertices, triangulos, color);
+    }
+
+    PropiedadesObjeto prop = getPropiedadesObjeto(8, objetoElement->FirstChildElement("propObjeto"));
+
+    return std::make_shared<Malla_RR>(vertices, triangulos, prop);
 }
 
 #endif // XML_HANDLER_H
