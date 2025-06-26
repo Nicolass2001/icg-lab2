@@ -216,9 +216,9 @@ ObjetoPtr XMLHandler::getPared(tinyxml2::XMLElement *objetoElement)
     if (objetoElement->FirstChildElement("propObjeto") == nullptr)
     {
         ColorRGB color(
-            std::stoi(objetoElement->FirstChildElement("r")->GetText()),
-            std::stoi(objetoElement->FirstChildElement("g")->GetText()),
-            std::stoi(objetoElement->FirstChildElement("b")->GetText()));
+            std::stoi(objetoElement->FirstChildElement("color")->FirstChildElement("r")->GetText()),
+            std::stoi(objetoElement->FirstChildElement("color")->FirstChildElement("g")->GetText()),
+            std::stoi(objetoElement->FirstChildElement("color")->FirstChildElement("b")->GetText()));
 
         return std::make_shared<Pared_RR>(centro, normal, ancho, alto, color);
     }
@@ -240,9 +240,9 @@ ObjetoPtr XMLHandler::getEsfera(tinyxml2::XMLElement *objetoElement)
     if (objetoElement->FirstChildElement("propObjeto") == nullptr)
     {
         ColorRGB color(
-            std::stoi(objetoElement->FirstChildElement("r")->GetText()),
-            std::stoi(objetoElement->FirstChildElement("g")->GetText()),
-            std::stoi(objetoElement->FirstChildElement("b")->GetText()));
+            std::stoi(objetoElement->FirstChildElement("color")->FirstChildElement("r")->GetText()),
+            std::stoi(objetoElement->FirstChildElement("color")->FirstChildElement("g")->GetText()),
+            std::stoi(objetoElement->FirstChildElement("color")->FirstChildElement("b")->GetText()));
 
         return std::make_shared<Esfera_RR>(centro, radio, color);
     }
@@ -270,9 +270,9 @@ ObjetoPtr XMLHandler::getCilindro(tinyxml2::XMLElement *objetoElement)
     if (objetoElement->FirstChildElement("propObjeto") == nullptr)
     {
         ColorRGB color(
-            std::stoi(objetoElement->FirstChildElement("r")->GetText()),
-            std::stoi(objetoElement->FirstChildElement("g")->GetText()),
-            std::stoi(objetoElement->FirstChildElement("b")->GetText()));
+            std::stoi(objetoElement->FirstChildElement("color")->FirstChildElement("r")->GetText()),
+            std::stoi(objetoElement->FirstChildElement("color")->FirstChildElement("g")->GetText()),
+            std::stoi(objetoElement->FirstChildElement("color")->FirstChildElement("b")->GetText()));
 
         return std::make_shared<Cilindro_RR>(centro, direccion, radio, altura, color);
     }
@@ -311,9 +311,9 @@ ObjetoPtr XMLHandler::getMalla(tinyxml2::XMLElement *objetoElement)
     if (objetoElement->FirstChildElement("propObjeto") == nullptr)
     {
         ColorRGB color(
-            std::stoi(objetoElement->FirstChildElement("r")->GetText()),
-            std::stoi(objetoElement->FirstChildElement("g")->GetText()),
-            std::stoi(objetoElement->FirstChildElement("b")->GetText()));
+            std::stoi(objetoElement->FirstChildElement("color")->FirstChildElement("r")->GetText()),
+            std::stoi(objetoElement->FirstChildElement("color")->FirstChildElement("g")->GetText()),
+            std::stoi(objetoElement->FirstChildElement("color")->FirstChildElement("b")->GetText()));
 
         return std::make_shared<Malla_RR>(vertices, triangulos, color);
     }
