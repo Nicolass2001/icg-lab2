@@ -13,9 +13,9 @@ private:
     ColorRGB colorReflexionDifusa;
     float coeficienteReflexionEspecular = DEFAULT_SPECULAR_REFLECTION_COEFFICIENT;
     ColorRGB colorReflexionEspecular;
-    Vector coeficienteTransparencia = DEFAULT_TRANSPARENCY_COEFFICIENT;
+    float coeficienteTransparencia = DEFAULT_TRANSPARENCY_COEFFICIENT;
     ColorRGB colorTransparencia;
-    Vector coeficienteReflexion = DEFAULT_REFLECTION_COEFFICIENT;
+    float coeficienteReflexion = DEFAULT_REFLECTION_COEFFICIENT;
     ColorRGB colorReflexion;
 
 public:
@@ -28,12 +28,17 @@ public:
     void setComponenteAmbiente(ColorRGB color, float coeficiente);
     void setComponenteDifusa(ColorRGB color, float coeficiente);
     void setComponenteEspecular(ColorRGB color, float coeficiente);
-    void setComponenteTransparencia(ColorRGB color, Vector coeficiente);
-    void setComponenteReflexion(ColorRGB color, Vector coeficiente);
+    void setComponenteTransparencia(ColorRGB color, float coeficiente);
+    void setComponenteReflexion(ColorRGB color, float coeficiente);
 
+    ColorRGB getComponenteAmbiente() const;
+    ColorRGB getComponenteDifusa() const;
+    ColorRGB getComponenteEspecular() const;
     ColorRGB getComponenteReflexion() const;
     ColorRGB getComponenteTransparencia() const;
 
+    ColorRGB getColorCoeficienteReflexion() const;
+    ColorRGB getColorCoeficienteTransparencia() const;
 };
 
 Color_RR::Color_RR()
@@ -95,25 +100,51 @@ void Color_RR::setComponenteEspecular(ColorRGB color, float coeficiente)
     this->coeficienteReflexionEspecular = coeficiente;
 }
 
-void Color_RR::setComponenteTransparencia(ColorRGB color, Vector coeficiente)
+void Color_RR::setComponenteTransparencia(ColorRGB color, float coeficiente)
 {
     this->colorTransparencia = color;
     this->coeficienteTransparencia = coeficiente;
 }
 
-void Color_RR::setComponenteReflexion(ColorRGB color, Vector coeficiente)
+void Color_RR::setComponenteReflexion(ColorRGB color, float coeficiente)
 {
     this->colorReflexion = color;
     this->coeficienteReflexion = coeficiente;
 }
 
-ColorRGB Color_RR::getComponenteReflexion() const {
-     return colorReflexion * coeficienteReflexion; 
+ColorRGB Color_RR::getComponenteAmbiente() const
+{
+    return colorAmbiente * coeficienteAmbiente;
 }
 
-ColorRGB Color_RR::getComponenteTransparencia() const { 
-    return colorTransparencia * coeficienteTransparencia; 
+ColorRGB Color_RR::getComponenteDifusa() const
+{
+    return colorReflexionDifusa * coeficienteReflexionDifusa;
 }
 
+ColorRGB Color_RR::getComponenteEspecular() const
+{
+    return colorReflexionEspecular * coeficienteReflexionEspecular;
+}
+
+ColorRGB Color_RR::getComponenteReflexion() const
+{
+    return colorReflexion * coeficienteReflexion;
+}
+
+ColorRGB Color_RR::getComponenteTransparencia() const
+{
+    return colorTransparencia * coeficienteTransparencia;
+}
+
+ColorRGB Color_RR::getColorCoeficienteReflexion() const
+{
+    return ColorRGB(255, 255, 255) * coeficienteReflexion;
+}
+
+ColorRGB Color_RR::getColorCoeficienteTransparencia() const
+{
+    return ColorRGB(255, 255, 255) * coeficienteTransparencia;
+}
 
 #endif // COLOR_H

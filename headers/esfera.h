@@ -14,7 +14,7 @@ public:
     Esfera_RR();
     Esfera_RR(Vector centro, float radio, PropiedadesObjeto prop);
     bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal) override;
-    bool estaDentro(Vector punto) override;
+    void setColoresTextura(Vector punto, datosTextura textura) override {};
 };
 
 using EsferaPtr = std::shared_ptr<Esfera_RR>;
@@ -31,8 +31,8 @@ Esfera_RR::Esfera_RR(Vector centro, float radio, PropiedadesObjeto prop)
 bool Esfera_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal)
 {
 
-    // Ecuacion de la esfera es: 
-    // ||P-C||^2 = r^2 
+    // Ecuacion de la esfera es:
+    // ||P-C||^2 = r^2
     // Con:
     // P punto en superficie, C centro de la esfera, r radio
 
@@ -54,18 +54,24 @@ bool Esfera_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Ve
 
     float discriminante = B * B - (4 * A * S);
 
-    if (discriminante < 0) return false;
+    if (discriminante < 0)
+        return false;
 
     float sqrt_disc = sqrt(discriminante);
     float t1 = (-B - sqrt_disc) / (2 * A);
     float t2 = (-B + sqrt_disc) / (2 * A);
 
     float t_esfera = -1;
-    if (t1 > 0) {
+    if (t1 > 0)
+    {
         t_esfera = t1;
-    } else if (t2 > 0) {
+    }
+    else if (t2 > 0)
+    {
         t_esfera = t2;
-    } else {
+    }
+    else
+    {
         return false;
     }
 
@@ -75,12 +81,6 @@ bool Esfera_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Ve
     *normal = (*puntoInterseccion - centro).normalize();
 
     return true;
-}
-
-bool Esfera_RR::estaDentro(Vector punto)
-{
-    // Verifica si el punto está dentro de la esfera
-    return (punto - centro).length() < radio;
 }
 
 #endif // ESFERA_H

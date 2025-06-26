@@ -63,7 +63,7 @@ std::string getPathToFile()
         }
     }
 
-    std::string file = dirPath + "/" + partes.second + ".png";
+    std::string file = dirPath + "/" + partes.second;
 
     return file;
 }

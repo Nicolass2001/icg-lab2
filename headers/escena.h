@@ -45,34 +45,13 @@ Camara_RR Escena_RR::getCamara()
 
 Escena_RR::Escena_RR(std::string pathConfig)
 {
-    fondo = Color_RR(51, 221, 221); // Fondo
-
     // Leer XML
     XMLHandler xmlHandler(pathConfig);
+    xmlHandler.setGlobalVariables();
+    fondo = xmlHandler.getFondo();
     camara = xmlHandler.getCamera();
     luces = xmlHandler.getLuces();
     objetos = xmlHandler.getObjetos();
-
-
-    float coeficienteAmbiente = 0.1;
-    ColorRGB colorAmbiente(255,255,255);
-    float coeficienteReflexionDifusa = 0.5;
-    ColorRGB colorReflexionDifusa(255,255,255);
-    float coeficienteReflexionEspecular = 1.0;
-    int brilloEspecular = 5;
-    ColorRGB colorReflexionEspecular(255,255,255);
-    Vector coeficienteTransparencia(0,0,0);
-    float indiceRefraccion = 0;
-    Vector coeficienteReflexion(0,0,0);
-
-    PropiedadesObjeto prop = PropiedadesObjeto(coeficienteAmbiente, colorAmbiente,
-                             coeficienteReflexionDifusa, colorReflexionDifusa,
-                             coeficienteReflexionEspecular, brilloEspecular, colorReflexionEspecular,
-                             coeficienteTransparencia, indiceRefraccion, coeficienteReflexion);
-
-
-    std::shared_ptr<Malla_RR> mallaPtr = std::make_shared<Malla_RR>(prop);
-    objetos.push_back(mallaPtr);
 }
 
 ObjetoPtr Escena_RR::calcularInterseccionMasCercana(Rayo_RR rayo, Vector *punto, Vector *normal)
@@ -115,7 +94,7 @@ void Escena_RR::calcularColorIluminacion(ObjetoPtr objeto, Rayo_RR rayo, Vector 
         float factorAtenuacion = 1 / distanciaLuz * distanciaLuz;
 
         // Calcular atenuación por bloqueo
-        Vector factorAtenuacionPorBloqueo = calcularLuzBloqueada(Rayo_RR(punto + direccionLuz * EPSILON, direccionLuz, 0), luz.getPosicion());
+        Vector factorAtenuacionPorBloqueo = calcularLuzBloqueada(Rayo_RR(punto + direccionLuz * EPSILON, direccionLuz), luz.getPosicion());
         intensidad = intensidad * factorAtenuacionPorBloqueo;
 
         // Calcular iluminación difusa
@@ -153,26 +132,16 @@ Vector Escena_RR::calcularLuzBloqueada(Rayo_RR rayo, Vector puntoLuz)
             float distancia = (punto - origenRayo).length();
             if (distancia < distanciaLuz)
             {
-                Vector coeficienteTransparencia = objeto->getCoeficienteTransparencia();
-                if (coeficienteTransparencia.length() == 0.0f)
+                float coeficienteTransparencia = objeto->getCoeficienteTransparencia();
+                if (coeficienteTransparencia == 0.0f)
                     return Vector(0.0f, 0.0f, 0.0f); // La luz está bloqueada
-                factorDeAtenuacion = factorDeAtenuacion * coeficienteTransparencia;
+                ColorRGB color = objeto->getColorAmbiente();
+                Vector atenuacionColor(color.getR() / 255.0f, color.getG() / 255.0f, color.getB() / 255.0f);
+                factorDeAtenuacion = atenuacionColor * factorDeAtenuacion * coeficienteTransparencia;
             }
         }
     }
     return factorDeAtenuacion;
-}
-
-float Escena_RR::indiceRefraccion(Vector punto)
-{
-    for (const auto &objeto : objetos)
-    {
-        if (objeto->estaDentro(punto))
-        {
-            return objeto->getIndiceRefraccion();
-        }
-    }
-    return DEFAULT_REFRACTION_INDEX; // Si no hay intersección, se asume el índice de refracción del aire
 }
 
 #endif // ESCENA_H

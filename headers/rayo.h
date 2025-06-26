@@ -6,12 +6,11 @@
 class Rayo_RR
 {
 private:
-    Vector origen;          // Punto de origen del rayo
-    Vector direccion;       // Dirección del rayo
-    float indiceRefraccion; // Indice de refracción del medio
+    Vector origen;    // Punto de origen del rayo
+    Vector direccion; // Dirección del rayo
 public:
     Rayo_RR();
-    Rayo_RR(Vector origen, Vector direccion, float indiceRefraccion);
+    Rayo_RR(Vector origen, Vector direccion);
     Vector getOrigen();
     Vector getDireccion();
     float getIndiceRefraccion();
@@ -20,8 +19,8 @@ public:
 
 Rayo_RR::Rayo_RR() {}
 
-Rayo_RR::Rayo_RR(Vector origen, Vector direccion, float indiceRefraccion)
-    : origen(origen), direccion(direccion.normalize()), indiceRefraccion(indiceRefraccion) {}
+Rayo_RR::Rayo_RR(Vector origen, Vector direccion)
+    : origen(origen), direccion(direccion.normalize()) {}
 
 Vector Rayo_RR::getOrigen()
 {
@@ -31,11 +30,6 @@ Vector Rayo_RR::getOrigen()
 Vector Rayo_RR::getDireccion()
 {
     return direccion;
-}
-
-float Rayo_RR::getIndiceRefraccion()
-{
-    return indiceRefraccion;
 }
 
 std::ostream &operator<<(std::ostream &os, const Rayo_RR &rayo)

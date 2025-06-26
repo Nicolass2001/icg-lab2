@@ -17,7 +17,7 @@ public:
     Cilindro_RR();
     Cilindro_RR(Vector base, Vector direccion, float radio, float altura, PropiedadesObjeto prop);
     bool calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, Vector *normal) override;
-    bool estaDentro(Vector punto) override;
+    void setColoresTextura(Vector punto, datosTextura textura) override {};
 
 private:
     bool interseccionConTapa(Vector centroTapa, Vector normalTapa, Rayo_RR rayo, Vector *puntoInterseccion);
@@ -84,12 +84,15 @@ bool Cilindro_RR::calcularInterseccion(Rayo_RR rayo, Vector *puntoInterseccion, 
         float sqrt_disc = sqrt(discriminante);
         float t1 = (-b - sqrt_disc) / (2 * a);
         float t2 = (-b + sqrt_disc) / (2 * a);
-        
+
         // Me voy a quedar con el t positivo mas cercano
         float t_cil = -1;
-        if (t1 > 0) {
+        if (t1 > 0)
+        {
             t_cil = t1;
-        } else if (t2 > 0) {
+        }
+        else if (t2 > 0)
+        {
             t_cil = t2;
         }
 
@@ -177,18 +180,6 @@ bool Cilindro_RR::interseccionConTapa(Vector centroTapa, Vector normalTapa, Rayo
     }
 
     return false;
-}
-
-bool Cilindro_RR::estaDentro(Vector punto)
-{
-    // Verifica si el punto está dentro del cilindro
-    Vector delta = punto - base;
-    float distanciaBase = delta.dot(direccion);
-    if (distanciaBase < 0 || distanciaBase > altura)
-        return false;
-
-    Vector proyeccion = delta - direccion * distanciaBase;
-    return proyeccion.length() <= radio;
 }
 
 #endif // CILINDRO_H
