@@ -5,6 +5,9 @@
 #include "escena.h"
 #include <SDL.h>
 
+#include <chrono>
+
+
 Escena_RR escena("config.xml");
 
 Texturas texturas(3);
@@ -176,6 +179,7 @@ int main(int argc, char *argv[])
 
     Camara_RR camara = escena.getCamara();
     Color_RR colorPixel;
+    auto inicio = std::chrono::high_resolution_clock::now();
     // Llenar la imagen utilizando la función `colorFunction`
     for (int y = 0; y < IMAGE_HEIGHT; ++y)
     {
@@ -233,6 +237,10 @@ int main(int argc, char *argv[])
     {
         std::cerr << "Error al guardar la imagen." << std::endl;
     }
+
+    auto fin = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duracion = fin - inicio;
+    std::cout << "Tiempo de renderizado y guardado: " << duracion.count() << " segundos." << std::endl;
 
     // Liberar memoria y finalizar FreeImage
     texturas.liberarTexturas();
